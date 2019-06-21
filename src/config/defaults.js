@@ -1,7 +1,10 @@
 export default {
     layout: {
-        mapView: true,
+        mapView: false,
         tableView: true,
-        chartView: true,
+        chartView: false,
+    },
+    data: {
+        baseUrl: 'https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/1/query?'
     }
 }
