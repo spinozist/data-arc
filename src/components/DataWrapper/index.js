@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import defaults from '../../config/defaults';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Container, Menu, Grid } from 'semantic-ui-react';
 import Table from '../Table';
 import Loader from 'react-loader-spinner';
 import API from '../../utils/API'
@@ -40,32 +40,7 @@ const DataWrapper = props => {
 
     }
 
-    const geoOptions = [
-        {
-            key: "geo-0",
-            text: "State of Georgia",
-            value: 'State' 
-        },
-        {
-            key: "geo-1",
-            text: "County",
-            value: 'County' 
-        },        {
-            key: "geo-2",
-            text: "City",
-            value: 'City' 
-        },
-        {
-            key: "geo-3",
-            text: "GA House Districts",
-            value: 'GAHouse' 
-        },
-        {
-            key: "geo-4",
-            text: "Neighborhood Planning Units (NPU)",
-            value: 'NPU' 
-        },
-    ];
+    
 
     // const categoryOptions = [
     //     {
@@ -126,26 +101,23 @@ const DataWrapper = props => {
     useEffect(() => getData(defaults.data.baseUrl, serviceID, sumLevel), [serviceID, sumLevel]);
     
     return (
-        <div style={{height: '100vh', width: '100%'}}>
-            <div style={{position: 'fixed', float: 'left', backgroundColor: 'white', top: '0px', width: "100%", height: '80px', zIndex: '999'}}>
+        <Container fluid>
+            <Menu fixed={'top'} style={{height: '10vh'}}>
+
+
             { defaults.categoryOptions ? 
-                <div style={{position: 'fixed', float: 'left', top: '10px', left: "5px"}}>
-                <Dropdown id='cat-selector' value={serviceID} onChange={(event, data) => setServiceID(data.value)} style={{position: 'fixed', float : 'left', width: '195'}} placeholder='Select Data Category' selection options={defaults.categoryOptions} />
-                {/* <button style={{float: 'right'}} onClick={event => handleFields(event)}>Add Fields to Table</button> */}
-                </div> : null }
+                <Dropdown style={{margin: '5px', height:'50px'}} id='cat-selector' value={serviceID} onChange={(event, data) => setServiceID(data.value)} placeholder='Select Data Category' selection options={defaults.categoryOptions} />
+                : null }
             { sumLevel ? 
-                <div style={{position: 'fixed', float: 'left', top: '10px', left: "205px"}}>
-                <Dropdown id='cat-selector' value={sumLevel} onChange={(event, data) => setSumLevel(data.value)} style={{position: 'fixed', float : 'left', width: '195'}} placeholder='Select Data Category' selection options={geoOptions} />
-                {/* <button style={{float: 'right'}} onClick={event => handleFields(event)}>Add Fields to Table</button> */}
-                </div> : null }
+                <Dropdown style={{margin: '5px', height:'50px'}} id='cat-selector' value={sumLevel} onChange={(event, data) => setSumLevel(data.value)} placeholder='Select Data Category' selection options={defaults.geoOptions} />
+                : null }
             { fieldOptions ? 
-                <div>
-                <Dropdown id='field-selector' value={fields} onChange={(event, data) => setFields(data.value)} style={{position: 'fixed', float : 'left', top: '10px', left: '505px'}} placeholder='Select Fields' multiple search selection options={fieldOptions} />
-                {/* <button style={{float: 'right'}} onClick={event => handleFields(event)}>Add Fields to Table</button> */}
-                </div> : null }
-            </div>
+                <Dropdown style={{margin: '5px'}} id='field-selector' value={fields} onChange={(event, data) => setFields(data.value)} placeholder='Select Fields' multiple search selection options={fieldOptions} />
+                : null }
+             </Menu>
+            <Grid.Row style={{height: '80vh'}}>
             { layout.mapView ? <div>Map Component</div> : null }
-            { layout.tableView && data ? 
+            { layout.tableView && data ?
                <div style={{float: 'left'}}>
                <Table
                     fields={fields} 
@@ -166,7 +138,9 @@ const DataWrapper = props => {
                     </div> 
             }
             { layout.chartView ? <div>Chart Component</div> : null }
-        </div>);
+            </Grid.Row>
+        </Container>
+        );
 }
 
 export default DataWrapper;

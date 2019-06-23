@@ -53,5 +53,31 @@ export default {
             text: "Social by Race & Ethnicity",
             value: 8
         }
+    ],
+    geoOptions : [
+        {
+            key: "geo-0",
+            text: "State of Georgia",
+            value: 'State' 
+        },
+        {
+            key: "geo-1",
+            text: "County",
+            value: 'County' 
+        },        {
+            key: "geo-2",
+            text: "City",
+            value: 'City' 
+        },
+        {
+            key: "geo-3",
+            text: "GA House Districts",
+            value: 'GAHouse' 
+        },
+        {
+            key: "geo-4",
+            text: "Neighborhood Planning Units (NPU)",
+            value: 'NPU' 
+        },
     ]
 }

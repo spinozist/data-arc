@@ -24,7 +24,7 @@ const Table = props => {
             <thead style={{
                 float: 'left',
                 position: 'fixed',
-                top: '80px',
+                top: '10vh',
                 width: '100%',
                 zIndex: '5'}}
                 >
@@ -46,7 +46,7 @@ const Table = props => {
                 ) : null }
 
             </thead>
-            <tbody style={{float: 'left', width: '100%', overflow: 'scroll', marginTop: '120px'}}>
+            <tbody style={{float: 'left', width: '100%', overflow: 'scroll', marginTop: '14vh'}}>
 
             {featureArray ? featureArray.map((feature,index) => {
                 // console.log(feature);
