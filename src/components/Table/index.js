@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-// import { Button } from 'react-bootstrap';
-// import { ExportToCsv } from 'export-to-csv';
-// import numeral from 'numeral';
-// import colormap from 'colormap';
+import Loader from 'react-loader-spinner';
 import './style.css';
 
 const Table = props => {
 
-    const sortField = 'mMedianAge_e';
+    const columns = props.fields;
+
+    const sortField = props.sortField;
     const sortOrder = 'hilo';
 
     const featureArray = props.data ? 
@@ -16,17 +15,19 @@ const Table = props => {
                             : null;
     const fieldArray = props.data ? props.data.fields : null;
 
-    console.log(featureArray ? featureArray : null);
-    console.log(featureArray ? fieldArray : null);
+    // console.log(featureArray ? featureArray : null);
+    // console.log(featureArray ? fieldArray : null);
 
-    const [columns, setColumns] = useState(props.fields)    
-
+    
     return (
         <div style={{width: '100%'}}>
             <thead style={{
                 float: 'left',
                 position: 'fixed',
-                width: '100%'}}>
+                top: '80px',
+                width: '100%',
+                zIndex: '5'}}
+                >
                 {columns ? columns.map((columnLabel,index) => 
                     <th style={{
                         width: "5%", 
@@ -37,13 +38,15 @@ const Table = props => {
                         textAlign: 'center'
                     }}  
                         title={columnLabel}
+                        value={columnLabel}
+                        // onClick={event => props.sort(event)}
                         >
                         {fieldArray ? fieldArray.map(item => item.name === columnLabel ? item.alias: null) : null}
                     </th>
                 ) : null }
 
             </thead>
-            <tbody style={{float: 'left', width: '100%', overflow: 'scroll', marginTop: '30px'}}>
+            <tbody style={{float: 'left', width: '100%', overflow: 'scroll', marginTop: '120px'}}>
 
             {featureArray ? featureArray.map((feature,index) => {
                 // console.log(feature);
