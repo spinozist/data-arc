@@ -76,6 +76,11 @@ export default {
         },
         {
             key: "geo-4",
+            text: "GA Senate Districts",
+            value: 'GASenate' 
+        },
+        {
+            key: "geo-5",
             text: "Neighborhood Planning Units (NPU)",
             value: 'NPU' 
         },
