@@ -1,6 +1,7 @@
 import React from "react";
-import DataWrapper from "./components/DataWrapper";
+import LayoutWrapper from "./components/LayoutWrapper";
 
-const App = props => <DataWrapper />;
+
+const App = props => <LayoutWrapper />;
 
 export default App;

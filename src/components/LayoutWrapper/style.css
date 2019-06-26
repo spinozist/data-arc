@@ -1,0 +1,83 @@
+@keyframes shadow-pulse
+{
+     0% {
+          box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.35);
+     }
+     100% {
+          box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+     }
+}
+
+body {
+    background-color: lightslategray;
+}
+
+.pulse {
+    animation: shadow-pulse 1s 6;
+}
+
+.layout {
+    height: 100vh;
+    position: fixed;
+}
+
+/* #table-box {
+    overflow: scroll;
+} */
+
+react-grid-layout {
+    position: relative;
+    transition: height 200ms ease;
+}
+.react-grid-item {
+    transition: all 200ms ease;
+    transition-property: left, top;
+    overflow: hidden;
+    background-color: whitesmoke;
+}
+.react-grid-item.cssTransforms {
+    transition-property: transform;
+}
+.react-grid-item.resizing {
+    z-index: 1;
+    will-change: width, height;
+}
+
+.react-grid-item.react-draggable-dragging {
+    transition: none;
+    z-index: 3;
+    will-change: transform;
+}
+
+.react-grid-item.react-grid-placeholder {
+    background: rgb(10, 144, 138);
+    opacity: 0.2;
+    transition-duration: 100ms;
+    z-index: 2;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.react-grid-item > .react-resizable-handle {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 5px;
+    height: 5px;
+    border-right: 2px solid rgba(0, 0, 0, 0.4);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+}
+
