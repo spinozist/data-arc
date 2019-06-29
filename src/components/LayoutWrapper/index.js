@@ -1,34 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import ReactGridLayout from 'react-grid-layout';
 import defaults from '../../config/defaults';
-import { Dropdown, Container, Menu, Grid, Button } from 'semantic-ui-react';
+import { Dropdown, Grid, Button } from 'semantic-ui-react';
 import DataTable from '../Table';
+import DataSelector from '../DataSelector';
+import MapWrapper from '../MapWrapper';
 import { ExportToCsv } from 'export-to-csv';
 import Loader from 'react-loader-spinner';
 import API from '../../utils/API'
 import './style.css';
 
-const DataWrapper = props => {
+const LayoutWrapper = props => {
 
     const [layout, setLayout] = useState({
-        mapVisible: defaults.mapView.visible,
-        tableVisible: defaults.tableView.visible,
-        chartVisible: defaults.chartView.visible
+        mapVisible: defaults.layout.mapView.visible,
+        tableVisible: defaults.layout.tableView.visible,
+        chartVisible: defaults.layout.chartView.visible,
+        colorMap: 'viridis',
+        numberOfBins: 72,
+        colorMapReverse: false,
+        // chartType: 'scatterplot',
+        colorOpacity: .9
     });
     const [serviceID, setServiceID] = useState(0);
     const [sortField, setSortField] = useState('NAME');
     const [sortOrder, setSortOrder] = useState('lohi');
     const [sumLevel, setSumLevel] = useState('County');
     const [plngRegion, setPlngRegion] = useState('*')
-    const [selectedFields, setSelectedFields] = useState(['NAME', 'GEOID'])
+    const [selectedFields, setSelectedFields] = useState(['NAME', 'GEOID']);
+    const [hoverField, setHoverField] = useState('GEOID')
     const [fieldOptions, setFieldOptions] = useState();
+    const [mapField, setMapField] = useState('TotPop_00')
     const [data, setData] = useState();
     const [csvData, setCSVData] = useState();
     const [csvStatus, setCSVStatus] = useState('nodata');
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [screenHeight, setScreenHeight] = useState(window.innerHeight);
-    const [cols, setCols] = useState(12); 
-    const [rows, setRows] = useState(10);
+    const [cols, setCols] = useState(defaults.layout.columns); 
+    const [rows, setRows] = useState(defaults.layout.rows);
+    const [fileType, setFileType] = useState('geojson')
 
 
     const rowHeight = screenHeight/rows;
@@ -37,52 +47,63 @@ const DataWrapper = props => {
     console.log(rowHeight);
     console.log(screenWidth);
     console.log(screenHeight);
-    // layout is an array of objects, see the demo for more complete usage
+    
     const boxLayout = [
         {
             i: 'table-box', 
-            x: defaults.tableView.x, 
-            y: defaults.tableView.y, 
-            w: defaults.tableView.w, 
-            h: defaults.tableView.h, 
-            minW: defaults.tableView.minW, 
-            maxH: defaults.tableView.maxH
+            x: defaults.layout.tableView.x, 
+            y: defaults.layout.tableView.y, 
+            w: defaults.layout.tableView.w, 
+            h: defaults.layout.tableView.h, 
+            minW: defaults.layout.tableView.minW, 
+            maxH: defaults.layout.tableView.maxH
         },
         {
             i: 'data-selector-box', 
-            x: defaults.dataSelector.x, 
-            y: defaults.dataSelector.y, 
-            w: defaults.dataSelector.w, 
-            h: defaults.dataSelector.h, 
-            minW: defaults.dataSelector.minW, 
-            maxH: defaults.dataSelector.maxH
+            x: defaults.layout.dataSelector.x, 
+            y: defaults.layout.dataSelector.y, 
+            w: defaults.layout.dataSelector.w, 
+            h: defaults.layout.dataSelector.h, 
+            minW: defaults.layout.dataSelector.minW, 
+            maxH: defaults.layout.dataSelector.maxH
         },
         {
             i: 'map-box', 
-            x: defaults.mapView.x, 
-            y: defaults.mapView.y, 
-            w: defaults.mapView.w, 
-            h: defaults.mapView.h, 
-            minW: defaults.mapView.minW, 
-            maxH: defaults.mapView.maxH
+            x: defaults.layout.mapView.x, 
+            y: defaults.layout.mapView.y, 
+            w: defaults.layout.mapView.w, 
+            h: defaults.layout.mapView.h, 
+            minW: defaults.layout.mapView.minW, 
+            maxH: defaults.layout.mapView.maxH,
+            static: defaults.layout.mapView.static
         }
     ];
+
 
     const getData = (baseurl, categoryID, geo, fields) => {
         // console.log(geo)
         setData();
         // setFieldOptions();
-        const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&returnGeometry=false&outFields=${fields}&f=json`;
+        const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&returnGeometry=true&outFields=${fields}&f=${fileType}`;
         API.getData(url)
             .then(res => {
-                // console.log(res);
-                const optionsArray = res.data.fields.map(field => 
+                console.log(res);
+                const optionsArray = fileType === 'json' ? res.data.fields.map(field => 
                     ({
                         key : field.name,
                         text : field.alias,
                         value : field.name
                     })
-                );
+                ) : fileType === 'geojson' ? 
+                    Object.keys(res.data.features[0].properties)
+                        .map(field => 
+                        ({
+                            key : field,
+                            text : field,
+                            value : field
+                        }) ) : fieldOptions;
+                                        
+                console.log(optionsArray);
                 setData(res.data);
                 setFieldOptions(optionsArray);
             })
@@ -114,9 +135,6 @@ const DataWrapper = props => {
     const downloadCSV = () => {
         const csvFilename = sumLevel + '-' + serviceID.toString() +  '-download';
         const csvTitle = 'Test';
-        // const fieldIDs = Object.keys(csvData[0]);
-    
-    //    const csvFilename = dataTitle
     
         const csvOptions = 
             { 
@@ -139,70 +157,34 @@ const DataWrapper = props => {
         setCSVStatus('nodata');
     }
 
-
     useEffect(() => getData(defaults.data.baseUrl, serviceID, sumLevel, '*'), [serviceID, sumLevel]);
     
     return (
-        <ReactGridLayout autoSize className="layout" layout={boxLayout} cols={cols} rowHeight={rowHeight} width={screenWidth}>
+        <ReactGridLayout className="layout" layout={boxLayout} cols={cols} rowHeight={rowHeight} width={screenWidth}>
             <div key="data-selector-box">
-
-            { defaults.categoryOptions ? 
-                <Dropdown 
-                    style={{float: 'left', margin: '5px', height:'50px'}} 
-                    id='cat-selector' 
-                    value={serviceID} 
-                    onChange={(event, data) => setServiceID(data.value)} 
-                    placeholder='Select Data Category' 
-                    selection 
-                    options={defaults.categoryOptions}
-                />
-                : null }
-            { sumLevel ? 
-                <Dropdown 
-                    selection 
-                    style={{ float: 'left', margin: '5px', height:'50px'}} 
-                    id='cat-selector' 
-                    value={sumLevel} 
-                    onChange={(event, data) => setSumLevel(data.value)} 
-                    placeholder='Select Data Category' 
-                    options={defaults.geoOptions}
-                />
-                : null }
-            { fieldOptions ? 
-                <Dropdown
-                    multiple search selection 
-                    style={{ float: 'left', margin: '5px'}} 
-                    id='field-selector' 
-                    value={selectedFields} 
-                    onChange={(event, data) => setSelectedFields(data.value)} 
-                    placeholder='Select Fields' 
-                    options={fieldOptions} 
-                />
-                : null }
-            { data ?
-                <Button 
-                    className={csvStatus === 'ready' ? 'pulse' : null } 
-                    onClick={() => csvStatus === 'nodata' ? handleCSVData(defaults.data.baseUrl, serviceID, sumLevel, selectedFields) : downloadCSV() } 
-                    style={{margin: '5px', float: 'right', height: '50px'}}
-                >
-                    {csvStatus === 'nodata' ? 'Create CSV' : 'Download CSV'}
-                </Button>
-                : null }
-            {csvStatus === 'ready' ? 
-                <Button
-                    color='red' 
-                    onClick={() => {
-                        setCSVData()
-                        setCSVStatus('nodata')
-                    }} 
-                    style={{margin: '5px', float: 'right', height: '50px'}}
-                >
-                Cancel
-                </Button>
-                : null}
+                <DataSelector
+                    setServiceID={setServiceID}
+                    setSelectedFields={setSelectedFields}
+                    setFieldOptions={setFieldOptions}
+                    handleCSVData={handleCSVData}
+                    downloadCSV={downloadCSV}
+                    setCSVStatus={setCSVStatus}
+                    setCSVData={setCSVData}
+                    setSumLevel={setSumLevel}
+                    serviceID={serviceID}
+                    sumLevel={sumLevel}
+                    data={data}
+                    selectedFields={selectedFields}
+                    csvStatus={csvStatus}
+                    fieldOptions={fieldOptions}
+                    hoverField={hoverField}
+                    setMapField={setMapField}
+                    />
             </div>
-            <div key="map-box">
-            { layout.mapVisible ? 'Map Component' : null }
+
+            <div 
+            key="map-box">
+            { layout.mapVisible ? <MapWrapper hoverField={hoverField} selectedVariable={mapField} layout={layout} data={data} /> : null }
             </div>
 
             <div key="table-box">
@@ -217,8 +199,8 @@ const DataWrapper = props => {
                     sortOrder={sortOrder}
                     /> 
                 : <Grid verticalAlign="middle">
-                        <Grid.Column width={16}  textAlign="center">
-                        <Loader type='Grid'/>
+                        <Grid.Column style={{marginTop: '50%'}} width={16}  textAlign="center">
+                        <Loader type='Grid' />
                         </Grid.Column>
                   </Grid> 
             }
@@ -229,4 +211,4 @@ const DataWrapper = props => {
     );
 }
 
-export default DataWrapper;
+export default LayoutWrapper;

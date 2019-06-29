@@ -1,8 +1,12 @@
 export default {
-    mapView: { visible: true, x: 0, y: 2, w: 8, h: 4, minW: 4, maxH: 10 },
-    tableView: { visible: true, x: 6, y: 2, w: 4, h: 4, minW: 4, maxH: 10 },
-    chartView: { visible: false },
-    dataSelector: { visivle: true,  x: 0, y: 0, w: 8, h: 2, minW: 2, maxH: 5 },
+    layout: {
+        mapView: { visible: true, x: 0, y: 2, w: 8, h: 6, minW: 4, maxH: 10, static: true },
+        tableView: { visible: true, x: 8, y: 2, w: 4, h: 8, minW: 4, maxH: 10 },
+        chartView: { visible: false },
+        dataSelector: { visivle: true,  x: 0, y: 0, w: 8, h: 2, minW: 2, maxH: 5 },
+        columns: 12,
+        rows: 10,
+        },
     data: {
         baseUrl: 'https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/'
     },

@@ -13,10 +13,11 @@ const DataTable = props => {
 
     const featureArray = props.data ? 
                             props.data.features.map(feature => feature)
-                            .sort(sortOrder === 'hilo' ? (a,b) => a.attributes[sortField] > b.attributes[sortField] ? -1 : 1 : (a,b) => a.attributes[sortField] > b.attributes[sortField] ? 1 : -1)
+                            .sort(sortOrder === 'hilo' ? (a,b) => a.properties[sortField] > b.properties[sortField] ? -1 : 1 : (a,b) => a.properties[sortField] > b.properties[sortField] ? 1 : -1)
                             : null;
 
     const fieldArray = props.data ? props.data.fields : null;
+    console.log(sortField);
 
         
     return (
@@ -29,7 +30,7 @@ const DataTable = props => {
                         value={columnLabel}
                         onClick={() => props.handleSortField(columnLabel, props.sortOrder === 'lohi' ? 'hilo' : 'lohi')}
                     >
-                        {fieldArray ? fieldArray.map(item => item.name === columnLabel ? item.alias: null) : null}
+                        {fieldArray ? fieldArray.map(item => item.name === columnLabel ? item.alias: columnLabel) : columnLabel}
                     </Table.HeaderCell>
                 ) : null }
 
@@ -41,7 +42,7 @@ const DataTable = props => {
                     <Table.Row key={'row-' + i}>
                         {selectedFields ? selectedFields.map(fieldName => {
                             const fieldType = fieldArray ? fieldArray.map(item => item.name === fieldName ? item.type: null) : null
-                            const value = feature.attributes[fieldName]
+                            const value = feature.properties[fieldName]
                             const formattedValue =  fieldType === 'esriFieldTypeInteger' ? numeral(value).format('0,0') : value;
                         return(
                         <Table.Cell key={'cell' + fieldName + '-' + feature}>
