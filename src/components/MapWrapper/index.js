@@ -14,7 +14,6 @@ const Map = props => {
     overlay_two: null,
     overlay_three: null,
   });
-  
 
   const apiOverlayData = (url1, url2, url3) => {
 
@@ -22,9 +21,6 @@ const Map = props => {
       .then(res => {
         const data = res.data.features;
         
-        // data.forEach(feature => 
-        //   console.log(feature.geometry.type));
-
       setOverlayData({
         ...overlayData,
         overlay_one: data})
@@ -34,11 +30,6 @@ const Map = props => {
     API.getData(url2)
       .then(res => {
         const data = res.data.features;
-        // console.log(data);
-        
-        // data.forEach(feature => 
-        //   console.log(feature.geometry.type));
-
 
       setOverlayData({
         ...overlayData,
@@ -49,11 +40,6 @@ const Map = props => {
     API.getData(url3)
       .then(res => {
         const data = res.data.features;
-        // console.log(data);
-        
-        // data.forEach(feature => 
-        //   console.log(feature.geometry.type));
-
 
       setOverlayData({
         ...overlayData,
@@ -82,6 +68,21 @@ const Map = props => {
       animate={false}
       easeLinearity={0.7}
     >
+        <div style={{
+                border: 'solid grey .8px', 
+                backgroundColor: 'white', 
+                textAlign: 'center', 
+                width: '60%', 
+                borderRadius: '5px', 
+                padding: '10px', 
+                position: 'absolute', 
+                top: '12px', 
+                left: '20%', 
+                zIndex: '9997',
+                opacity: '.9'
+                }}>
+            <h2>{props.selectedVariable ? props.selectedVariable : 'No Selected'}</h2>
+        </div>
         <ZoomControl position="topright" />
 
 

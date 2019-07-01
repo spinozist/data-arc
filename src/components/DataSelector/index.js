@@ -33,7 +33,9 @@ const DataSelector = props => {
                 />
                 : null }
                     { props.data ?
-                <Button 
+                <Button
+                    basic
+                    color='teal'
                     className={props.csvStatus === 'ready' ? 'pulse' : null } 
                     onClick={() => props.csvStatus === 'nodata' ? 
                                 props.handleCSVData(
@@ -42,7 +44,7 @@ const DataSelector = props => {
                                     props.sumLevel, 
                                     props.selectedFields) 
                                     : props.downloadCSV() } 
-                    style={{margin: '5px', float: 'left', height: '50px'}}
+                    style={{margin: '10px', float: 'left', height: '50px'}}
                 >
                     {props.csvStatus === 'nodata' ? 
                     'Create CSV' 
@@ -51,12 +53,13 @@ const DataSelector = props => {
                 : null }
                 {props.csvStatus === 'ready' ? 
                     <Button
+                        basic
                         color='red' 
                         onClick={() => {
                             props.setCSVData()
                             props.setCSVStatus('nodata')
                         }} 
-                        style={{margin: '5px', float: 'left', height: '50px'}}
+                        style={{margin: '10px', float: 'left', height: '50px'}}
                     >
                     Cancel
                     </Button>
@@ -65,7 +68,7 @@ const DataSelector = props => {
             { props.fieldOptions ? 
                 <Dropdown
                     multiple search selection 
-                    style={{ float: 'right', margin: '5px', width: '50%', height: '90%', zIndex: '9999'}} 
+                    style={{ float: 'right', margin: '10px', width: '45%', height: '80%', zIndex: '9999'}} 
                     id='field-selector' 
                     value={props.selectedFields} 
                     onChange={(event, data) => props.setSelectedFields(data.value)} 

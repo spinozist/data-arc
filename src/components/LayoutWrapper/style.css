@@ -1,3 +1,23 @@
+.leaflet-container {
+    height: 97%;
+    width: 100%;
+    border-radius: 5px;
+  }
+
+  body {
+    background: rgb(230, 226, 213);
+  }
+
+
+  .no-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;  
+  }
+
+  .no-scrollbar::-webkit-scrollbar-thumb {
+    background: #FF0000;
+  }
+
 @keyframes shadow-pulse
 {
      0% {

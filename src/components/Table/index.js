@@ -21,7 +21,7 @@ const DataTable = props => {
 
         
     return (
-        <Table style={{height: '100%', width: '100%', float: 'left'}} celled striped sortable>
+        <Table style={{borderRadius: '5px' ,marginLeft: '15px', height: '100%', width: '100%', float: 'left'}} celled striped sortable>
             <Table.Header>
                 {selectedFields ? selectedFields.map((columnLabel,index) => 
                     <Table.HeaderCell
