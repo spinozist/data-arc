@@ -21,7 +21,7 @@ const DataTable = props => {
 
         
     return (
-        <Table celled striped sortable>
+        <Table style={{height: '100%', width: '100%', float: 'left'}} celled striped sortable>
             <Table.Header>
                 {selectedFields ? selectedFields.map((columnLabel,index) => 
                     <Table.HeaderCell
@@ -35,7 +35,7 @@ const DataTable = props => {
                 ) : null }
 
             </Table.Header>
-            <Table.Body style={{overflow: 'scroll !important', height: '100px'}}>
+            <Table.Body>
 
             {featureArray ? featureArray.map((feature, i) => {
                 return(

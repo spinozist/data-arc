@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import ReactGridLayout from 'react-grid-layout';
+// import ReactGridLayout from 'react-grid-layout';
+import {Grid, Row, Col} from 'react-flexbox-grid';
 import defaults from '../../config/defaults';
-import { Dropdown, Grid, Button } from 'semantic-ui-react';
+import { Dropdown, Button } from 'semantic-ui-react';
 import DataTable from '../Table';
 import DataSelector from '../DataSelector';
 import MapWrapper from '../MapWrapper';
@@ -83,6 +84,9 @@ const LayoutWrapper = props => {
     const getData = (baseurl, categoryID, geo, fields) => {
         // console.log(geo)
         setData();
+
+        // setSelectedFields(['NAME','GEOID']);
+
         // setFieldOptions();
         const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&returnGeometry=true&outFields=${fields}&f=${fileType}`;
         API.getData(url)
@@ -160,54 +164,59 @@ const LayoutWrapper = props => {
     useEffect(() => getData(defaults.data.baseUrl, serviceID, sumLevel, '*'), [serviceID, sumLevel]);
     
     return (
-        <ReactGridLayout className="layout" layout={boxLayout} cols={cols} rowHeight={rowHeight} width={screenWidth}>
-            <div key="data-selector-box">
-                <DataSelector
-                    setServiceID={setServiceID}
-                    setSelectedFields={setSelectedFields}
-                    setFieldOptions={setFieldOptions}
-                    handleCSVData={handleCSVData}
-                    downloadCSV={downloadCSV}
-                    setCSVStatus={setCSVStatus}
-                    setCSVData={setCSVData}
-                    setSumLevel={setSumLevel}
-                    serviceID={serviceID}
-                    sumLevel={sumLevel}
-                    data={data}
-                    selectedFields={selectedFields}
-                    csvStatus={csvStatus}
-                    fieldOptions={fieldOptions}
-                    hoverField={hoverField}
-                    setMapField={setMapField}
-                    />
-            </div>
+        <Grid fluid style={{height: '100vh'}}>
+            <Row style={{height: '15vh'}}>
+                    <DataSelector
+                        setServiceID={setServiceID}
+                        setSelectedFields={setSelectedFields}
+                        setFieldOptions={setFieldOptions}
+                        handleCSVData={handleCSVData}
+                        downloadCSV={downloadCSV}
+                        setCSVStatus={setCSVStatus}
+                        setCSVData={setCSVData}
+                        setSumLevel={setSumLevel}
+                        serviceID={serviceID}
+                        sumLevel={sumLevel}
+                        data={data}
+                        selectedFields={selectedFields}
+                        csvStatus={csvStatus}
+                        fieldOptions={fieldOptions}
+                        hoverField={hoverField}
+                        setMapField={setMapField}
+                        />
+            </Row>
+            <Row style={{height: '80vh'}}>
+                <Col sm={12} lg={6} style={{height: '100%', width: '100%'}}>
+                        <Row style={{height: '50%', width: '100%', overflow: 'scroll'}}>
 
-            <div 
-            key="map-box">
-            { layout.mapVisible ? <MapWrapper hoverField={hoverField} selectedVariable={mapField} layout={layout} data={data} /> : null }
-            </div>
-
-            <div key="table-box">
-                <div id='table-box'>
-
-            { layout.tableVisible && data ?
-            <DataTable
-                    selectedFields={selectedFields} 
-                    data={data}
-                    sortField={sortField}
-                    handleSortField={handleSortField}
-                    sortOrder={sortOrder}
-                    /> 
-                : <Grid verticalAlign="middle">
-                        <Grid.Column style={{marginTop: '50%'}} width={16}  textAlign="center">
-                        <Loader type='Grid' />
-                        </Grid.Column>
-                  </Grid> 
-            }
-            { layout.chartVisible ? <div>Chart Component</div> : null }
-                </div>       
-            </div>
-        </ReactGridLayout>
+                        { layout.tableVisible && data ?
+                        <DataTable
+                                selectedFields={selectedFields} 
+                                data={data}
+                                sortField={sortField}
+                                handleSortField={handleSortField}
+                                sortOrder={sortOrder}
+                                /> 
+                            : 
+                                <Loader id='loader-box' type='Grid' />
+                               
+                            
+                        }
+                        </Row>
+                        <Row style={{height: '50%', width: '100%'}}>
+                        { layout.chartVisible ? <div>Chart Component</div> : null }
+                        </Row>
+                </Col>
+                <Col sm={12} lg={6} style={{height: '100%'}}>  
+                    { layout.mapVisible ? 
+                        <MapWrapper 
+                            hoverField={hoverField} 
+                            selectedVariable={mapField} 
+                            layout={layout} data={data} /> 
+                        : <h1>Map not loading</h1> }
+                </Col>
+            </Row>
+        </Grid>
     );
 }
 

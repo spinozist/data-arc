@@ -11,6 +11,7 @@
     "numeral": "^2.0.6",
     "react": "^16.8.1",
     "react-dom": "^16.8.6",
+    "react-flexbox-grid": "^2.1.2",
     "react-grid-layout": "^0.16.6",
     "react-leaflet": "^2.4.0",
     "react-loader-spinner": "^2.3.0",
