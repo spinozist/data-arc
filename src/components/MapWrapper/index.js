@@ -4,6 +4,7 @@ import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
 // import Loader from 'react-loader-spinner';
 import API from '../../utils/API.js';
+import DataManifest from '../../config/DataManifest.json'
 
 const Map = props => {
 
@@ -81,7 +82,9 @@ const Map = props => {
                 zIndex: '9997',
                 opacity: '.9'
                 }}>
-            <h2>{props.selectedVariable ? props.selectedVariable : 'No Selected'}</h2>
+            <h2>{props.selectedVariable ? 
+                DataManifest.map(item => item.Variable === props.selectedVariable ? item.Long : null)
+                : 'No Variable Selected'}</h2>
         </div>
         <ZoomControl position="topright" />
 

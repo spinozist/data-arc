@@ -11,8 +11,11 @@ import Loader from 'react-loader-spinner';
 import API from '../../utils/API'
 import './style.css';
 import ColorRamp from '../Legends/ColorRamp';
+import DataManifest from '../../config/DataManifest.json'
 
 const LayoutWrapper = props => {
+
+    // console.log(DataManifest);
 
     const [layout, setLayout] = useState({
         mapVisible: defaults.layout.mapView.visible,
@@ -60,12 +63,11 @@ const LayoutWrapper = props => {
                     })
                 ) : fileType === 'geojson' ? 
                     Object.keys(res.data.features[0].properties)
-                        .map(field => 
-                        ({
+                        .map(field =>  ({
                             key : field,
-                            text : field,
+                            text : DataManifest.map(item => field === item.Variable ? item.Long : null), 
                             value : field
-                        }) ) : fieldOptions;
+                        })) : fieldOptions;
                                         
                 console.log(optionsArray);
                 setData(res.data);
