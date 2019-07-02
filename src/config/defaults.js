@@ -112,6 +112,11 @@ export default {
             key: "geo-10",
             text: "Super Districts",
             value: "SuperDistrict"
+        },
+        {
+            key: "geo-11",
+            text: 'Census Tracts',
+            value: 'Tract'
         }
     ]
 }

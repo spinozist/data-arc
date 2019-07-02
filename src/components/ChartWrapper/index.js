@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import ScatterPlot from '../Charts/ScatterPlot';
+import ScatterPlot from '../Charts/ScatterPlot';
 import SimpleBarChart from '../Charts/BarChart';
 
 const ChartWrapper = props => {
@@ -12,25 +12,32 @@ useEffect(() => setChartType('bar-chart'), [props.data, props.selectedVariable])
 
 return(
     <div style={{height: '100%', width: '100%'}}>
-        {/* {  chartType === 'scatterplot' ?
+        {  chartType === 'scatterplot' ?
         <ScatterPlot
             key={'scatterplot'}
-            hoverID={hoverID} 
-            data={dataState}
-            layoutState={layoutState}
-            handleHoverID={handleHover}
-            handleSecVarChange={handleSecVarChange}
+            {...props}
+            // hoverID={props.hoverID} 
+            // data={props.data}
+            // layout={props.layout}
+            // selectedVariable={props.selectedVariable}
+            selectedSecondVar={'TotPop_00'}
+            hoverField={'GEOID'}
+            // handleHoverID={props.handleHover}
+
+            // handleSecVarChange={handleSecVarChange}
         />
         : null
-        } */}
+        }
 
         {  chartType === 'bar-chart' ?
         <SimpleBarChart
             key={'simple-bar-chart'}
+            {...props}
+            hoverField={'GEOID'}
             // hoverID={props.hoverID} 
-            data={props.data}
-            layout={props.layout}
-            selectedVariable={props.selectedVariable}
+            // data={props.data}
+            // layout={props.layout}
+            // selectedVariable={props.selectedVariable}
             // handleHoverID={props.handleHover}
 
         />

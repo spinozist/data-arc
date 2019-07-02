@@ -22,66 +22,23 @@ const LayoutWrapper = props => {
         numberOfBins: 72,
         colorMapReverse: false,
         // chartType: 'scatterplot',
-        colorOpacity: .9
+        colorOpacity: .8
     });
 
     const [serviceID, setServiceID] = useState(0);
     const [sortField, setSortField] = useState('NAME');
     const [sortOrder, setSortOrder] = useState('lohi');
     const [sumLevel, setSumLevel] = useState('County');
-    const [plngRegion, setPlngRegion] = useState('*')
+    const [plngRegion, setPlngRegion] = useState('ARC 10')
     const [selectedFields, setSelectedFields] = useState(['NAME', 'GEOID']);
-    const [hoverField, setHoverField] = useState('GEOID')
+    const [hoverField, setHoverField] = useState('GEOID');
+    const [hoverID, setHoverID] = useState();
     const [fieldOptions, setFieldOptions] = useState();
     const [mapField, setMapField] = useState('TotPop_00')
     const [data, setData] = useState();
     const [csvData, setCSVData] = useState();
     const [csvStatus, setCSVStatus] = useState('nodata');
     const [fileType, setFileType] = useState('geojson')
-
-    // const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-    // const [screenHeight, setScreenHeight] = useState(window.innerHeight);
-    // const [cols, setCols] = useState(defaults.layout.columns); 
-    // const [rows, setRows] = useState(defaults.layout.rows);
-
-
-    // const rowHeight = screenHeight/rows;
-
-
-    // console.log(rowHeight);
-    // console.log(screenWidth);
-    // console.log(screenHeight);
-    
-    // const boxLayout = [
-    //     {
-    //         i: 'table-box', 
-    //         x: defaults.layout.tableView.x, 
-    //         y: defaults.layout.tableView.y, 
-    //         w: defaults.layout.tableView.w, 
-    //         h: defaults.layout.tableView.h, 
-    //         minW: defaults.layout.tableView.minW, 
-    //         maxH: defaults.layout.tableView.maxH
-    //     },
-    //     {
-    //         i: 'data-selector-box', 
-    //         x: defaults.layout.dataSelector.x, 
-    //         y: defaults.layout.dataSelector.y, 
-    //         w: defaults.layout.dataSelector.w, 
-    //         h: defaults.layout.dataSelector.h, 
-    //         minW: defaults.layout.dataSelector.minW, 
-    //         maxH: defaults.layout.dataSelector.maxH
-    //     },
-    //     {
-    //         i: 'map-box', 
-    //         x: defaults.layout.mapView.x, 
-    //         y: defaults.layout.mapView.y, 
-    //         w: defaults.layout.mapView.w, 
-    //         h: defaults.layout.mapView.h, 
-    //         minW: defaults.layout.mapView.minW, 
-    //         maxH: defaults.layout.mapView.maxH,
-    //         static: defaults.layout.mapView.static
-    //     }
-    // ];
 
 
     const getData = (baseurl, categoryID, geo, fields) => {
@@ -91,7 +48,7 @@ const LayoutWrapper = props => {
         // setSelectedFields(['NAME','GEOID']);
 
         // setFieldOptions();
-        const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&returnGeometry=true&outFields=${fields}&f=${fileType}`;
+        const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&outFields=${fields}&f=${fileType}`;
         API.getData(url)
             .then(res => {
                 console.log(res);
@@ -122,6 +79,12 @@ const LayoutWrapper = props => {
         setSortField(fieldAlias);
         setSortOrder(sortOrder);
     }
+
+    const handleHover = featureID => {
+        setHoverID(featureID);
+      }
+
+
 
     // For CSV Export
 
@@ -199,6 +162,9 @@ const LayoutWrapper = props => {
                             sortField={sortField}
                             handleSortField={handleSortField}
                             sortOrder={sortOrder}
+                            hoverID={hoverID}
+                            handleHover={handleHover}
+                            hoverField={hoverField}
                         /> : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
                             <Loader id='loader-box' type='Grid' />
@@ -209,7 +175,9 @@ const LayoutWrapper = props => {
                         <ChartWrapper 
                             selectedVariable={mapField}
                             data={data} 
-                            layout={layout} 
+                            layout={layout}
+                            handleHover={handleHover}
+                            hoverID={hoverID} 
                         />  : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
                             <Loader id='loader-box' type='Audio' />
@@ -218,7 +186,9 @@ const LayoutWrapper = props => {
                 </Col>
                 <Col sm={12} lg={6} style={{height: '100%'}}>  
                     { layout.mapVisible ? 
-                    <MapWrapper 
+                    <MapWrapper
+                        hoverID={hoverID}
+                        handleHover={handleHover}
                         hoverField={hoverField} 
                         selectedVariable={mapField} 
                         layout={layout} data={data} /> 

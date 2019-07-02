@@ -1,18 +1,16 @@
 import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Dropdown } from 'react-bootstrap';
-import dataConfig from "../../../config/dataConfig";
+// import { Dropdown } from 'react-bootstrap';
+// import dataConfig from "../../../config/dataConfig";
 import colormap from 'colormap';
 import numeral from 'numeral';
 import './style.css';
 
-
-
 const ScatterPlot = props => {
 
-  const numberOfBins = props.layoutState.numberOfBins;
-  const colorMap = props.layoutState.colorMap;
-  const reverse = props.layoutState.colorMapReverse;
+  const numberOfBins = props.layout.numberOfBins;
+  const colorMap = props.layout.colorMap;
+  const reverse = props.layout.colorMapReverse;
 
   const colors = reverse ? colormap({
       colormap: colorMap,
@@ -26,11 +24,11 @@ const ScatterPlot = props => {
       alpha: 1
     });
 
-  const valueArray = props.data.geojson ? props.data.geojson
-    .filter(feature => feature.properties[props.data.selectedVariable])
+  const valueArray = props.data ? props.data.features
+    .filter(feature => feature.properties[props.selectedVariable])
     .map(feature => {
   
-      const variable = feature.properties[props.data.selectedVariable];
+      const variable = feature.properties[props.selectedVariable];
       const normalizer=props.data.normalizedBy ? feature.properties[props.data.normalizedBy] : 1
 
         return variable/normalizer}) : null;
@@ -38,47 +36,45 @@ const ScatterPlot = props => {
   const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
   const minValue = valueArray !== null ? Math.min(...valueArray) : 'Value array not load yet';
 
-  const dataArray = props.data.geojson ? props.data.geojson.map(feature => 
+  const dataArray = props.data ? props.data.features.map(feature => 
     ({
-      x: feature.properties[props.data.selectedVariable],
-      y: feature.properties[props.data.selectedSecondVar],
-      name: feature.properties[props.data.hoverField]
+      x: feature.properties[props.selectedVariable],
+      y: feature.properties[props.selectedSecondVar],
+      name: feature.properties[props.hoverField]
     })
     ) : null;
 
-  const dataObject = dataConfig.filter(item => item.name === props.data.geography);
+  // const dataObject = dataConfig.filter(item => item.name === props.data.geography);
 
-  const indicatorList = dataObject && props.data.geography ? dataObject[0].variableOptions : null;
+  // const indicatorList = dataObject && props.data.geography ? dataObject[0].variableOptions : null;
 
   // console.log (indicatorList);  
 
   return (
-    <div
-      className="chart-container" >
       <ResponsiveContainer height="100%" width="100%">
         <ScatterChart
           margin={{
-            top: 40, right: 10, bottom: 5, left: 15,
+            top: 40, right: 15, bottom: 20, left: 30,
           }} >
           <CartesianGrid />
           <XAxis 
-            hide
+            // hide
             type="number" 
             dataKey="x" 
-            name={props.data ? props.data.selectedVariable : null } 
+            name={props.data ? props.selectedVariable : null } 
             label={{
-              value: props.data ? props.data.selectedVariable : 'x',
+              value: props.data ? props.selectedVariable : 'x',
               position: 'bottom'
             }}
             unit={null} />
           <YAxis 
-            hide
+            // hide
             orientation="right"
             type="number" 
             dataKey="y" 
-            name={props.data ? props.data.selectedSecondVar : null } 
+            name={props.data ? props.selectedSecondVar : null } 
             label={{
-              value: props.data ? props.data.selectedSecondVar : 'y',
+              value: props.data ? props.selectedSecondVar : 'y',
               position: 'right',
               angle: -90
             }} 
@@ -95,9 +91,9 @@ const ScatterPlot = props => {
               }
           />
           <Scatter 
-            name={props.data.hoverField} 
+            name={props.hoverField} 
             data={dataArray} 
-            onMouseEnter={point => props.handleHoverID(point.name)} 
+            onMouseEnter={point => props.handleHover(point.name)} 
             // fill={colors[0]}
             >
             {
@@ -108,7 +104,7 @@ const ScatterPlot = props => {
 
                 // console.log(feature);
         
-                // console.log(props.data.selectedVariable);
+                // console.log(props.selectedVariable);
                 const distFromMin = value - minValue;
                 const range = maxValue - minValue;
                 const binningRatio = distFromMin/range;
@@ -127,7 +123,7 @@ const ScatterPlot = props => {
             }
           </Scatter>
           <Scatter 
-            name={props.data.hoverField} 
+            name={props.hoverField} 
             data={props.hoverID && dataArray ? dataArray.filter(e => e.name === props.hoverID) : null} fill={colors[numberOfBins-1]}
             >
             {
@@ -138,7 +134,7 @@ const ScatterPlot = props => {
 
                 // console.log(feature);
         
-                // console.log(props.data.selectedVariable);
+                // console.log(props.selectedVariable);
                 const distFromMin = value - minValue;
                 const range = maxValue - minValue;
                 const binningRatio = distFromMin/range;
@@ -158,37 +154,6 @@ const ScatterPlot = props => {
           </Scatter>
         </ScatterChart>
       </ResponsiveContainer>
-      <Dropdown 
-        style={{ 
-          float: 'center',
-          margin: '5px 0 0 10px'}}>
-        <Dropdown.Toggle variant="secondary" className="category-dropdown" id="dropdown-basic">
-          Change Y Variable
-        </Dropdown.Toggle>
-
-        <Dropdown.Menu
-          style={{
-            overflow: 'scroll',
-            maxHeight: '30vh',
-          }}>
-          {  indicatorList ? indicatorList.map(option => 
-            <Dropdown.Item
-              style={{
-                backgroundColor: option === props.data.selectedSecondVar ? 'black' : null,
-                color: option === props.data.selectedSecondVar ? 'white' : null,
-                marginLeft: '2%'
-              }} 
-              value={option} 
-              onClick={e => props.handleSecVarChange(option)}
-            >
-              {option}
-            </Dropdown.Item>
-          ) : null
-          }
-        </Dropdown.Menu>
-        </Dropdown>
-
-    </div>
   );
 };
 

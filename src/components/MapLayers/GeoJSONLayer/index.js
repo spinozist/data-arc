@@ -157,8 +157,9 @@ const GeoJSONLayer = props => {
 
         layer.bindTooltip(String(featureID))
           .on('mouseover', e => {
-              console.log(featureID);
-            //   props.handleHoverID(featureID)
+            //   console.log(featureID);
+            //   console.log(e)
+              props.handleHover(featureID)
             });
       }}
     />

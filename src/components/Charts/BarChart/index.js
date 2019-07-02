@@ -11,8 +11,8 @@ const SimpleBarChart = props => {
 
   const [ sortOrder, setSortOrder] = useState('lohi');
 
-  console.log('BAR CHART PROPS...')
-  console.log(props)
+  // console.log('BAR CHART PROPS...')
+  // console.log(props)
 
   const numberOfBins = props.layout.numberOfBins;
   const colorMap = props.layout.colorMap;
@@ -46,6 +46,7 @@ const SimpleBarChart = props => {
         ({
         x: feature.properties[props.selectedVariable],
         name: feature.properties['NAME'],
+        id: feature.properties[props.hoverField]
         })
         ).sort(sortOrder === 'lohi' ? (a,b) => a.x > b.x ? 1 : -1 : (a,b) => a.x < b.x ? 1 : -1 ) : null;
 
@@ -66,13 +67,16 @@ const SimpleBarChart = props => {
           name={props.selectedVariable} 
           dataKey={'x'} 
           fill={colors[0]}
-          // onMouseEnter={point => props.handleHoverID(point.name)} 
+          onMouseEnter={point => props.handleHover(point.id)} 
           >
           {
             dataArray ? dataArray.map((feature, index) => {
               
               const value=feature.x;
               const name=feature.name;
+              const id=feature.id;
+
+              console.log(feature)
 
               // console.log(feature);
       
@@ -88,8 +92,8 @@ const SimpleBarChart = props => {
               return <Cell 
                 key={`cell-${index}`} 
                 fill={color} 
-                stroke={props.hoverID && name === props.hoverID ? 'black' : color}
-                strokeWidth={props.hoverID && name === props.hoverID ? 2 : 1}
+                stroke={props.hoverID && id === props.hoverID ? 'black' : color}
+                strokeWidth={props.hoverID && id === props.hoverID ? 2 : 1}
                 />
             }) : null
           }

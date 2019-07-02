@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table } from 'semantic-ui-react';
+import { Table, Sticky } from 'semantic-ui-react';
 import numeral from 'numeral';
 // import Loader from 'react-loader-spinner';
 import './style.css';
@@ -21,8 +21,21 @@ const DataTable = props => {
 
         
     return (
-        <Table style={{borderRadius: '5px' ,marginLeft: '15px', height: '100%', width: '100%', float: 'left'}} celled striped sortable>
-            <Table.Header>
+        <Table 
+        style={{
+            borderRadius: '5px' ,
+            marginLeft: '15px', 
+            height: '100%', 
+            width: '100%',
+            float: 'left'
+            }}
+        celled 
+        striped 
+        sortable
+        selectable
+        >
+
+            <Table.Header >
                 {selectedFields ? selectedFields.map((columnLabel,index) => 
                     <Table.HeaderCell
                         key={"column-" + columnLabel} 
@@ -39,13 +52,19 @@ const DataTable = props => {
 
             {featureArray ? featureArray.map((feature, i) => {
                 return(
-                    <Table.Row key={'row-' + i}>
+                    <Table.Row 
+                    key={'row-' + i}
+                    // onMouseEnter={props.handleHover(feature.properties[props.hoverField])}
+                    >
                         {selectedFields ? selectedFields.map(fieldName => {
                             const fieldType = fieldArray ? fieldArray.map(item => item.name === fieldName ? item.type: null) : null
                             const value = feature.properties[fieldName]
                             const formattedValue =  fieldType === 'esriFieldTypeInteger' ? numeral(value).format('0,0') : value;
                         return(
-                        <Table.Cell key={'cell' + fieldName + '-' + feature}>
+                        <Table.Cell 
+                        // onMouseEnter={props.handleHover(feature.properties[props.hoverField])}
+
+                        key={'cell' + fieldName + '-' + feature}>
                            {formattedValue}
                         </Table.Cell>
                         )}) : null }
