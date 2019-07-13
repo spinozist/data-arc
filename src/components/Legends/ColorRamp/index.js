@@ -7,7 +7,7 @@ const lableWidth = (100 - colorRampWidth)/2
 
 const ColorRamp = props => {
 
-    console.log(props)
+    // console.log(props)
 
     const [maxValue, setMaxValue] = useState();
     const [minValue, setMinValue] = useState();
@@ -37,9 +37,9 @@ const ColorRamp = props => {
         .filter(feature => feature.properties[props.selectedVariable])
         .map(feature => {
         
-          const variable = feature.properties[props.selectedVariable];
-        //   const normalizer=props.normalizedBy ? feature.properties[props.normalizedBy] : 1
-            console.log(variable ? variable : null);
+            const variable = feature.properties[props.selectedVariable];
+            //   const normalizer=props.normalizedBy ? feature.properties[props.normalizedBy] : 1
+            // console.log(variable ? variable : null);
             return variable}) : null;
     
         const maxValue = valueArray !== null ? Math.max(...valueArray) : 'no data';

@@ -6,9 +6,11 @@ import colormap from 'colormap';
 
 const GeoJSONLayer = props => {
 
+  // console.log(props.data)
+
   // const pointData = props.data.geojson.map(feature => feature.geometry.type === 'Point' ? L. : null);
 
-  console.log(props.data ? props.data : 'no data to geojson layer yet');
+  // console.log(props.data ? props.data : 'no data to geojson layer yet');
 
   const numberOfBins = props.layout.numberOfBins;
   const colorMap = props.layout.colorMap;
@@ -35,21 +37,21 @@ const GeoJSONLayer = props => {
     
       const variable = feature.properties[props.selectedVariable];
     //   const normalizer=props.normalizedBy ? feature.properties[props.normalizedBy] : 1
-        console.log(variable ? variable : null);
+        // console.log(variable ? variable : null);
         return variable}) : null;
 
   const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
   const minValue = valueArray !== null ? Math.min(...valueArray) : 'Value array not load yet';
 
-  console.log(valueArray ? valueArray : 'no value array');
+  // console.log(valueArray ? valueArray : 'no value array');
   
   // console.log(props.data)
-    console.log(maxValue);
-    console.log(minValue);
+    // console.log(maxValue);
+    // console.log(minValue);
 
 
   const geojsonData = props.data ? props.data : null;
-  console.log(geojsonData);
+  // console.log(geojsonData);
   
 //   props.geographyFilter ? 
 //   //If there's a filter type
@@ -129,7 +131,7 @@ const GeoJSONLayer = props => {
         const featureID = feature.properties[props.hoverField];
 
 
-        console.log(featureID);
+        // console.log(featureID);
 
           return ({
             color: props.hoverID === featureID ? 'black' : '#1a1d62',

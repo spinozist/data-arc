@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import defaults from '../../config/defaults';
 import DataTable from '../Table';
+import TableSE from '../Table-SE';
 import DataSelector from '../DataSelector';
 import MapWrapper from '../MapWrapper';
 import ChartWrapper from '../ChartWrapper';
@@ -11,7 +12,8 @@ import Loader from 'react-loader-spinner';
 import API from '../../utils/API'
 import './style.css';
 import ColorRamp from '../Legends/ColorRamp';
-import DataManifest from '../../config/DataManifest.json'
+// import DataManifest from '../../config/DataManifest.json'
+import OpenDataManifest from '../../config/OpenDataManifest';
 
 const LayoutWrapper = props => {
 
@@ -21,7 +23,7 @@ const LayoutWrapper = props => {
         mapVisible: defaults.layout.mapView.visible,
         tableVisible: defaults.layout.tableView.visible,
         chartVisible: defaults.layout.chartView.visible,
-        colorMap: 'temperature',
+        colorMap: 'spring',
         numberOfBins: 72,
         colorMapReverse: false,
         // chartType: 'scatterplot',
@@ -29,10 +31,11 @@ const LayoutWrapper = props => {
     });
 
     const [serviceID, setServiceID] = useState(0);
+    const [labelManifest, setLabelManifest] = useState('Change');
     const [sortField, setSortField] = useState('NAME');
     const [sortOrder, setSortOrder] = useState('lohi');
     const [sumLevel, setSumLevel] = useState('County');
-    const [plngRegion, setPlngRegion] = useState('ARC 10')
+    // const [plngRegion, setPlngRegion] = useState('ARC 10')
     const [selectedFields, setSelectedFields] = useState(['NAME', 'GEOID']);
     const [hoverField, setHoverField] = useState('GEOID');
     const [hoverID, setHoverID] = useState();
@@ -41,7 +44,7 @@ const LayoutWrapper = props => {
     const [data, setData] = useState();
     const [csvData, setCSVData] = useState();
     const [csvStatus, setCSVStatus] = useState('nodata');
-    const [fileType, setFileType] = useState('geojson')
+    const [fileType, setFileType] = useState('geojson');
 
 
     const getData = (baseurl, categoryID, geo, fields) => {
@@ -50,26 +53,61 @@ const LayoutWrapper = props => {
 
         // setSelectedFields(['NAME','GEOID']);
 
-        // setFieldOptions();
+        // const excludeFields = [
+        //     'GEOID_1',
+        //     'GlobalID',
+        //     'LogRecNo',
+        //     'GEOID',
+        //     'SumLevel',
+        //     'NAME',
+        //     'County10',
+        //     'County20',
+        //     'PLNG_REGIO',
+        //     'created_date',
+        //     'created_user',
+        //     'last_edited_data',
+        //     'last_edited_user'
+        // ];
+
+
+        setFieldOptions();
+        setSelectedFields(['NAME', 'GEOID'])
+        
         const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&outFields=${fields}&f=${fileType}`;
+        
         API.getData(url)
             .then(res => {
+                // console.log(labelManifest);
                 console.log(res);
-                const optionsArray = fileType === 'json' ? res.data.fields.map(field => 
+                // console.log(fileType)
+                const optionsArray = fileType === 'json' ?
+                res.data.fields.map(field => 
                     ({
                         key : field.name,
                         text : field.alias,
                         value : field.name
                     })
                 ) : fileType === 'geojson' ? 
-                    Object.keys(res.data.features[0].properties)
-                        .map(field =>  ({
-                            key : field,
-                            text : DataManifest.map(item => field === item.Variable ? item.Long : null), 
-                            value : field
-                        })) : fieldOptions;
+                    OpenDataManifest[labelManifest].filter(fieldObject => 
+                        labelManifest === 'RaceX' ? 
+                        fieldObject.Category === defaults.categoryOptions.find(item => item.value === serviceID).subcategory : true )
+                        .map(fieldObj => 
+                        ({
+                            key : fieldObj.Variable,
+                            text : fieldObj.Long, 
+                            value : fieldObj.Variable 
+                        })
+
+                    // Object.keys(res.data.features[0].properties)
+                    //     .map(field =>  
+                    //         ({
+                    //             key : field,
+                    //             text : OpenDataManifest[labelManifest].map(item => item.Variable === field ? item.Long : undefined), 
+                    //             value : field
+                    //         })
+                ) : fieldOptions;
                                         
-                console.log(optionsArray);
+                // console.log(optionsArray);
                 setData(res.data);
                 setFieldOptions(optionsArray);
             })
@@ -95,9 +133,9 @@ const LayoutWrapper = props => {
 
         API.getData(url)
             .then(res => {
-                console.log(res.data.features);
+                // console.log(res.data.features);
                 const dataArray = res.data.features.map(feature => feature.attributes);
-                console.log(dataArray);
+                // console.log(dataArray);
                 setCSVData(dataArray);
                 setCSVStatus('ready');
             })
@@ -139,6 +177,7 @@ const LayoutWrapper = props => {
                     setServiceID={setServiceID}
                     setSelectedFields={setSelectedFields}
                     setFieldOptions={setFieldOptions}
+                    setLabelManifest={setLabelManifest}
                     handleCSVData={handleCSVData}
                     downloadCSV={downloadCSV}
                     setCSVStatus={setCSVStatus}
@@ -156,9 +195,19 @@ const LayoutWrapper = props => {
             </Row>
             <Row style={{height: '80vh'}}>
                 <Col sm={12} lg={6} style={{height: '100%', width: '100%'}}>
-                    <Row className='no-scrollbar' middle='sm' style={{marginTop: '30px', height: '50%', width: '100%', overflow: 'scroll'}}>
+                    <Row className='no-scrollbar' middle='sm' style={{padding: '10px 30px 0px 30px', height: '50%', width: '100%', overflow: 'scroll'}}>
                         { layout.tableVisible && data ?
-                        <DataTable
+                        // <DataTable
+                        //     selectedFields={selectedFields} 
+                        //     data={data}
+                        //     sortField={sortField}
+                        //     handleSortField={handleSortField}
+                        //     sortOrder={sortOrder}
+                        //     hoverID={hoverID}
+                        //     handleHover={handleHover}
+                        //     hoverField={hoverField}
+                        // /> 
+                        <TableSE
                             selectedFields={selectedFields} 
                             data={data}
                             sortField={sortField}
@@ -167,7 +216,8 @@ const LayoutWrapper = props => {
                             hoverID={hoverID}
                             handleHover={handleHover}
                             hoverField={hoverField}
-                        /> : 
+                        />
+                        : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
                             <Loader id='loader-box' type='Grid' />
                         </div>}
@@ -193,7 +243,9 @@ const LayoutWrapper = props => {
                         handleHover={handleHover}
                         hoverField={hoverField} 
                         selectedVariable={mapField} 
-                        layout={layout} data={data} /> 
+                        layout={layout} 
+                        data={data}
+                        labelManifest={labelManifest} /> 
                     : <h1>Map not loading</h1> }
                     <ColorRamp selectedVariable={mapField} data={data} layout={layout} />
                 </Col>

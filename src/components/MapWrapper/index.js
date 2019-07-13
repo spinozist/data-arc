@@ -4,11 +4,13 @@ import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
 // import Loader from 'react-loader-spinner';
 import API from '../../utils/API.js';
-import DataManifest from '../../config/DataManifest.json'
+// import DataManifest from '../../config/DataManifest.json';
+import OpenDataManifest from '../../config/OpenDataManifest';
 
 const Map = props => {
 
-  console.log(props.data);
+
+  // console.log(DataLabels['Social']);
 
   const [overlayData, setOverlayData] = useState({
     overlay_one: null,
@@ -67,7 +69,7 @@ const Map = props => {
       scrollWheelZoom={true}
       dragging={true}
       animate={false}
-      easeLinearity={0.7}
+      // easeLinearity={0.7}
     >
         <div style={{
                 border: 'solid grey .8px', 
@@ -82,8 +84,11 @@ const Map = props => {
                 zIndex: '9997',
                 opacity: '.9'
                 }}>
-            <h2>{props.selectedVariable ? 
-                DataManifest.map(item => item.Variable === props.selectedVariable ? item.Long : null)
+            <h2>{props.data && props.selectedVariable && props.labelManifest ?
+                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.selectedVariable) ?
+                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.selectedVariable).Long :
+                'Loading'
+                // DataManifest.map(item => item.Variable === props.selectedVariable ? item.Long : null)
                 : 'No Variable Selected'}</h2>
         </div>
         <ZoomControl position="topright" />

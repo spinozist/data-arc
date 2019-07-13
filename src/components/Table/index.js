@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Sticky } from 'semantic-ui-react';
+import { Table } from 'semantic-ui-react';
 import numeral from 'numeral';
 // import Loader from 'react-loader-spinner';
 import './style.css';
@@ -16,7 +16,7 @@ const DataTable = props => {
                             .sort(sortOrder === 'hilo' ? (a,b) => a.properties[sortField] > b.properties[sortField] ? -1 : 1 : (a,b) => a.properties[sortField] > b.properties[sortField] ? 1 : -1)
                             : null;
 
-    const fieldArray = props.data ? props.data.fields : null;
+    // const fieldArray = props.data ? props.data.fields : null;
     console.log(sortField);
 
         
@@ -43,7 +43,7 @@ const DataTable = props => {
                         value={columnLabel}
                         onClick={() => props.handleSortField(columnLabel, props.sortOrder === 'lohi' ? 'hilo' : 'lohi')}
                     >
-                        {fieldArray ? fieldArray.map(item => item.name === columnLabel ? item.alias: columnLabel) : columnLabel}
+                        {selectedFields ? selectedFields.map(item => item.name === columnLabel ? item.alias: columnLabel) : columnLabel}
                     </Table.HeaderCell>
                 ) : null }
 
@@ -57,7 +57,7 @@ const DataTable = props => {
                     // onMouseEnter={props.handleHover(feature.properties[props.hoverField])}
                     >
                         {selectedFields ? selectedFields.map(fieldName => {
-                            const fieldType = fieldArray ? fieldArray.map(item => item.name === fieldName ? item.type: null) : null
+                            const fieldType = selectedFields ? selectedFields.map(item => item.name === fieldName ? item.type: null) : null
                             const value = feature.properties[fieldName]
                             const formattedValue =  fieldType === 'esriFieldTypeInteger' ? numeral(value).format('0,0') : value;
                         return(

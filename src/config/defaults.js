@@ -14,47 +14,62 @@ export default {
         {
             key: "serviceID-0",
             text: "Change since 2000",
-            value: 0
+            value: 0,
+            name: 'Change'
         },
         {
             key: "serviceID-1",
             text: "Demography",
-            value: 1
+            value: 1,
+            name: 'Demography'
         },
         {
             key: "serviceID-2",
             text: "Demography by Race & Ethnicity",
-            value: 2
+            value: 2,
+            name: 'RaceX',
+            subcategory: 'Demographic'
         },
         {
             key: "serviceID-3",
             text: "Economy",
-            value: 3
+            value: 3,
+            name: 'Economy'
         },
         {
             key: "serviceID-4",
             text: "Economy by Race & Ethnicity",
-            value: 4
+            value: 4,
+            name: 'RaceX',
+            subcategory: 'Economic'
         },
         {
             key: "serviceID-5",
             text: "Housing",
-            value: 5
+            value: 5,
+            name: 'Housing'
         },
         {
             key: "serviceID-6",
             text: "Housing by Race & Ehtnicity",
-            value: 6
+            value: 6,
+            name: 'RaceX',
+            subcategory: 'Housing'
         },
         {
             key: "serviceID-7",
             text: "Social",
-            value: 7
+            value: 7,
+            name: 'Social'
         },
         {
             key: "serviceID-8",
             text: "Social by Race & Ethnicity",
-            value: 8
+            value: 8,
+            name: 'RaceX',
+            subcategory: 'Social'
+
+
         }
     ],
     geoOptions : [

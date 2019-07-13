@@ -8,7 +8,7 @@ const [chartType , setChartType ] = useState();
 
 
 
-useEffect(() => setChartType('bar-chart'), [props.data, props.selectedVariable]);
+useEffect(() => setChartType('scatterplot'), [props.data, props.selectedVariable]);
 
 return(
     <div style={{height: '100%', width: '100%'}}>
