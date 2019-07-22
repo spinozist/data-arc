@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
- 
 import { StickyTable, Row, Cell } from 'react-sticky-table';
-import numeral from 'numeral';
+// import numeral from 'numeral';
 import OpenDataManifest from '../../config/OpenDataManifest';
-
-
 import 'react-sticky-table/dist/react-sticky-table.css';
-import LayoutWrapper from '../LayoutWrapper';
 
 const TableSE = props => {
 
@@ -43,22 +39,22 @@ const TableSE = props => {
             </Row>
 
             {featureArray ? featureArray.map((feature, i) => {
+                
+                const id = feature.properties[props.hoverField];
+                // console.log(feature);
                 return(
                     <Row
                     key={'row-' + i}
-                    // onMouseEnter={props.handleHover(feature.properties[props.hoverField])}
+                    onMouseEnter={() => props.handleHover(id)}
+                    // onMouseEnter={() => props.handleHover(feature.properties[props.hoverField])}
                     >
                         {selectedFields ? selectedFields.map(fieldName => {
-                            // const fieldType = selectedFields ? selectedFields.map(item => item.name === fieldName ? item.type: null) : null
                             const value = feature.properties[fieldName];
-                            // console.log(feature);
-                            // console.log(fieldName);
-                            // const formattedValue =  fieldType === 'esriFieldTypeInteger' ? numeral(value).format('0,0') : value;
                         return(
                         <Cell 
-                        // onMouseEnter={props.handleHover(feature.properties[props.hoverField])}
                         style={{
-                            backgroundColor: i % 2 === 0 ? props.layout.tableBanding[0] : props.layout.tableBanding[1],
+                            backgroundColor: id === props.hoverID ? 'orange' : props.layout.tableBanding[0],
+                            // backgroundColor: i % 2 === 0 ? props.layout.tableBanding[0] : props.layout.tableBanding[1],
                             textAlign: 'center'
                         }}
                         key={'cell' + fieldName + '-' + feature.properties[props.hoverField]}>
