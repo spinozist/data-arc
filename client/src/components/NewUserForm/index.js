@@ -1,12 +1,10 @@
-// User Login input /newuser
-
-// Name, Address, Username, Password, Income, Date of Birth, Race, Ethnicity
-
 import React, { useState, useEffect } from 'react';
 // import { Row, Input, Button } from 'react-materialize';
 import { Form, Button } from 'semantic-ui-react';
 import Auth from '../../utils/Auth'
 import './style.css';
+import API from '../../utils/API';
+// import API from '../../utils/API';
 
 // Rewrite as Class with State passing using ID and Handler with calls /api/needs/ POST request
 
@@ -16,7 +14,7 @@ const NewUserForm = props => {
 
   const handleInputChange = event => {
     const { name, value } = event.target;
-    console.log(newUserInfo);
+    // console.log(newUserInfo);
     setNewUserInfo({
       ...newUserInfo,
       [name]: value
@@ -25,31 +23,35 @@ const NewUserForm = props => {
 
   const handleNewUserSubmit = event => {
     event.preventDefault();
-    const SignUpInfo = newUserInfo;
-    console.log(SignUpInfo);
-    if (newUserInfo.password) {
+    // console.log(newUserInfo);
+    newUserInfo ?
+    newUserInfo.password && newUserInfo.email ? 
       // console.log(event);
-      console.log(SignUpInfo);
+      // console.log(newUserInfo);
       Auth.signup({
-        email: SignUpInfo.email,
-        password: SignUpInfo.password,
-        firstName: SignUpInfo.firstName,
-        lastName: SignUpInfo.lastName,
+        email: newUserInfo.email,
+        password: newUserInfo.password,
+        firstName: newUserInfo.firstName,
+        lastName: newUserInfo.lastName,
       })
-        .then(res => {
-          window.location = res.data.redirect;
-        })
-        .catch(err => {
-          if (err.response.data.error) {
-            // Todo Show the flash message
-            //I'll change this to react side flash instead of a window alert
-            alert(err.response.data.error);
-          }
-        });
-    } else {
-      return console.log('please confirm password');
-    }
+      .then(res => {
+        // setNewUserInfo();
+        console.log('Result of NEW USER SUBMIT ');
+        console.log(res);
+
+        // Auth.login({
+        //   email: res.config.data.email,
+        //   password: res.config.data.password
+        // })
+      })
+      .catch(err => 
+        err ? console.log(err) : null) 
+
+    : console.log('No password and/or email entered')
+    : console.log('Nothing entered!');
   }
+
+  // useEffect(null, newUserInfo);
 
 
   return (

@@ -4,44 +4,31 @@ var userController = require('./../../controllers/userControllers')
 //API call for signup
 router.route('/signup')
     .post(userController.signup,
-        (err, req, res, next) => {
-            if (err) {
-                return next(err)
-            }
-            next()
-        },
+        (err, req, res, next) => err ? next(err) : next(),
         // Success responses
         (req, res) => {
-            console.log(`returned to the router.route('/login) after a successful login, 
-                        req.user = ${req.session.user}`)
+            console.log('Inside successful callback of post request in route.user.signup')
+            console.log(req.session);
+            // console.log(res);
+            console.log('\n');
+
+            //****** STUCK HERE *******
             res.json({
                 success: true,
                 redirect: "/"
-            })
+            })        
         }
     );
 
 //API call for login
 router.route('/login')
     .post(
-        userController.beforeLogin,
+        // userController.beforeLogin,
         userController.login,
         // This will handle errors
-        function (err, req, res, next) {
-            if (err) {
-                return next(err)
-            }
-            next()
-        },
+        (err, req, res, next) => err ? next(err) : next(),
         // Success responses
-        function (req, res) {
-            console.log(`returned to the router.route('/login) after a successful login, 
-                        req.user = ${req.session.user}`)
-            res.json({
-                success: true,
-                redirect: "/main/get-help"
-            })
-        }
+        (req, res) => res.json({success: true, redirect: "/"})
     );
 
 

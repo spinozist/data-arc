@@ -1,12 +1,15 @@
 export default {
     layout: {
-        mapView: { visible: true, x: 0, y: 2, w: 8, h: 6, minW: 4, maxH: 10, static: true },
-        tableView: { visible: true, x: 8, y: 2, w: 4, h: 8, minW: 4, maxH: 10 },
-        chartView: { visible: true },
-        dataSelector: { visivle: true,  x: 0, y: 0, w: 8, h: 2, minW: 2, maxH: 5 },
-        columns: 12,
-        rows: 10,
-        },
+        mapVisible: true,
+        tableVisible: true,
+        chartVisible: true,
+        colorMap: 'temperature',
+        numberOfBins: 36,
+        colorMapReverse: true,
+        // chartType: 'scatterplot',
+        colorOpacity: .8,
+        tableBanding: ['#c8e4d6', '#f3eeeb']
+    },
     data: {
         baseUrl: 'https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/'
     },

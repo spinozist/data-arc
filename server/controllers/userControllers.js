@@ -19,17 +19,15 @@ const UserControllers = module.exports = {
     },
 
     login: (req, res, next) => {
-        console.log(`inside userControllers.js > login > returned from passport.authenticate, 
-        req.user = ${req.user}`);
-        (passport.authenticate('local.login', {
+         console.log('Inside login controller');
+         console.log(res);
+         console.log('\n');
+        passport.authenticate('local-login', {
             session: true
-        }, function (err, user) {
-            if (err) {
-                return next(err)
-            }
-            req.session.user = user
+        }, (err, user) => {
+            err ? next(err) : req.session.user = user;
             next();
-        }))(req, res, next)
+        })(req, res, next)
     },
 
     logout: (req, res) => {
@@ -44,23 +42,24 @@ const UserControllers = module.exports = {
     },
 
     signup: (req, res, next) => {
-        console.log(`inside userControllers.js > login > returned from passport.authenticate, 
-        req.user = ${req.user}`);
-        // console.log(req.body);
-        (passport.authenticate('local.signup', {
+        console.log('Inside signup controller');
+        console.log(req.body)
+        console.log('\n');
+        passport.authenticate('local-signup', {
             session: true
-        }, function (err, user) {
-            if (err) {
-                return next(err)
-            }
-            req.session.user = user;
-            next();
-        }))
-            (req, res, next)
+        }, (err, user) => {
+            console.log('Inside error callback in signup controller');
+            console.log(err)
+            console.log('\n');
+            err ? next(err) : next();
+        })(req, res, next)
     },
 
     //this function will return our session info
     getSession: (req, res, next) => {
+        console.log('Inside getSession controller');
+        console.log(req.session)
+        console.log('\n');
         req.session.user ? () => {
             const userInfo = {
                 email: req.session.user.email,
@@ -78,11 +77,14 @@ const UserControllers = module.exports = {
     },
 
     isLoggedIn: (req, res, next) => {
-        req.session.user ? next() : console.log('no req.session.user passed to isLoggedIn controller');
-        console.log('must login first!')
-        const err = new Error("You have to log in first");
-        err.statusCode = 403;
-        next(err);
+        console.log('Inside isLoggedIn controller');
+        console.log(res)
+        console.log('\n');
+        req.session ? next(res) : () => {
+            console.log('must login first!')
+            const err = new Error("You have to log in first");
+            err.statusCode = 403
+        };
     },
 
     checkApiAuthentication: (req, res, next) => {
@@ -113,7 +115,7 @@ const UserControllers = module.exports = {
         console.log(req.body)
         console.log(req.session.user._id)
         db.User.findOneAndUpdate({ _id: req.session.user._id },
-            { $push: { deed: req.body } })
+            { $push: { data: req.body } })
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
     }

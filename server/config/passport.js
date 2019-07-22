@@ -6,33 +6,38 @@ var User = mongoose.model('User');
 
 
 //serializeUser allows passport to save the users id (or other information if we define after done) into the session upon login
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
+    console.log('INSIDE passport.serializeUser in config/passport.js')
+    console.log(user);
     done(null, user.id)
 });
 
 //deserializeUser upon login go to the database and fetch the users info based upon the id
-passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err, user) {
+passport.deserializeUser((id, done) => {
+    console.log(id);
+    User.findById(id, (err, user) => {
         //Once the sign login is successful, the "user" object below will be available globally 
-        done(err, user);
-    });
+        done(err, user)
+    })
 });
 
 //Sign up passport strategy
-passport.use('local.signup', new LocalStrategy({
+passport.use('local-signup', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
-}, function (req, email, password, done) {
-    console.log(`this is the req going into User.findOne ${email}`)
-    User.findOne({ 'email': email }, function (err, user) {
+}, (req, email, password, done) => {
+    User.findOne({ 'email': email }, (err, user) => {
+
         if (err) {
+            console.log('Error in findOne function checking for existing user')
             return done(err);
         }
         //if the user exists already
         if (user) {
-            console.log("this user already exists")
-            req.flash('alreadyExists', 'This user alrady exists!')
+            console.log('User returned from findOne passport.use(local-signup)');
+            console.log("The user " + user.email + " already exists");
+            req.flash('alreadyExists', 'This user already exists!')
             return done(null, false)
         }
 
@@ -40,15 +45,11 @@ passport.use('local.signup', new LocalStrategy({
         var newUser = new User();
         newUser.firstName = req.body.firstName;
         newUser.lastName = req.body.lastName;
-        newUser.userName = req.body.userName;
         newUser.email = req.body.email;
-        newUser.imageurl = req.body.imageurl;
         newUser.password = newUser.encryptPassword(req.body.password);
 
-        newUser.save(function (err) {
-            if (err) {
-                return done(err);
-            }
+        newUser.save(err => {
+            err ? done(err) : null;
             //if user is successfully created/saved send back the data via the "done" call back carrying the "newUser" obj
             return done(null, newUser)
         })
@@ -60,7 +61,7 @@ passport.use('local.signup', new LocalStrategy({
 
 
 //Login passport strategy
-passport.use('local.login', new LocalStrategy({
+passport.use('local-login', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
@@ -89,7 +90,7 @@ passport.use('local.login', new LocalStrategy({
         }
         //if they do exist and their password is correct we'll return the "user" object via the "done" call back function
         console.log('password/username was correct')
-        debugger
+        // debugger
         return done(null, user)
     })
 }))

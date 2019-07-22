@@ -21,17 +21,7 @@ const LayoutWrapper = props => {
 
     // console.log(DataManifest);
 
-    const [layout, setLayout] = useState({
-        mapVisible: defaults.layout.mapView.visible,
-        tableVisible: defaults.layout.tableView.visible,
-        chartVisible: defaults.layout.chartView.visible,
-        colorMap: 'spring',
-        numberOfBins: 72,
-        colorMapReverse: false,
-        // chartType: 'scatterplot',
-        colorOpacity: .8,
-        tableBanding: ['#c8e4d6', '#f3eeeb']
-    });
+    const [layout, setLayout] = useState(defaults.layout);
 
     const [serviceID, setServiceID] = useState(0);
     const [labelManifest, setLabelManifest] = useState('Change');
@@ -169,10 +159,7 @@ const LayoutWrapper = props => {
     return (
         <Grid fluid style={{height: '100vh'}}>
             <Row style={{height: '15vh'}}>
-                <Col 
-                        sm={12} 
-                        lg={1}
-                    >
+                {/* <Col sm={12} lg={1}>
                     <Modal 
                         style={{backgroundColor: 'rgb(230, 226, 213)'}}
                         trigger={
@@ -182,8 +169,10 @@ const LayoutWrapper = props => {
                             style={{
                                 margin: '10px',
                                 float: 'left',
-                                height: '50px'}}>
-                                Add New User
+                                height: '50px',
+                                fontSize: '.8em'
+                                }}>
+                                Create Account
                             </Button>}>
                         <Modal.Header style={{backgroundColor: 'rgb(230, 226, 213)'}}>
                             New User Form
@@ -192,10 +181,10 @@ const LayoutWrapper = props => {
                             <NewUserForm/>
                         </Modal.Content>
                     </Modal>
-                </Col>
+                </Col> */}
                 <Col 
                     sm={12} 
-                    lg={11}
+                    lg={12}
                 >
                     <DataSelector
                         setServiceID={setServiceID}
