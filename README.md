@@ -2,7 +2,8 @@
 ## Tools need to install 
 1. [Node.js](https://nodejs.org/en/)</br>
   Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
-2. [Github Desktop](https://desktop.github.com/)
+2. [Github Desktop](https://desktop.github.com/)</br>
+  Follow steps on https://help.github.com/en/desktop/getting-started-with-github-desktop/setting-up-github-desktop
 3. [Visual Studio Code](https://code.visualstudio.com/)
 ## Get start
 1. Go to GitHub website, cilck "Clone or download", then click "Open in Dekstop". The Github Desktop will make a clone to you machine.
