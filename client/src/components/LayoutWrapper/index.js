@@ -41,27 +41,8 @@ const LayoutWrapper = props => {
 
 
     const getData = (baseurl, categoryID, geo, fields) => {
-        // console.log(geo)
+        
         setData();
-
-        // setSelectedFields(['NAME','GEOID']);
-
-        // const excludeFields = [
-        //     'GEOID_1',
-        //     'GlobalID',
-        //     'LogRecNo',
-        //     'GEOID',
-        //     'SumLevel',
-        //     'NAME',
-        //     'County10',
-        //     'County20',
-        //     'PLNG_REGIO',
-        //     'created_date',
-        //     'created_user',
-        //     'last_edited_data',
-        //     'last_edited_user'
-        // ];
-
 
         setFieldOptions();
         setSelectedFields(['NAME', 'GEOID'])
@@ -95,12 +76,10 @@ const LayoutWrapper = props => {
                             })
                 ) : fieldOptions;
                                         
-                // console.log(optionsArray);
                 setData(res.data);
                 setFieldOptions(optionsArray);
             })
             .catch(err => console.log(err));
-
     }
 
     const handleSortField = (fieldAlias, sortOrder) => {
@@ -108,20 +87,17 @@ const LayoutWrapper = props => {
         setSortOrder(sortOrder);
     }
 
-    const handleHover = featureID => {
-        setHoverID(featureID);
-      }
-
     // For CSV Export
 
     const handleCSVData = (baseurl, categoryID, geo, fields) => {
+
         const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&returnGeometry=false&outFields=${fields}&f=json`;
 
         API.getData(url)
             .then(res => {
-                // console.log(res.data.features);
+
                 const dataArray = res.data.features.map(feature => feature.attributes);
-                // console.log(dataArray);
+
                 setCSVData(dataArray);
                 setCSVStatus('ready');
             })
@@ -182,10 +158,7 @@ const LayoutWrapper = props => {
                         </Modal.Content>
                     </Modal>
                 </Col> */}
-                <Col 
-                    sm={12} 
-                    lg={12}
-                >
+                <Col sm={12} lg={12}>
                     <DataSelector
                         setServiceID={setServiceID}
                         setSelectedFields={setSelectedFields}
@@ -211,16 +184,6 @@ const LayoutWrapper = props => {
                 <Col sm={12} lg={6} style={{height: '100%', width: '100%'}}>
                     <Row className='no-scrollbar' middle='sm' style={{padding: '0px 30px 0px 30px', height: '50%', width: '100%', overflow: 'scroll'}}>
                         { layout.tableVisible && data ?
-                        // <DataTable
-                        //     selectedFields={selectedFields} 
-                        //     data={data}
-                        //     sortField={sortField}
-                        //     handleSortField={handleSortField}
-                        //     sortOrder={sortOrder}
-                        //     hoverID={hoverID}
-                        //     handleHover={handleHover}
-                        //     hoverField={hoverField}
-                        // /> 
                         <TableSE
                             selectedFields={selectedFields} 
                             data={data}
@@ -228,7 +191,7 @@ const LayoutWrapper = props => {
                             handleSortField={handleSortField}
                             sortOrder={sortOrder}
                             hoverID={hoverID}
-                            handleHover={handleHover}
+                            handleHover={setHoverID}
                             hoverField={hoverField}
                             labelManifest={labelManifest}
                             layout={layout}
@@ -244,7 +207,7 @@ const LayoutWrapper = props => {
                             selectedVariable={mapField}
                             data={data} 
                             layout={layout}
-                            handleHover={handleHover}
+                            handleHover={setHoverID}
                             hoverID={hoverID} 
                         />  : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
@@ -256,7 +219,7 @@ const LayoutWrapper = props => {
                     { layout.mapVisible ? 
                     <MapWrapper
                         hoverID={hoverID}
-                        handleHover={handleHover}
+                        handleHover={setHoverID}
                         hoverField={hoverField} 
                         selectedVariable={mapField} 
                         layout={layout} 

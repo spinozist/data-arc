@@ -73,7 +73,7 @@ const SimpleBarChart = props => {
             dataArray ? dataArray.map((feature, index) => {
               
               const value=feature.x;
-              const name=feature.name;
+              // const name=feature.name;
               const id=feature.id;
 
               // console.log(feature)
