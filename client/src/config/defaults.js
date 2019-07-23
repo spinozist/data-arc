@@ -4,7 +4,7 @@ export default {
         tableVisible: true,
         chartVisible: true,
         colorMap: 'temperature',
-        numberOfBins: 36,
+        numberOfBins: 72,
         colorMapReverse: true,
         // chartType: 'scatterplot',
         colorOpacity: .8,

@@ -11,11 +11,11 @@ import ChartWrapper from '../ChartWrapper';
 import { ExportToCsv } from 'export-to-csv';
 import Loader from 'react-loader-spinner';
 import API from '../../utils/API'
-import './style.css';
 import ColorRamp from '../Legends/ColorRamp';
-import NewUserForm from '../NewUserForm';
+// import NewUserForm from '../NewUserForm';
 // import DataManifest from '../../config/DataManifest.json'
 import OpenDataManifest from '../../config/OpenDataManifest';
+import './style.css';
 
 const LayoutWrapper = props => {
 
@@ -36,16 +36,17 @@ const LayoutWrapper = props => {
     const [mapField, setMapField] = useState('TotPop_00')
     const [data, setData] = useState();
     const [csvData, setCSVData] = useState();
+    const [csvHeaders, setCSVHeaders] = useState();
     const [csvStatus, setCSVStatus] = useState('nodata');
+
     const [fileType, setFileType] = useState('geojson');
 
 
     const getData = (baseurl, categoryID, geo, fields) => {
         
         setData();
-
+        setSelectedFields();
         setFieldOptions();
-        setSelectedFields(['NAME', 'GEOID'])
         
         const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&outFields=${fields}&f=${fileType}`;
         
@@ -75,9 +76,11 @@ const LayoutWrapper = props => {
                                 value : fieldObj.Variable 
                             })
                 ) : fieldOptions;
-                                        
+
                 setData(res.data);
                 setFieldOptions(optionsArray);
+                setSelectedFields(['NAME', 'GEOID'])
+
             })
             .catch(err => console.log(err));
     }
@@ -97,8 +100,15 @@ const LayoutWrapper = props => {
             .then(res => {
 
                 const dataArray = res.data.features.map(feature => feature.attributes);
+                // const headerArray = dataArray.map(feature => feature.attributes)
+
+                // const headerKeyArray = dataArray ? Object.keys(dataArray[0]) : null;
+                // const headerLabelArray = headerKeyArray ? headerKeyArray.map(variable => 
+                //     OpenDataManifest[labelManifest].find(item => item.Variable === variable).Long) : null;
+
 
                 setCSVData(dataArray);
+                // setCSVHeaders(headerLabelArray);
                 setCSVStatus('ready');
             })
             .catch(err => console.log(err))
@@ -108,6 +118,8 @@ const LayoutWrapper = props => {
         const csvFilename = sumLevel + '-' + serviceID.toString() +  '-download';
         const csvTitle = 'Test';
     
+        console.log(csvHeaders);
+
         const csvOptions = 
             { 
                 fieldSeparator: ',',
@@ -115,10 +127,11 @@ const LayoutWrapper = props => {
                 decimalSeparator: '.',
                 filename: csvFilename, 
                 showTitle: false,
+                // showLabels: true,
                 title: csvTitle,
                 useTextFile: false,
-                useKeysAsHeaders: true,
-                // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+                useKeysAsHeaders: true
+                // headers: csvHeaders
             };
 
         const csvExporter = new ExportToCsv(csvOptions);
@@ -128,6 +141,11 @@ const LayoutWrapper = props => {
         setCSVData();
         setCSVStatus('nodata');
     }
+
+    // const downloadXLSX = data => {
+    //     console.log(data);
+
+    // }
 
 
     useEffect(() => getData(defaults.data.baseUrl, serviceID, sumLevel, '*'), [serviceID, sumLevel]);
@@ -215,7 +233,7 @@ const LayoutWrapper = props => {
                         </div> }
                     </Row>
                 </Col>
-                <Col sm={12} lg={6} style={{height: '100%'}}>  
+                <Col id='map-col' sm={12} lg={6} style={{height: '100%'}}>  
                     { layout.mapVisible ? 
                     <MapWrapper
                         hoverID={hoverID}

@@ -15,7 +15,7 @@ const TableSE = props => {
         props.data.features.map(feature => feature)
         .sort(sortOrder === 'hilo' ? (a,b) => a.properties[sortField] > b.properties[sortField] ? -1 : 1 : (a,b) => a.properties[sortField] > b.properties[sortField] ? 1 : -1)
         : null;
-
+        
     return (
           <StickyTable style={{width: '100%', height: '100%'}} stickHeaderCount={1}>
             <Row >
@@ -46,6 +46,7 @@ const TableSE = props => {
                     <Row
                     key={'row-' + i}
                     onMouseEnter={() => props.handleHover(id)}
+                    id={'row-' + id}
                     // onMouseEnter={() => props.handleHover(feature.properties[props.hoverField])}
                     >
                         {selectedFields ? selectedFields.map(fieldName => {
@@ -53,7 +54,7 @@ const TableSE = props => {
                         return(
                         <Cell 
                         style={{
-                            backgroundColor: id === props.hoverID ? 'orange' : props.layout.tableBanding[0],
+                            backgroundColor: id === props.hoverID ? 'orange' : i % 2 === 0 ? props.layout.tableBanding[0] : props.layout.tableBanding[1],
                             // backgroundColor: i % 2 === 0 ? props.layout.tableBanding[0] : props.layout.tableBanding[1],
                             textAlign: 'center'
                         }}

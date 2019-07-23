@@ -53,6 +53,7 @@ const DataSelector = props => {
                 : null }
             { props.data ?
                 <Button
+                    id='csv-button'
                     basic
                     color='teal'
                     className={props.csvStatus === 'ready' ? 'pulse' : null } 

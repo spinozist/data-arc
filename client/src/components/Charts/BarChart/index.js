@@ -53,8 +53,8 @@ const SimpleBarChart = props => {
   // console.log(dataArray);
 
   return (
-    <ResponsiveContainer key={"rc-bar-chart-container"} height="100%" width="100%">
-     <ComposedChart 
+    <ResponsiveContainer id='diagram' key={"rc-bar-chart-container"} height="90%" width="100%">
+     <ComposedChart
         key={"cc-bar-chart"}
         data={dataArray}
         margin={{
