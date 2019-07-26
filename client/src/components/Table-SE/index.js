@@ -33,7 +33,8 @@ const TableSE = props => {
                         value={columnLabel}
                         onClick={() => props.handleSortField(columnLabel, props.sortOrder === 'lohi' ? 'hilo' : 'lohi')}
                     >
-                        {columnLabel ? OpenDataManifest[props.labelManifest].find(field => field.Variable === columnLabel).Long : 'no label' }
+                        {columnLabel && OpenDataManifest[props.labelManifest].find(field => field.Variable === columnLabel) ? 
+                            OpenDataManifest[props.labelManifest].find(field => field.Variable === columnLabel).Long : columnLabel }
                     </Cell>
                 ) : null }
             </Row>

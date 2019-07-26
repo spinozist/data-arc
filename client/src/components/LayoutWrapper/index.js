@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
-// import ReactGridLayout from 'react-grid-layout';
 import {Grid, Row, Col} from 'react-flexbox-grid';
-import { Button, Header, Modal } from 'semantic-ui-react'
-import defaults from '../../config/defaults';
-// import DataTable from '../Table';
 import TableSE from '../Table-SE';
 import DataSelector from '../DataSelector';
 import MapWrapper from '../MapWrapper';
 import ChartWrapper from '../ChartWrapper';
-import { ExportToCsv } from 'export-to-csv';
 import Loader from 'react-loader-spinner';
 import API from '../../utils/API'
 import ColorRamp from '../Legends/ColorRamp';
 // import NewUserForm from '../NewUserForm';
 // import DataManifest from '../../config/DataManifest.json'
 import OpenDataManifest from '../../config/OpenDataManifest';
+import defaults from '../../config/defaults';
+
 import './style.css';
 
 const LayoutWrapper = props => {
@@ -27,34 +24,39 @@ const LayoutWrapper = props => {
     const [labelManifest, setLabelManifest] = useState('Change');
     const [sortField, setSortField] = useState('NAME');
     const [sortOrder, setSortOrder] = useState('lohi');
-    const [sumLevel, setSumLevel] = useState('County');
-    // const [plngRegion, setPlngRegion] = useState('ARC 10')
-    const [selectedFields, setSelectedFields] = useState(['NAME', 'GEOID']);
-    const [hoverField, setHoverField] = useState('GEOID');
+    const [sumLevel, setSumLevel] = useState(defaults.data.sumLevel);
+    const [selectedFields, setSelectedFields] = useState(defaults.data.selectedFields);
+    const [hoverField, setHoverField] = useState(defaults.data.hoverField);
     const [hoverID, setHoverID] = useState();
     const [fieldOptions, setFieldOptions] = useState();
-    const [mapField, setMapField] = useState('TotPop_00')
+    const [primaryField, setPrimaryField] = useState('TotPop_00')
     const [data, setData] = useState();
-    const [csvData, setCSVData] = useState();
-    const [csvHeaders, setCSVHeaders] = useState();
-    const [csvStatus, setCSVStatus] = useState('nodata');
 
     const [fileType, setFileType] = useState('geojson');
 
 
     const getData = (baseurl, categoryID, geo, fields) => {
-        
-        setData();
+       
+        const optionObject = defaults.categoryOptions.find(option =>
+            option.value === categoryID)
+
+        setLabelManifest(optionObject.name);
+        setPrimaryField(optionObject.defaultField)
+
+        console.log(optionObject);
+
         setSelectedFields();
         setFieldOptions();
+        setData();
         
         const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&outFields=${fields}&f=${fileType}`;
         
         API.getData(url)
             .then(res => {
                 // console.log(labelManifest);
-                console.log(res);
+                // console.log(res);
                 // console.log(fileType)
+                // const labelManifest = optionObject.name
                 const optionsArray = fileType === 'json' ?
                 res.data.fields.map(field => 
                     ({
@@ -63,11 +65,11 @@ const LayoutWrapper = props => {
                         value : field.name
                     })
                 ) : fileType === 'geojson' ? 
-                    OpenDataManifest[labelManifest]
+                    OpenDataManifest[optionObject.name]
                         .filter(fieldObject => 
-                            labelManifest === 'RaceX' ? 
+                            optionObject.name === 'RaceX' ? 
                             fieldObject.Category === 'N/A' ||
-                            fieldObject.Category === defaults.categoryOptions.find(item => item.value === serviceID).subcategory 
+                            fieldObject.Category === optionObject.subcategory 
                             : true )
                         .map(fieldObj => 
                             ({
@@ -77,9 +79,9 @@ const LayoutWrapper = props => {
                             })
                 ) : fieldOptions;
 
-                setData(res.data);
                 setFieldOptions(optionsArray);
-                setSelectedFields(['NAME', 'GEOID'])
+                setSelectedFields(['NAME', 'GEOID', optionObject.defaultField]);
+                setData(res.data);
 
             })
             .catch(err => console.log(err));
@@ -88,58 +90,6 @@ const LayoutWrapper = props => {
     const handleSortField = (fieldAlias, sortOrder) => {
         setSortField(fieldAlias);
         setSortOrder(sortOrder);
-    }
-
-    // For CSV Export
-
-    const handleCSVData = (baseurl, categoryID, geo, fields) => {
-
-        const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&returnGeometry=false&outFields=${fields}&f=json`;
-
-        API.getData(url)
-            .then(res => {
-
-                const dataArray = res.data.features.map(feature => feature.attributes);
-                // const headerArray = dataArray.map(feature => feature.attributes)
-
-                // const headerKeyArray = dataArray ? Object.keys(dataArray[0]) : null;
-                // const headerLabelArray = headerKeyArray ? headerKeyArray.map(variable => 
-                //     OpenDataManifest[labelManifest].find(item => item.Variable === variable).Long) : null;
-
-
-                setCSVData(dataArray);
-                // setCSVHeaders(headerLabelArray);
-                setCSVStatus('ready');
-            })
-            .catch(err => console.log(err))
-    }
-
-    const downloadCSV = () => {
-        const csvFilename = sumLevel + '-' + serviceID.toString() +  '-download';
-        const csvTitle = 'Test';
-    
-        console.log(csvHeaders);
-
-        const csvOptions = 
-            { 
-                fieldSeparator: ',',
-                quoteStrings: '"',
-                decimalSeparator: '.',
-                filename: csvFilename, 
-                showTitle: false,
-                // showLabels: true,
-                title: csvTitle,
-                useTextFile: false,
-                useKeysAsHeaders: true
-                // headers: csvHeaders
-            };
-
-        const csvExporter = new ExportToCsv(csvOptions);
-
-        csvExporter.generateCsv(csvData);
-        
-        setCSVData();
-        setCSVStatus('nodata');
     }
 
     // const downloadXLSX = data => {
@@ -182,17 +132,12 @@ const LayoutWrapper = props => {
                         setSelectedFields={setSelectedFields}
                         setFieldOptions={setFieldOptions}
                         setLabelManifest={setLabelManifest}
-                        handleCSVData={handleCSVData}
-                        downloadCSV={downloadCSV}
-                        setCSVStatus={setCSVStatus}
-                        setCSVData={setCSVData}
                         setSumLevel={setSumLevel}
-                        setMapField={setMapField}
+                        setPrimaryField={setPrimaryField}
                         serviceID={serviceID}
                         sumLevel={sumLevel}
                         data={data}
                         selectedFields={selectedFields}
-                        csvStatus={csvStatus}
                         fieldOptions={fieldOptions}
                         hoverField={hoverField}
                     />
@@ -201,7 +146,7 @@ const LayoutWrapper = props => {
             <Row style={{height: '80vh'}}>
                 <Col sm={12} lg={6} style={{height: '100%', width: '100%'}}>
                     <Row className='no-scrollbar' middle='sm' style={{padding: '0px 30px 0px 30px', height: '50%', width: '100%', overflow: 'scroll'}}>
-                        { layout.tableVisible && data ?
+                        { layout.tableVisible && data && primaryField ?
                         <TableSE
                             selectedFields={selectedFields} 
                             data={data}
@@ -220,9 +165,9 @@ const LayoutWrapper = props => {
                         </div>}
                     </Row>
                     <Row center='sm' middle='sm' style={{height: '50%', width: '100%', zIndex: '99999'}}>
-                        { layout.chartVisible && data ? 
+                        { layout.chartVisible && data && primaryField ? 
                         <ChartWrapper 
-                            selectedVariable={mapField}
+                            selectedVariable={primaryField}
                             data={data} 
                             layout={layout}
                             handleHover={setHoverID}
@@ -239,12 +184,12 @@ const LayoutWrapper = props => {
                         hoverID={hoverID}
                         handleHover={setHoverID}
                         hoverField={hoverField} 
-                        selectedVariable={mapField} 
+                        selectedVariable={primaryField} 
                         layout={layout} 
                         data={data}
                         labelManifest={labelManifest} /> 
                     : <h1>Map not loading</h1> }
-                    <ColorRamp selectedVariable={mapField} data={data} layout={layout} />
+                    <ColorRamp selectedVariable={primaryField} data={data} layout={layout} />
                 </Col>
             </Row>
         </Grid>
