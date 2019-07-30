@@ -44,7 +44,7 @@ const SimpleBarChart = props => {
 
   const dataArray = props.data ? props.data.features.map(feature => 
         ({
-        x: feature.properties[props.selectedVariable],
+        x: parseFloat(feature.properties[props.selectedVariable]),
         name: feature.properties['NAME'],
         id: feature.properties[props.hoverField]
         })
@@ -67,7 +67,8 @@ const SimpleBarChart = props => {
           name={props.selectedVariable} 
           dataKey={'x'} 
           fill={colors[0]}
-          onMouseEnter={point => props.handleHover(point.id)} 
+          onMouseOver={point => props.handleHover(point.id)} 
+          onMouseOut={() => props.handleHover()}
           >
           {
             dataArray ? dataArray.map((feature, index) => {

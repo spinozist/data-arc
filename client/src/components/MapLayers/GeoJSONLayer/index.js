@@ -116,8 +116,8 @@ const GeoJSONLayer = props => {
 
 
       style={ feature => {
-        const variable = feature.properties ? feature.properties[props.selectedVariable] : null;
-        const normalizer = props.normalizedBy ? feature.properties[props.normalizedBy] : 1;
+        const variable = feature.properties ? parseFloat(feature.properties[props.selectedVariable]) : null;
+        const normalizer = props.normalizedBy ? parseFloat(feature.properties[props.normalizedBy]) : 1;
 
         // console.log(props.data.selectedVariable);
         const value = variable/normalizer;
@@ -159,9 +159,10 @@ const GeoJSONLayer = props => {
 
         layer.bindTooltip(String(featureID))
           .on('mouseover', e => {
-            //   console.log(featureID);
-            //   console.log(e)
               props.handleHover(featureID)
+            })
+          .on('mouseout', () => {
+              props.handleHover()
             });
       }}
     />
