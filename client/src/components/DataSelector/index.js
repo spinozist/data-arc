@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Radio } from 'semantic-ui-react';
 import defaults from '../../config/defaults';
 import CSVExportButton from '../CSVExportButton';
 import './style.css';

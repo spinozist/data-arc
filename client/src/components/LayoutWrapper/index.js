@@ -40,7 +40,7 @@ const LayoutWrapper = props => {
         const optionObject = defaults.categoryOptions.find(option =>
             option.value === categoryID)
 
-        setLabelManifest(optionObject.name);
+        setLabelManifest(optionObject.manifest);
         setPrimaryField(optionObject.defaultField)
 
         console.log(optionObject);
@@ -56,7 +56,7 @@ const LayoutWrapper = props => {
                 // console.log(labelManifest);
                 // console.log(res);
                 // console.log(fileType)
-                // const labelManifest = optionObject.name
+                // const labelManifest = optionObject.manifest
                 const optionsArray = fileType === 'json' ?
                 res.data.fields.map(field => 
                     ({
@@ -65,9 +65,9 @@ const LayoutWrapper = props => {
                         value : field.name
                     })
                 ) : fileType === 'geojson' ? 
-                    OpenDataManifest[optionObject.name]
+                    OpenDataManifest[optionObject.manifest]
                         .filter(fieldObject => 
-                            optionObject.name === 'RaceX' ? 
+                            optionObject.manifest === 'RaceX' ? 
                             fieldObject.Category === 'N/A' ||
                             fieldObject.Category === optionObject.subcategory 
                             : true )

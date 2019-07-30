@@ -21,21 +21,21 @@ export default {
             key: 'serviceID-0',
             text: 'Change since 2000',
             value: 0,
-            name: 'Change',
+            manifest: 'Change',
             defaultField: 'TotPop_00'
         },
         {
             key: 'serviceID-1',
             text: 'Demography',
             value: 1,
-            name: 'Demography',
+            manifest: 'Demography',
             defaultField: 'TotPop_e'
         },
         {
             key: 'serviceID-2',
             text: 'Demography by Race & Ethnicity',
             value: 2,
-            name: 'RaceX',
+            manifest: 'RaceX',
             subcategory: 'Demographic',
             defaultField: 'BlackTotPop_e'
         },
@@ -43,7 +43,7 @@ export default {
             key: 'serviceID-3',
             text: 'Economy',
             value: 3,
-            name: 'Economy',
+            manifest: 'Economy',
             defaultField: 'InLabForce_e'
 
         },
@@ -51,7 +51,7 @@ export default {
             key: 'serviceID-4',
             text: 'Economy by Race & Ethnicity',
             value: 4,
-            name: 'RaceX',
+            manifest: 'RaceX',
             subcategory: 'Economic',
             defaultField: 'BlackCivLabFor1664_e'
         },
@@ -59,14 +59,14 @@ export default {
             key: 'serviceID-5',
             text: 'Housing',
             value: 5,
-            name: 'Housing',
+            manifest: 'Housing',
             defaultField: 'TotalHU_e'
         },
         {
             key: 'serviceID-6',
             text: 'Housing by Race & Ehtnicity',
             value: 6,
-            name: 'RaceX',
+            manifest: 'RaceX',
             subcategory: 'Housing',
             defaultField: 'BlackOccHU_e'
         },
@@ -74,14 +74,14 @@ export default {
             key: 'serviceID-7',
             text: 'Social',
             value: 7,
-            name: 'Social',
+            manifest: 'Social',
             defaultField: 'TotalHH_e'
         },
         {
             key: 'serviceID-8',
             text: 'Social by Race & Ethnicity',
             value: 8,
-            name: 'RaceX',
+            manifest: 'RaceX',
             subcategory: 'Social',
             defaultField: 'BlackInCollGradSch_e'
         }
