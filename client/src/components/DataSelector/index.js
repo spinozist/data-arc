@@ -59,6 +59,20 @@ const DataSelector = props =>
                 // margin= <= default set to '10px'
             />
             : null }
+        { props.fieldOptions ? 
+        <Radio 
+            toggle
+            checked={props.MOE ? true : false} 
+            style={{
+                float: 'right',
+                marginTop: '10px'
+            }} 
+            label={'MOE'}
+            // onClick={event => console.log(props.MOE)}
+            onClick={() => props.handleOptionsArray(props.data, props.serviceID, 
+                props.MOE ? false : true)}
+        /> 
+        : null}
 
         { props.fieldOptions ? 
             <Dropdown

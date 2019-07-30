@@ -31,6 +31,7 @@ const LayoutWrapper = props => {
     const [fieldOptions, setFieldOptions] = useState();
     const [primaryField, setPrimaryField] = useState('TotPop_00')
     const [data, setData] = useState();
+    const [MOE, setMOE] = useState(true);
 
     const [fileType, setFileType] = useState('geojson');
 
@@ -43,43 +44,18 @@ const LayoutWrapper = props => {
         setLabelManifest(optionObject.manifest);
         setPrimaryField(optionObject.defaultField)
 
-        console.log(optionObject);
+        // console.log(optionObject);
 
         setSelectedFields();
-        setFieldOptions();
         setData();
         
         const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&outFields=${fields}&f=${fileType}`;
         
         API.getData(url)
             .then(res => {
-                // console.log(labelManifest);
-                // console.log(res);
-                // console.log(fileType)
-                // const labelManifest = optionObject.manifest
-                const optionsArray = fileType === 'json' ?
-                res.data.fields.map(field => 
-                    ({
-                        key : field.name,
-                        text : field.alias,
-                        value : field.name
-                    })
-                ) : fileType === 'geojson' ? 
-                    OpenDataManifest[optionObject.manifest]
-                        .filter(fieldObject => 
-                            optionObject.manifest === 'RaceX' ? 
-                            fieldObject.Category === 'N/A' ||
-                            fieldObject.Category === optionObject.subcategory 
-                            : true )
-                        .map(fieldObj => 
-                            ({
-                                key : fieldObj.Variable,
-                                text : fieldObj.Long, 
-                                value : fieldObj.Variable 
-                            })
-                ) : fieldOptions;
 
-                setFieldOptions(optionsArray);
+                handleOptionsArray(res.data, categoryID, MOE);
+
                 setSelectedFields(['NAME', 'GEOID', optionObject.defaultField]);
                 setData(res.data);
 
@@ -91,6 +67,43 @@ const LayoutWrapper = props => {
         setSortField(fieldAlias);
         setSortOrder(sortOrder);
     }
+    
+    const handleOptionsArray = (data, categoryID, MOE) => {
+        
+        setFieldOptions();
+        setMOE(MOE)
+
+        const optionObject = defaults.categoryOptions.find(option =>
+            option.value === categoryID);
+        
+        const optionsArray = fileType === 'json' ?
+        data.fields.map(field => 
+            ({
+                key : field.name,
+                text : field.alias,
+                value : field.name
+            })
+        ) : fileType === 'geojson' ? 
+            OpenDataManifest[optionObject.manifest]
+                .filter(fieldObject => 
+                    optionObject.manifest === 'RaceX' ? 
+                    fieldObject.Category === 'N/A' ||
+                    fieldObject.Category === optionObject.subcategory 
+                    : true )
+                .filter(fieldObject =>
+                    !MOE ? 
+                    fieldObject.ESTMOE !== 'MOE'
+                    : true)
+                .map((fieldObj, i) => 
+                    ({
+                        key : fieldObj.Variable + i,
+                        text : fieldObj.Long, 
+                        value : fieldObj.Variable 
+                    })
+        ) : fieldOptions;
+    
+        setFieldOptions(optionsArray);
+    }
 
     // const downloadXLSX = data => {
     //     console.log(data);
@@ -99,6 +112,7 @@ const LayoutWrapper = props => {
 
 
     useEffect(() => getData(defaults.data.baseUrl, serviceID, sumLevel, '*'), [serviceID, sumLevel]);
+    // useEffect(() => handleOptionsArray(data, serviceID, MOE), [MOE]);
     
     return (
         <Grid fluid style={{height: '100vh'}}>
@@ -140,6 +154,8 @@ const LayoutWrapper = props => {
                         selectedFields={selectedFields}
                         fieldOptions={fieldOptions}
                         hoverField={hoverField}
+                        MOE={MOE}
+                        handleOptionsArray={handleOptionsArray}
                     />
                 </Col>
             </Row>
@@ -158,6 +174,7 @@ const LayoutWrapper = props => {
                             hoverField={hoverField}
                             labelManifest={labelManifest}
                             layout={layout}
+                            MOE={MOE}
                         />
                         : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
