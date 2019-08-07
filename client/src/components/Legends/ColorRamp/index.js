@@ -8,9 +8,8 @@ const lableWidth = (100 - colorRampWidth)/2
 const ColorRamp = props => {
 
     // console.log(props)
-
-    const [maxValue, setMaxValue] = useState();
     const [minValue, setMinValue] = useState();
+    const [maxValue, setMaxValue] = useState();
 
 
     const numberOfBins = props.layout.numberOfBins;
@@ -34,23 +33,28 @@ const ColorRamp = props => {
 
     const handleMaxMin = () => {
         const valueArray = props.data ? props.data.features
-        .filter(feature => feature.properties[props.selectedVariable])
+        .filter(feature => feature.properties[props.primaryField] !== 'NA')
         .map(feature => {
         
-            const variable = feature.properties[props.selectedVariable];
+            const variable = parseFloat(feature.properties[props.primaryField]);
             //   const normalizer=props.normalizedBy ? feature.properties[props.normalizedBy] : 1
             // console.log(variable ? variable : null);
             return variable}) : null;
-    
-        const maxValue = valueArray !== null ? Math.max(...valueArray) : 'no data';
+            
         const minValue = valueArray !== null ? Math.min(...valueArray) : 'no data';
+
+        const maxValue = valueArray !== null ? Math.max(...valueArray) : 'no data';
         
+        console.log(valueArray);
+        console.log(minValue);
+        console.log(maxValue);
+
         setMinValue(minValue);
         setMaxValue(maxValue);
     
     }
 
-    useEffect(() => handleMaxMin(), [props.data, props.selectedVariable])
+    useEffect(() => handleMaxMin(), [props.data, props.primaryField], [minValue, maxValue])
 
     return (
 
@@ -71,7 +75,7 @@ const ColorRamp = props => {
                     marginTop: '15px',
                     zIndex: '999'
                 }}>
-                {minValue ? minValue : null}
+                {minValue || minValue === 0 ? minValue : null}
             </div>
         { colors ? colors.map(color => 
             <div 

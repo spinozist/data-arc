@@ -6,12 +6,6 @@ import colormap from 'colormap';
 
 const GeoJSONLayer = props => {
 
-  // console.log(props.data)
-
-  // const pointData = props.data.geojson.map(feature => feature.geometry.type === 'Point' ? L. : null);
-
-  // console.log(props.data ? props.data : 'no data to geojson layer yet');
-
   const numberOfBins = props.layout.numberOfBins;
   const colorMap = props.layout.colorMap;
   const reverse = props.layout.colorMapReverse;
@@ -19,29 +13,26 @@ const GeoJSONLayer = props => {
 //  props.data.geojson ? props.data.geojson.forEach(feature => feature.geometry.type === 'Point' ? L.pointToLayer(feature.geometry.type) : console.log('Is not point')) : null;
 
 
-  const colors = reverse ? colormap({
-    colormap: colorMap,
-    nshades: numberOfBins,
-    format: 'hex',
-    alpha: 1
-  }).reverse() : colormap({
+  let colors = colormap({
     colormap: colorMap,
     nshades: numberOfBins,
     format: 'hex',
     alpha: 1
   });
 
+  colors = reverse ? colors.reverse() : colors;
+  
   const valueArray = props.data ? props.data.features
-    .filter(feature => feature.properties[props.selectedVariable])
+    .filter(feature => feature.properties[props.primaryField] !== 'NA')
     .map(feature => {
-    
-      const variable = feature.properties[props.selectedVariable];
-    //   const normalizer=props.normalizedBy ? feature.properties[props.normalizedBy] : 1
+      
+        const variable = parseFloat(feature.properties[props.primaryField]);
+        // const normalizer=props.normalizedBy ? feature.properties[props.normalizedBy] : 1
         // console.log(variable ? variable : null);
         return variable}) : null;
 
-  const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
-  const minValue = valueArray !== null ? Math.min(...valueArray) : 'Value array not load yet';
+    const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
+    const minValue = valueArray !== null ? Math.min(...valueArray) : 'Value array not load yet';
 
   // console.log(valueArray ? valueArray : 'no value array');
   
@@ -50,13 +41,14 @@ const GeoJSONLayer = props => {
     // console.log(minValue);
 
 
-  const geojsonData = props.data ? props.data : null;
+  const geojsonData = props.data ? 
+    props.data.features.filter(feature => feature.properties[props.primaryField] !== 'NA') : null;
   // console.log(geojsonData);
   
 //   props.geographyFilter ? 
 //   //If there's a filter type
 //   props.data.filter(feature => 
-//     feature.properties[props.selectedVariable] > 0 && feature.properties[props.geographyFilter] === props.geographyFilterValue )
+//     feature.properties[props.primaryField] > 0 && feature.properties[props.geographyFilter] === props.geographyFilterValue )
 //   //If there isn't a filter type
 //     : props.data;
 
@@ -87,10 +79,10 @@ const GeoJSONLayer = props => {
       data={ geojsonData }
     //   pointToLayer={props.data.point ? (feature, latlng) => {
         
-    //     const variable=feature.properties[props.data.selectedVariable];
+    //     const variable=feature.properties[props.data.primaryField];
     //     const normalizer=props.data.normalizedBy ? feature.properties[props.data.normalizedBy] : 1
 
-    //     // console.log(props.data.selectedVariable);
+    //     // console.log(props.data.primaryField);
     //     const value = variable/normalizer;
     //     const distFromMin = value - minValue;
     //     const range = maxValue - minValue;
@@ -116,10 +108,10 @@ const GeoJSONLayer = props => {
 
 
       style={ feature => {
-        const variable = feature.properties ? parseFloat(feature.properties[props.selectedVariable]) : null;
+        const variable = feature.properties ? parseFloat(feature.properties[props.primaryField]) : null;
         const normalizer = props.normalizedBy ? parseFloat(feature.properties[props.normalizedBy]) : 1;
 
-        // console.log(props.data.selectedVariable);
+        // console.log(props.data.primaryField);
         const value = variable/normalizer;
         const distFromMin = value - minValue;
         const range = maxValue - minValue;
@@ -147,7 +139,7 @@ const GeoJSONLayer = props => {
 
       onEachFeature={(feature, layer) => {
           
-        // const variable=feature.properties[props.data.selectedVariable];
+        // const variable=feature.properties[props.data.primaryField];
         // const normalizer=props.data.normalizedBy ? feature.properties[props.data.normalizedBy] : 1
 
         // const value = variable/normalizer;

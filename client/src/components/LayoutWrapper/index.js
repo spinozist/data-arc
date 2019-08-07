@@ -21,17 +21,19 @@ const LayoutWrapper = props => {
     const [layout, setLayout] = useState(defaults.layout);
 
     const [serviceID, setServiceID] = useState(0);
+    const [prevServiceID, setPreviousServiceID] = useState();
     const [labelManifest, setLabelManifest] = useState('Change');
     const [sortField, setSortField] = useState('NAME');
-    const [sortOrder, setSortOrder] = useState('lohi');
+    const [sortOrder, setSortOrder] = useState('hilo');
     const [sumLevel, setSumLevel] = useState(defaults.data.sumLevel);
     const [selectedFields, setSelectedFields] = useState(defaults.data.selectedFields);
     const [hoverField, setHoverField] = useState(defaults.data.hoverField);
     const [hoverID, setHoverID] = useState();
     const [fieldOptions, setFieldOptions] = useState();
-    const [primaryField, setPrimaryField] = useState('TotPop_00')
+    const [primaryField, setPrimaryField] = useState('')
+    const [secondaryField, setSecondaryField] = useState('')
     const [data, setData] = useState();
-    const [MOE, setMOE] = useState(true);
+    const [MOE, setMOE] = useState(defaults.data.MOE);
 
     const [fileType, setFileType] = useState('geojson');
 
@@ -42,11 +44,16 @@ const LayoutWrapper = props => {
             option.value === categoryID)
 
         setLabelManifest(optionObject.manifest);
-        setPrimaryField(optionObject.defaultField)
 
-        // console.log(optionObject);
+        setPrimaryField(categoryID !== prevServiceID ? 
+            optionObject.primaryField : primaryField);
 
-        setSelectedFields();
+        setSecondaryField(categoryID !== prevServiceID ?
+            optionObject.secondaryField : secondaryField);
+            
+        setSelectedFields(categoryID !== prevServiceID ? 
+            [ 'NAME', 'GEOID', optionObject.primaryField, optionObject.secondaryField ] 
+                : selectedFields);
         setData();
         
         const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&outFields=${fields}&f=${fileType}`;
@@ -56,7 +63,6 @@ const LayoutWrapper = props => {
 
                 handleOptionsArray(res.data, categoryID, MOE);
 
-                setSelectedFields(['NAME', 'GEOID', optionObject.defaultField]);
                 setData(res.data);
 
             })
@@ -156,6 +162,7 @@ const LayoutWrapper = props => {
                         hoverField={hoverField}
                         MOE={MOE}
                         handleOptionsArray={handleOptionsArray}
+                        setPreviousServiceID={setPreviousServiceID}
                     />
                 </Col>
             </Row>
@@ -184,7 +191,8 @@ const LayoutWrapper = props => {
                     <Row center='sm' middle='sm' style={{height: '50%', width: '100%', zIndex: '99999'}}>
                         { layout.chartVisible && data && primaryField ? 
                         <ChartWrapper 
-                            selectedVariable={primaryField}
+                            primaryField={primaryField}
+                            secondaryField={secondaryField}
                             data={data} 
                             layout={layout}
                             handleHover={setHoverID}
@@ -201,12 +209,12 @@ const LayoutWrapper = props => {
                         hoverID={hoverID}
                         handleHover={setHoverID}
                         hoverField={hoverField} 
-                        selectedVariable={primaryField} 
+                        primaryField={primaryField} 
                         layout={layout} 
                         data={data}
                         labelManifest={labelManifest} /> 
                     : <h1>Map not loading</h1> }
-                    <ColorRamp selectedVariable={primaryField} data={data} layout={layout} />
+                    <ColorRamp primaryField={primaryField} data={data} layout={layout} />
                 </Col>
             </Row>
         </Grid>

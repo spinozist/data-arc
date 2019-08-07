@@ -13,7 +13,10 @@ const ImageExportButton = props => {
 
 
         domtoimage.toBlob(node, {bgcolor: imageBGColor})
-        .then(blob => saveAs(blob, `${imageFileName}.${type}`));
+        .then(blob => {
+            console.log(blob);
+            saveAs(blob, `${imageFileName}.${type}`)
+        });
     }
 
     return (

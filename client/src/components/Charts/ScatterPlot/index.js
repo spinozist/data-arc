@@ -12,37 +12,37 @@ const ScatterPlot = props => {
   const colorMap = props.layout.colorMap;
   const reverse = props.layout.colorMapReverse;
 
-  const colors = reverse ? colormap({
-      colormap: colorMap,
-      nshades: numberOfBins,
-      format: 'hex',
-      alpha: 1
-    }).reverse() : colormap({
-      colormap: colorMap,
-      nshades: numberOfBins,
-      format: 'hex',
-      alpha: 1
-    });
+
+  let colors = colormap({
+    colormap: colorMap,
+    nshades: numberOfBins,
+    format: 'hex',
+    alpha: 1
+  });
+
+  colors = reverse ? colors.reverse() : colors;
 
   const valueArray = props.data ? props.data.features
-    .filter(feature => feature.properties[props.selectedVariable])
+    .filter(feature => feature.properties[props.primaryField] !== 'NA')
     .map(feature => {
-  
-      const variable = feature.properties[props.selectedVariable];
-      const normalizer=props.data.normalizedBy ? feature.properties[props.data.normalizedBy] : 1
+    
+      const variable = parseFloat(feature.properties[props.primaryField]);
+      const normalizer = props.data.normalizedBy ? parseFloat(feature.properties[props.data.normalizedBy]) : 1
 
-        return variable/normalizer}) : null;
+      return variable/normalizer}) : null;
 
   const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
   const minValue = valueArray !== null ? Math.min(...valueArray) : 'Value array not load yet';
 
-  const dataArray = props.data ? props.data.features.map(feature => 
-    ({
-      x: feature.properties[props.selectedVariable],
-      y: feature.properties[props.selectedSecondVar],
-      name: feature.properties[props.hoverField]
-    })
-    ) : null;
+  const dataArray = props.data ? props.data.features
+    .filter(feature => feature.properties[props.primaryField] !== 'NA')
+    .map(feature => 
+      ({
+        x: parseFloat(feature.properties[props.primaryField]),
+        y: parseFloat(feature.properties[props.secondaryField]),
+        name: feature.properties[props.hoverField]
+      })
+      ) : null;
 
   // const dataObject = dataConfig.filter(item => item.name === props.data.geography);
 
@@ -51,7 +51,7 @@ const ScatterPlot = props => {
   // console.log (indicatorList);  
 
   return (
-      <ResponsiveContainer height="100%" width="100%">
+      <ResponsiveContainer height="90%" width="100%">
         <ScatterChart
           margin={{
             top: 40, right: 15, bottom: 20, left: 30,
@@ -61,9 +61,9 @@ const ScatterPlot = props => {
             // hide
             type="number" 
             dataKey="x" 
-            name={props.data ? props.selectedVariable : null } 
+            name={props.data ? props.primaryField : null } 
             label={{
-              value: props.data ? props.selectedVariable : 'x',
+              value: props.data ? props.primaryField : 'x',
               position: 'bottom'
             }}
             unit={null} />
@@ -72,9 +72,9 @@ const ScatterPlot = props => {
             orientation="right"
             type="number" 
             dataKey="y" 
-            name={props.data ? props.selectedSecondVar : null } 
+            name={props.data ? props.secondaryField : null } 
             label={{
-              value: props.data ? props.selectedSecondVar : 'y',
+              value: props.data ? props.secondaryField : 'y',
               position: 'right',
               angle: -90
             }} 
@@ -97,14 +97,16 @@ const ScatterPlot = props => {
             // fill={colors[0]}
             >
             {
-              dataArray ? dataArray.map((feature, index) => {
+              dataArray ? dataArray
+              .filter(a => a.x !== 'NA')
+              .map((feature, index) => {
                 
-                const value=feature.x;
+                const value=parseFloat(feature.x);
                 // const name=feature.name;
 
                 // console.log(feature);
         
-                // console.log(props.selectedVariable);
+                // console.log(props.primaryField);
                 const distFromMin = value - minValue;
                 const range = maxValue - minValue;
                 const binningRatio = distFromMin/range;
@@ -129,12 +131,12 @@ const ScatterPlot = props => {
             {
               dataArray ? dataArray.filter(e => e.name === props.hoverID).map((feature, index) => {
                 
-                const value=feature.x;
+                const value=parseFloat(feature.x);
                 // const name=feature.name;
 
                 // console.log(feature);
         
-                // console.log(props.selectedVariable);
+                // console.log(props.primaryField);
                 const distFromMin = value - minValue;
                 const range = maxValue - minValue;
                 const binningRatio = distFromMin/range;

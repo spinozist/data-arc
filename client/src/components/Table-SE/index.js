@@ -11,18 +11,19 @@ const TableSE = props => {
     const sortField = props.sortField;
     const sortOrder = props.sortOrder;
 
-    const featureArray = props.data ?
-        sortField === 'NAME' ? 
-        props.data.features.sort(sortOrder === 'hilo' ? (a,b) => 
-            a.properties[sortField] > b.properties[sortField] ? 
-            -1 : 1 : (a,b) => 
-                a.properties[sortField] > b.properties[sortField] ? 
-            1 : -1) :
-        props.data.features.sort(sortOrder === 'hilo' ? (a,b) => 
-            parseFloat(a.properties[sortField]) > parseFloat(b.properties[sortField]) ? 
-            -1 : 1 : (a,b) => 
-                parseFloat(a.properties[sortField]) > parseFloat(b.properties[sortField]) ? 
-            1 : -1) : null;
+    let featureArray = props.data ? props.data.features : null;
+
+    featureArray = sortField ? featureArray.filter(a => a.properties[sortField] !== 'NA') : featureArray;
+    
+    featureArray = sortField === 'NAME' ? featureArray.sort(sortOrder === 'hilo' ? (a,b) => 
+        a.properties[sortField] > b.properties[sortField] ? 
+        1 : -1 : (a,b) => a.properties[sortField] < b.properties[sortField] ? 1 : -1)
+        : featureArray;
+
+    featureArray =  sortField !== 'NAME' ? featureArray.sort(sortOrder === 'hilo' ? (a,b) => 
+        parseFloat(a.properties[sortField]) > parseFloat(b.properties[sortField]) ? 
+        1 : -1 : (a,b) => parseFloat(a.properties[sortField]) < parseFloat(b.properties[sortField]) ? 1 : -1)
+        : featureArray;
         
     return (
           <StickyTable style={{width: '100%', height: '100%'}} stickHeaderCount={1}>
@@ -53,16 +54,16 @@ const TableSE = props => {
                 // console.log(feature);
                 return(
                     <Row
-                    key={'row-' + i}
+                    key={'row-'+ id + i}
                     onMouseEnter={() => props.handleHover(id)}
                     onMouseOut={() => props.handleHover()}
                     id={'row-' + id}
                     // onMouseEnter={() => props.handleHover(feature.properties[props.hoverField])}
                     >
-                        {selectedFields ? selectedFields.map(fieldName => {
+                        {selectedFields ? selectedFields.map((fieldName, j) => {
                             const value = feature.properties[fieldName];
-                            const datatype = OpenDataManifest[props.labelManifest]
-                                .find(obj => obj.Variable === fieldName).Type;
+                            // const datatype = OpenDataManifest[props.labelManifest]
+                            //     .find(obj => obj.Variable === fieldName).Type;
                             // console.log(datatype + '(' + typeof value + '): ' + value);
 
                         return(
@@ -72,11 +73,8 @@ const TableSE = props => {
                             // backgroundColor: i % 2 === 0 ? props.layout.tableBanding[0] : props.layout.tableBanding[1],
                             textAlign: 'center'
                         }}
-                        key={'cell' + fieldName + '-' + feature.properties[props.hoverField]}>
-                           {typeof value == 'string' && datatype === 'Count' ? 
-                                parseInt(value) :
-                            typeof value == 'string' && datatype === 'Percent' ? 
-                                parseFloat(value) : value}
+                        key={'cell' + fieldName + '-' + j}>
+                           {value}
                         </Cell>
                         )}) : null }
                     </Row>

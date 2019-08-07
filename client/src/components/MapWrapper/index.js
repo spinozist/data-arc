@@ -60,8 +60,8 @@ const Map = props => {
   return (
     <LeafletMap
       key={'leaflet-map'}
-      center={[33.8, -84.3]}
-      zoom={9}
+      center={[33.8, -84.4]}
+      zoom={10.5}
       maxZoom={18}
       attributionControl={true}
       zoomControl={false}
@@ -84,12 +84,25 @@ const Map = props => {
                 zIndex: '998',
                 opacity: '.9'
                 }}>
-            <h2>{props.data && props.selectedVariable && props.labelManifest ?
-                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.selectedVariable) ?
-                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.selectedVariable).Long :
+            <h2>
+              {
+                props.data && props.primaryField && props.labelManifest ?
+                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField) ?
+                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField).Long :
                 'No Variable Selected'
-                // DataManifest.map(item => item.Variable === props.selectedVariable ? item.Long : null)
-                : 'No Variable Selected'}</h2>
+                // DataManifest.map(item => item.Variable === props.primaryField ? item.Long : null)
+                : 'No Variable Selected'
+              }</h2>
+            <p>
+              {
+                props.data && props.primaryField && props.labelManifest ?
+                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField) ?
+                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField).Source :
+                null
+                // DataManifest.map(item => item.Variable === props.primaryField ? item.Long : null)
+                : null
+              }
+            </p>
         </div>
         <ZoomControl position="topright" />
 
@@ -134,8 +147,17 @@ const Map = props => {
         />
       </LayersControl.BaseLayer>
       <LayersControl.Overlay 
+        name="NPU Boundaries"
+        checked={true}>
+        { overlayData.overlay_three ?
+          <OverlayLayer 
+          borderWeight={1.5}
+          borderColor={"black"}
+          data={overlayData.overlay_three}/> : null } 
+      </LayersControl.Overlay>
+      <LayersControl.Overlay 
         name="County Boundaries"
-        checked='false'>
+        checked={false}>
         { overlayData.overlay_one ?
           <OverlayLayer 
           borderWeight={2}
@@ -144,21 +166,12 @@ const Map = props => {
       </LayersControl.Overlay>
       <LayersControl.Overlay 
         name="City Boundaries"
-        checked='false'>
+        checked={false}>
         { overlayData.overlay_two ?
           <OverlayLayer 
           borderWeight={1.5}
           borderColor={"white"}
           data={overlayData.overlay_two}/> : null } 
-      </LayersControl.Overlay>
-      <LayersControl.Overlay 
-        name="NPU Boundaries"
-        checked='false'>
-        { overlayData.overlay_three ?
-          <OverlayLayer 
-          borderWeight={1.5}
-          borderColor={"black"}
-          data={overlayData.overlay_three}/> : null } 
       </LayersControl.Overlay>
     </LayersControl>
 

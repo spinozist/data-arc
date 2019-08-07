@@ -18,23 +18,21 @@ const SimpleBarChart = props => {
   const colorMap = props.layout.colorMap;
   const reverse = props.layout.colorMapReverse;
 
-  const colors = reverse ? colormap({
-      colormap: colorMap,
-      nshades: numberOfBins,
-      format: 'hex',
-      alpha: 1
-    }).reverse() : colormap({
-      colormap: colorMap,
-      nshades: numberOfBins,
-      format: 'hex',
-      alpha: 1
-    });
+
+  let colors = colormap({
+    colormap: colorMap,
+    nshades: numberOfBins,
+    format: 'hex',
+    alpha: 1
+  });
+
+  colors = reverse ? colors.reverse() : colors;
 
   const valueArray = props.data ? props.data.features
-    .filter(feature => feature.properties[props.selectedVariable])
+    .filter(feature => feature.properties[props.primaryField] !== 'NA')
     .map(feature => {
   
-      const variable = feature.properties[props.selectedVariable];
+      const variable = feature.properties[props.primaryField];
       const normalizer = props.normalizedBy ? feature.properties[props.normalizedBy] : 1
 
         return variable/normalizer}) : null;
@@ -42,13 +40,15 @@ const SimpleBarChart = props => {
   const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
   const minValue = valueArray !== null ? Math.min(...valueArray) : 'Value array not load yet';
 
-  const dataArray = props.data ? props.data.features.map(feature => 
-        ({
-        x: parseFloat(feature.properties[props.selectedVariable]),
-        name: feature.properties['NAME'],
-        id: feature.properties[props.hoverField]
-        })
-        ).sort(sortOrder === 'lohi' ? (a,b) => a.x > b.x ? 1 : -1 : (a,b) => a.x < b.x ? 1 : -1 ) : null;
+  const dataArray = props.data ? props.data.features
+    .filter(feature => feature.properties[props.primaryField] !== 'NA')
+    .map(feature => 
+      ({
+      x: parseFloat(feature.properties[props.primaryField]),
+      name: feature.properties['NAME'],
+      id: feature.properties[props.hoverField]
+      })
+      ).sort(sortOrder === 'lohi' ? (a,b) => a.x > b.x ? 1 : -1 : (a,b) => a.x < b.x ? 1 : -1 ) : null;
 
   // console.log(dataArray);
 
@@ -61,19 +61,19 @@ const SimpleBarChart = props => {
           top: 40, right: 15, bottom: 20, left: 10,
         }}>
         {/* <XAxis name={'bar-chart-axis'} dataKey="name" /> */}
-        <YAxis name={props.selectedVariable} dataKey='x' />
+        <YAxis name={props.primaryField} dataKey='x' />
         <Bar 
-          key={"bar-" + props.selectedVariable}
-          name={props.selectedVariable} 
+          key={"bar-" + props.primaryField}
+          name={props.primaryField} 
           dataKey={'x'} 
           fill={colors[0]}
           onMouseOver={point => props.handleHover(point.id)} 
           onMouseOut={() => props.handleHover()}
           >
           {
-            dataArray ? dataArray.map((feature, index) => {
+            dataArray ? dataArray.filter(a => a.x !== 'NA').map((feature, index) => {
               
-              const value=feature.x;
+              const value=parseFloat(feature.x);
               // const name=feature.name;
               const id=feature.id;
 
@@ -81,7 +81,7 @@ const SimpleBarChart = props => {
 
               // console.log(feature);
       
-              // console.log(props.selectedVariable);
+              // console.log(props.primaryField);
               const distFromMin = value - minValue;
               const range = maxValue - minValue;
               const binningRatio = distFromMin/range;
@@ -102,7 +102,7 @@ const SimpleBarChart = props => {
         {/* <Area type="monotone" dataKey={'x'} fill="#8884d8" stroke="#8884d8" /> */}
         {/* <Brush dataKey="name" height={30} stroke="#8884d8" /> */}
         <Tooltip
-          key={"tooltip-" + props.selectedVariable}
+          key={"tooltip-" + props.primaryField}
           itemStyle={{ color: 'black' }}
           style={{ borderRadius: '5px'}}
           cursor={{ strokeDasharray: '3 3' }} 

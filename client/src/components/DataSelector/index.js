@@ -43,7 +43,10 @@ const DataSelector = props =>
                 }} 
                 id='geo-selector' 
                 value={props.sumLevel} 
-                onChange={(event, data) => props.setSumLevel(data.value)} 
+                onChange={(event, data) => {
+                    props.setPreviousServiceID(props.serviceID)
+                    props.setSumLevel(data.value)
+                }} 
                 placeholder='Select Geography' 
                 options={defaults.geoOptions}
             />

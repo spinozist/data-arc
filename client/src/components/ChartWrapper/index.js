@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import ScatterPlot from '../Charts/ScatterPlot';
 import SimpleBarChart from '../Charts/BarChart';
 import ImageExportButton from '../ImageExportButton';
+import defaults from '../../config/defaults';
 
 const ChartWrapper = props => {
 
 const [chartType , setChartType ] = useState();
 
-useEffect(() => setChartType('bar-chart'), [props.data, props.selectedVariable]);
+useEffect(() => setChartType(defaults.layout.chartType), [props.data, props.selectedVariable]);
 
 return(
     <div id='chart-wrapper' style={{height: '100%', width: '100%'}}>
