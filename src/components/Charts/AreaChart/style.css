@@ -1,0 +1,9 @@
+.chart-container {
+    float: right;
+    height: 50%;
+    width: 40%;
+    padding: 20px;
+    /* background-color: blanchedalmond; */
+    /* border: 2px solid black; */
+    /* overflow: scroll; */
+}
