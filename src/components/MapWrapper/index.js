@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Map as LeafletMap, TileLayer, LayersControl, ZoomControl, ImageOverlay } from 'react-leaflet';
 import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
+import L from 'leaflet';
 // import Loader from 'react-loader-spinner';
 import API from '../../utils/API.js';
-// import DataManifest from '../../config/DataManifest.json';
 import OpenDataManifest from '../../config/OpenDataManifest';
 
 const Map = props => {
+
+  console.log(props.boundingGEO)
 
   // console.log(props.data);
   // console.log(DataLabels['Social']);
@@ -18,8 +20,33 @@ const Map = props => {
     overlay_three: null,
   });
 
-  const [bounds , setBounds] = useState([[34.8, -85.4],[32.8, -83.4]]);
+  const [bounds , setBounds] = useState();
   
+  const handleBounds = boundingGEO => {
+    const pointArray = boundingGEO ? 
+      boundingGEO.features[0].geometry.type === 'MultiPolygon' ?
+      boundingGEO.features[0].geometry.coordinates[0][0]
+      : boundingGEO.features[0].geometry.coordinates[0]
+      : [[-85.4, 34.8],[-83.4, 32.8],[-84, 33]];
+    
+    const lngArray = pointArray.map(point => parseFloat(point[0]));
+    const latArray = pointArray.map(point => parseFloat(point[1]));
+    const maxLng = Math.max.apply(Math, lngArray);
+    const maxLat = Math.max.apply(Math,latArray);
+    const minLng = Math.min.apply(Math,lngArray);
+    const minLat = Math.min.apply(Math,latArray);
+
+    const bounds = [[maxLat, minLng],[minLat,maxLng]]
+    
+    console.log(lngArray);
+    console.log(latArray);
+    console.log(maxLng)
+  
+    console.log(bounds);
+
+    setBounds(bounds)
+  }
+
   const apiOverlayData = (url1, url2, url3) => {
 
     API.getData(url1)
@@ -58,6 +85,8 @@ const Map = props => {
     'https://opendata.arcgis.com/datasets/0248805ea42145d3b7d7194beafcc3d7_55.geojson',
     'https://opendata.arcgis.com/datasets/91911cd123624a6b9b88cbf4266a2309_4.geojson'
     ), [])
+
+  useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO])
 
   return (
     <LeafletMap

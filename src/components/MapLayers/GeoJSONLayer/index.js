@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from "react";
-import L from 'leaflet';
+// import L from 'leaflet';
 import { GeoJSON } from 'react-leaflet';
 import colormap from 'colormap';
 
 
 const GeoJSONLayer = props => {
 
-  const [primaryField, setPrimaryField] = useState()
+  // const [primaryField, setPrimaryField] = useState()
 
   const numberOfBins = props.layout.numberOfBins;
   const colorMap = props.layout.colorMap;

@@ -30,10 +30,11 @@ const LayoutWrapper = props => {
     const [hoverField, setHoverField] = useState(defaults.data.hoverField);
     const [hoverID, setHoverID] = useState();
     const [fieldOptions, setFieldOptions] = useState();
-    const [primaryField, setPrimaryField] = useState('')
-    const [secondaryField, setSecondaryField] = useState('')
+    const [primaryField, setPrimaryField] = useState()
+    const [secondaryField, setSecondaryField] = useState()
     const [data, setData] = useState();
     const [MOE, setMOE] = useState(defaults.data.MOE);
+    const [boundingGEO, setBoundingGEO] = useState()
 
     const [fileType, setFileType] = useState('geojson');
 
@@ -58,6 +59,9 @@ const LayoutWrapper = props => {
         
         const url = `${baseurl}${categoryID}/query?where=SumLevel='${geo}'&outFields=${fields}&f=${fileType}`;
         
+        handleBoundingGeo(defaults.geoOptions.find(option => 
+            option.value === geo).boundingGeo);
+
         API.getData(url)
             .then(res => {
 
@@ -67,6 +71,15 @@ const LayoutWrapper = props => {
 
             })
             .catch(err => console.log(err));
+    }
+
+    const handleBoundingGeo = boundingGEO => {
+        
+        const url = defaults.boundingGeoURL[boundingGEO];
+
+        API.getData(url)
+            .then(res => setBoundingGEO(res.data))
+            .catch(err => console.error(err))
     }
 
     const handleSortField = (fieldAlias, sortOrder) => {
@@ -206,6 +219,7 @@ const LayoutWrapper = props => {
                 <Col id='map-col' sm={12} lg={6} style={{height: '100%'}}>  
                     { layout.mapVisible ? 
                     <MapWrapper
+                        boundingGEO={boundingGEO}
                         hoverID={hoverID}
                         handleHover={setHoverID}
                         hoverField={hoverField} 

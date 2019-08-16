@@ -95,62 +95,79 @@ export default {
         {
             key: 'geo-0',
             text: 'State of Georgia',
-            value: 'State' 
+            value: 'State',
+            boundingGeo: 'State' 
         },
         {
             key: 'geo-1',
             text: 'County',
-            value: 'County' 
+            value: 'County',
+            boundingGeo: 'State'  
         },        
         {
             key: 'geo-2',
             text: 'City',
-            value: 'City' 
+            value: 'City',
+            boundingGeo: 'State' 
         },
         {
             key: 'geo-3',
             text: 'GA House Districts',
-            value: 'GAHouse' 
+            value: 'GAHouse',
+            boundingGeo: 'State'  
         },
         {
             key: 'geo-4',
             text: 'GA Senate Districts',
-            value: 'GASenate' 
+            value: 'GASenate',
+            boundingGeo: 'State'  
         },
         {
             key: 'geo-5',
             text: 'Neighborhood Planning Units (NPU)',
-            value: 'NPU' 
+            value: 'NPU',
+            boundingGeo: 'COA'  
         },
         {
             key: 'geo-6',
             text: 'ARC 20 County',
-            value: 'ARC20'
+            value: 'ARC20',
+            boundingGeo: 'ARC20' 
         },
         {
             key: 'geo-7',
             text: 'US Congressional Districts',
-            value: 'Congress'
+            value: 'Congress',
+            boundingGeo: 'State' 
         },
         {
             key: 'geo-8',
             text: 'Neighborhood Statistical Areas',
-            value: 'NSA'
+            value: 'NSA',
+            boundingGeo: 'COA' 
         },
         {
             key: 'geo-9',
             text: 'Regional Commissions',
-            value: 'RC'
+            value: 'RC',
+            boundingGeo: 'State' 
         },
         {
             key: 'geo-10',
             text: 'Super Districts',
-            value: 'SuperDistrict'
+            value: 'SuperDistrict',
+            boundingGeo: 'ARC10' 
         },
-        {
-            key: 'geo-11',
-            text: 'Census Tracts',
-            value: 'Tract'
-        }
-    ]
+        // {
+        //     key: 'geo-11',
+        //     text: 'Census Tracts',
+        //     value: 'Tract',
+        // }
+    ],
+    boundingGeoURL: {
+        State: 'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/2/query?where=GEOID=13&f=geojson',
+        COA: 'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_ACS2019/MapServer/28/query?where=GEOID%3D1304000&f=geojson',
+        ARC20: '',
+        ARC10: ''
+    }
 }
