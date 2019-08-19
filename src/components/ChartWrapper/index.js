@@ -45,7 +45,7 @@ return(
         } */}
 
         <ImageExportButton
-            elementID={'chart-wrapper'}
+            elementID={'root'}
             type={'png'}
             text={'PNG'}
             imageBGColor={'white'}

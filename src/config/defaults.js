@@ -3,10 +3,10 @@ export default {
         mapVisible: true,
         tableVisible: true,
         chartVisible: true,
-        colorMap: 'temperature',
+        colorMap: 'portland',
         numberOfBins: 72,
         colorMapReverse: true,
-        chartType: 'scatterplot',
+        chartType: 'bar-chart',
         colorOpacity: .8,
         tableBanding: ['#c8e4d6', '#f3eeeb']
     },

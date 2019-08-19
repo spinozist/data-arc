@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Map as LeafletMap, TileLayer, LayersControl, ZoomControl, ImageOverlay } from 'react-leaflet';
+import { Map as LeafletMap, TileLayer, LayersControl, ZoomControl } from 'react-leaflet';
+import Control from 'react-leaflet-control';
 import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
-import L from 'leaflet';
+// import L from 'leaflet';
 // import Loader from 'react-loader-spinner';
+import { FiHome } from "react-icons/fi";
+
 import API from '../../utils/API.js';
 import OpenDataManifest from '../../config/OpenDataManifest';
 
 const Map = props => {
 
-  console.log(props.boundingGEO)
+  // console.log(props.boundingGEO)
 
   // console.log(props.data);
   // console.log(DataLabels['Social']);
@@ -21,7 +24,9 @@ const Map = props => {
   });
 
   const [bounds , setBounds] = useState();
-  
+
+  // const [viewport, setViewport] = useState();
+
   const handleBounds = boundingGEO => {
     const pointArray = boundingGEO ? 
       boundingGEO.features[0].geometry.type === 'MultiPolygon' ?
@@ -38,11 +43,11 @@ const Map = props => {
 
     const bounds = [[maxLat, minLng],[minLat,maxLng]]
     
-    console.log(lngArray);
-    console.log(latArray);
-    console.log(maxLng)
+    // console.log(lngArray);
+    // console.log(latArray);
+    // console.log(maxLng)
   
-    console.log(bounds);
+    // console.log(bounds);
 
     setBounds(bounds)
   }
@@ -80,6 +85,27 @@ const Map = props => {
       .catch(err => console.log(err));
   }
 
+  // const customControl = L.Control.extend({
+
+  //   options: {
+  //     position: 'topright'
+  //   },
+
+  //   onAdd: () => {
+  //     const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+ 
+  //     container.style.backgroundColor = 'white';
+  //     container.style.width = '30px';
+  //     container.style.height = '30px';
+  
+  //     container.onclick = () => {
+  //       console.log('buttonClicked');
+  //     }
+  //     return container
+  //   }
+  // })
+
+
   useEffect(() => apiOverlayData(
     'https://opendata.arcgis.com/datasets/63996663b8a040438defe56ef7ce31e3_0.geojson',
     'https://opendata.arcgis.com/datasets/0248805ea42145d3b7d7194beafcc3d7_55.geojson',
@@ -101,9 +127,12 @@ const Map = props => {
       scrollWheelZoom={true}
       dragging={true}
       animate={false}
-      // easeLinearity={0.7}
-    >
-        <div style={{
+      // onViewportChange={(viewport: Viewport) => setViewport(viewport)}
+      onViewportChange={() => setBounds()}
+
+    > 
+        <div 
+          style={{
                 border: 'solid grey .8px', 
                 backgroundColor: 'white', 
                 textAlign: 'center', 
@@ -138,7 +167,20 @@ const Map = props => {
         </div>
         <ZoomControl position="topright" />
 
-
+        <Control position="topright" >
+        <button style={{
+          padding: '5px',
+          borderRadius: '5px'
+        }}
+          onClick={() => {
+            console.log('Reset View Button Clicked');
+            handleBounds(props.boundingGEO)
+          }}
+        >
+         <FiHome style={{height: '25px', width: '25px'}} />
+        </button>
+        </Control>
+ 
 
       { props.data ?
        <GeoJSONLayer {...props}/> : null }
