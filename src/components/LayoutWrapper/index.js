@@ -4,9 +4,11 @@ import TableSE from '../Table-SE';
 import DataSelector from '../DataSelector';
 import MapWrapper from '../MapWrapper';
 import ChartWrapper from '../ChartWrapper';
-import Loader from 'react-loader-spinner';
+// import Loader from 'react-loader-spinner';
 import API from '../../utils/API'
 import ColorRamp from '../Legends/ColorRamp';
+import ModalWrapper from '../ModalWrapper';
+import { Button } from 'semantic-ui-react';
 // import NewUserForm from '../NewUserForm';
 // import DataManifest from '../../config/DataManifest.json'
 import OpenDataManifest from '../../config/OpenDataManifest';
@@ -70,7 +72,9 @@ const LayoutWrapper = props => {
                 setData(res.data);
 
             })
-            .catch(err => console.log(err));
+            .catch(err =>
+                console.log(err)
+            );
     }
 
     const handleBoundingGeo = boundingGEO => {
@@ -130,59 +134,60 @@ const LayoutWrapper = props => {
     // }
 
 
-    useEffect(() => getData(defaults.data.baseUrl, serviceID, sumLevel, '*'), [serviceID, sumLevel]);
+    useEffect(() => getData(
+        defaults.data.baseUrl, 
+        serviceID, 
+        sumLevel, 
+        '*'), [serviceID, sumLevel]);
     // useEffect(() => handleOptionsArray(data, serviceID, MOE), [MOE]);
     
     return (
-        <Grid fluid style={{height: '100vh'}}>
-            <Row style={{height: '15vh'}}>
-                {/* <Col sm={12} lg={1}>
-                    <Modal 
-                        style={{backgroundColor: 'rgb(230, 226, 213)'}}
-                        trigger={
-                            <Button
-                            basic
-                            color='red' 
-                            style={{
-                                margin: '10px',
-                                float: 'left',
-                                height: '50px',
-                                fontSize: '.8em'
-                                }}>
-                                Create Account
-                            </Button>}>
-                        <Modal.Header style={{backgroundColor: 'rgb(230, 226, 213)'}}>
-                            New User Form
-                        </Modal.Header>
-                        <Modal.Content style={{backgroundColor: 'rgb(230, 226, 213)'}}>
-                            <NewUserForm/>
-                        </Modal.Content>
-                    </Modal>
-                </Col> */}
-                <Col sm={12} lg={12}>
-                    <DataSelector
-                        setServiceID={setServiceID}
-                        setSelectedFields={setSelectedFields}
-                        setFieldOptions={setFieldOptions}
-                        setLabelManifest={setLabelManifest}
-                        setSumLevel={setSumLevel}
-                        setPrimaryField={setPrimaryField}
-                        serviceID={serviceID}
-                        sumLevel={sumLevel}
+        <Grid fluid style={{padding: '20px', height: '100vh'}}>
+
+            <Row style={{height: '100%'}}>
+                <Col id='map-col' sm={layout.mapWidth.sm} lg={layout.mapWidth.lg} style={{padding: '5px', borderRadius: '10px', backgroundColor: 'white', height: '96%'}}>  
+                    { layout.mapVisible ? 
+                    <MapWrapper
+                        colorRamp={<ColorRamp primaryField={primaryField} data={data} layout={layout} />}
+                        setLayout={setLayout}
+                        layout={layout}
+                        dataButton={                
+                            <ModalWrapper
+                            header={<h2>Browse Data</h2>} 
+                            trigger={<Button color='teal'>Browse Data</Button>} 
+                            content={
+                                <DataSelector
+                                    setServiceID={setServiceID}
+                                    setSelectedFields={setSelectedFields}
+                                    setFieldOptions={setFieldOptions}
+                                    setLabelManifest={setLabelManifest}
+                                    setSumLevel={setSumLevel}
+                                    setPrimaryField={setPrimaryField}
+                                    serviceID={serviceID}
+                                    sumLevel={sumLevel}
+                                    data={data}
+                                    selectedFields={selectedFields}
+                                    fieldOptions={fieldOptions}
+                                    hoverField={hoverField}
+                                    MOE={MOE}
+                                    handleOptionsArray={handleOptionsArray}
+                                    setPreviousServiceID={setPreviousServiceID}
+                                />
+                            }
+                        />}
+                        boundingGEO={boundingGEO}
+                        geo={sumLevel}
+                        hoverID={hoverID}
+                        handleHover={setHoverID}
+                        hoverField={hoverField} 
+                        primaryField={primaryField} 
                         data={data}
-                        selectedFields={selectedFields}
-                        fieldOptions={fieldOptions}
-                        hoverField={hoverField}
-                        MOE={MOE}
-                        handleOptionsArray={handleOptionsArray}
-                        setPreviousServiceID={setPreviousServiceID}
-                    />
+                        labelManifest={labelManifest} /> 
+                    : <h1>Map not loading</h1> }
                 </Col>
-            </Row>
-            <Row style={{height: '80vh'}}>
-                <Col sm={12} lg={6} style={{height: '100%', width: '100%'}}>
-                    <Row className='no-scrollbar' middle='sm' style={{padding: '0px 30px 0px 30px', height: '50%', width: '100%', overflow: 'scroll'}}>
-                        { layout.tableVisible && data && primaryField ?
+                <Col className='no-scrollbar' sm={layout.sideBarWidth.sm} lg={layout.sideBarWidth.lg} style={{height: '100%', width: '100%', overflow: 'scroll'}}>
+                { layout.tableVisible && data && primaryField ?
+                    <Row className='no-scrollbar' middle='sm' style={{margin: '5px', height: '50%', width: '100%', overflow: 'scroll'}}>
                         <TableSE
                             selectedFields={selectedFields} 
                             data={data}
@@ -196,39 +201,40 @@ const LayoutWrapper = props => {
                             layout={layout}
                             MOE={MOE}
                         />
-                        : 
+                    </Row> : null }
+                        {/* : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
                             <Loader id='loader-box' type='Grid' />
-                        </div>}
-                    </Row>
-                    <Row center='sm' middle='sm' style={{height: '50%', width: '100%', zIndex: '99999'}}>
-                        { layout.chartVisible && data && primaryField ? 
-                        <ChartWrapper 
-                            primaryField={primaryField}
-                            secondaryField={secondaryField}
-                            data={data} 
-                            layout={layout}
-                            handleHover={setHoverID}
-                            hoverID={hoverID} 
-                        />  : 
-                        <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
+                        </div>} */}
+                    { layout.scatterPlotVisible && data && primaryField ? 
+
+                        <Row center='sm' middle='sm' style={{margin: '5px', height: '40%', width: '100%', zIndex: '99999'}}>
+                            <ChartWrapper 
+                                primaryField={primaryField}
+                                secondaryField={secondaryField}
+                                data={data} 
+                                layout={layout}
+                                handleHover={setHoverID}
+                                hoverID={hoverID} 
+                                chartType={'scatterplot'}
+                            /> 
+                        </Row> : null }
+                    { layout.barChartVisible && data && primaryField ? 
+
+                        <Row center='sm' middle='sm' style={{margin: '5px', height: '40%', width: '100%', zIndex: '99999'}}>
+                            <ChartWrapper 
+                                primaryField={primaryField}
+                                secondaryField={secondaryField}
+                                data={data} 
+                                layout={layout}
+                                handleHover={setHoverID}
+                                hoverID={hoverID} 
+                                chartType={'bar-chart'}
+                            /> 
+                        </Row> : null }
+                        {/* <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
                             <Loader id='loader-box' type='Audio' />
-                        </div> }
-                    </Row>
-                </Col>
-                <Col id='map-col' sm={12} lg={6} style={{height: '100%'}}>  
-                    { layout.mapVisible ? 
-                    <MapWrapper
-                        boundingGEO={boundingGEO}
-                        hoverID={hoverID}
-                        handleHover={setHoverID}
-                        hoverField={hoverField} 
-                        primaryField={primaryField} 
-                        layout={layout} 
-                        data={data}
-                        labelManifest={labelManifest} /> 
-                    : <h1>Map not loading</h1> }
-                    <ColorRamp primaryField={primaryField} data={data} layout={layout} />
+                        </div> } */}
                 </Col>
             </Row>
         </Grid>

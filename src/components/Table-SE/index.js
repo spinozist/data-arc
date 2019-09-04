@@ -26,7 +26,7 @@ const TableSE = props => {
         : featureArray;
         
     return (
-          <StickyTable style={{width: '100%', height: '100%'}} stickHeaderCount={1}>
+          <StickyTable style={{width: '100%', height: '100%', borderRadius: '10px'}} stickHeaderCount={1}>
             <Row >
                 {selectedFields ? selectedFields.map((columnLabel,index) => 
                     <Cell

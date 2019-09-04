@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@iconify/icons-mdi": "^1.0.9",
+    "@iconify/icons-mdi-light": "^1.0.0",
+    "@iconify/react": "^1.1.1",
     "@turf/turf": "^5.1.6",
     "axios": "^0.18.0",
     "colormap": "^2.3.1",

@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import ScatterPlot from '../Charts/ScatterPlot';
 import SimpleBarChart from '../Charts/BarChart';
 import ImageExportButton from '../ImageExportButton';
-import defaults from '../../config/defaults';
+// import defaults from '../../config/defaults';
 
 const ChartWrapper = props => {
 
 const [chartType , setChartType ] = useState();
 
-useEffect(() => setChartType(defaults.layout.chartType), [props.data, props.selectedVariable]);
+useEffect(() => setChartType(props.chartType), [props.data, props.selectedVariable]);
 
 return(
-    <div id='chart-wrapper' style={{height: '100%', width: '100%'}}>
+    <div id='chart-wrapper' style={{margin: '5px', borderRadius: '10px', backgroundColor: 'white', height: '100%', width: '100%'}}>
         
         {  chartType === 'scatterplot' ?
         <ScatterPlot
@@ -44,7 +44,7 @@ return(
         : null
         } */}
 
-        <ImageExportButton
+        {/* <ImageExportButton
             elementID={'root'}
             type={'png'}
             text={'PNG'}
@@ -57,7 +57,7 @@ return(
             text={'JPG'}
             imageBGColor={'white'}
             imageFileName={'test'}
-        />
+        /> */}
     </div>
 
     );

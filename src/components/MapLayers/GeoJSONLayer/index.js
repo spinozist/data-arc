@@ -26,7 +26,7 @@ const GeoJSONLayer = props => {
   
   const valueArray = props.data ? props.data.features
     .filter(feature => feature.properties[props.primaryField] !== 'NA')
-    .map(feature => {
+        .map(feature => {
       
         const variable = parseFloat(feature.properties[props.primaryField]);
         // const normalizer=props.normalizedBy ? feature.properties[props.normalizedBy] : 1
@@ -74,10 +74,10 @@ const GeoJSONLayer = props => {
     // console.log(feature.geometry.type);
     
     const featureID = feature.properties[props.hoverField];
-    const value = feature.properties[props.primaryField];
+    // const value = feature.properties[props.primaryField];
     // console.log(String(value))
 
-    layer.bindTooltip(String(featureID) + ': ' + String(value))
+    layer.bindTooltip(String(featureID))
       .on('mouseover', e => {
           props.handleHover(featureID)
         })

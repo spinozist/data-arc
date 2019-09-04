@@ -53,7 +53,7 @@ const SimpleBarChart = props => {
   // console.log(dataArray);
 
   return (
-    <ResponsiveContainer id='diagram' key={"rc-bar-chart-container"} height="90%" width="100%">
+    <ResponsiveContainer id='diagram' key={"rc-bar-chart-container"} height="100%" width="100%">
      <ComposedChart
         key={"cc-bar-chart"}
         data={dataArray}
@@ -61,7 +61,7 @@ const SimpleBarChart = props => {
           top: 40, right: 15, bottom: 20, left: 10,
         }}>
         {/* <XAxis name={'bar-chart-axis'} dataKey="name" /> */}
-        <YAxis name={props.primaryField} dataKey='x' />
+        <YAxis orientation='right' name={props.primaryField} dataKey='x' />
         <Bar 
           key={"bar-" + props.primaryField}
           name={props.primaryField} 

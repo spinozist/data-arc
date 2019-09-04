@@ -15,7 +15,7 @@ const DataSelector = props =>
                         margin: '10px',
                         width: '15%',
                         height:'50px',
-                        zIndex: '999'
+                        zIndex: '1000'
                 }} 
                 id='cat-selector' 
                 value={props.serviceID} 
@@ -39,7 +39,7 @@ const DataSelector = props =>
                     margin: '10px', 
                     height:'50px', 
                     width: '15%', 
-                    zIndex: '998'
+                    zIndex: '1000'
                 }} 
                 id='geo-selector' 
                 value={props.sumLevel} 
@@ -51,7 +51,7 @@ const DataSelector = props =>
                 options={defaults.geoOptions}
             />
             : null }
-        { props.data && props.selectedFields ?
+        {/* { props.data && props.selectedFields ?
             <CSVExportButton
                 // {...props}
                 data={props.data}
@@ -61,21 +61,22 @@ const DataSelector = props =>
                 basic='true'
                 // margin= <= default set to '10px'
             />
-            : null }
+            : null } */}
         { props.fieldOptions ? 
-        <Radio 
-            toggle
-            checked={props.MOE ? true : false} 
-            style={{
-                float: 'right',
-                marginTop: '10px'
-            }} 
-            label={'MOE'}
-            // onClick={event => console.log(props.MOE)}
-            onClick={() => props.handleOptionsArray(props.data, props.serviceID, 
-                props.MOE ? false : true)}
-        /> 
-        : null}
+            <Radio 
+                toggle
+                checked={props.MOE ? true : false} 
+                style={{
+                    float: 'right',
+                    margin: '10px'
+                }} 
+                label={'MOE'}
+                // onClick={event => console.log(props.MOE)}
+                onClick={() => props.handleOptionsArray(props.data, props.serviceID, 
+                    props.MOE ? false : true)}
+            /> 
+            : null}
+
 
         { props.fieldOptions ? 
             <Dropdown
@@ -83,8 +84,8 @@ const DataSelector = props =>
                 style={{ 
                     float: 'right', 
                     margin: '10px', 
-                    width: '45%', 
-                    height: '80%', 
+                    width: '100%', 
+                    // height: '80%', 
                     zIndex: '999'
                 }} 
                 id='field-selector' 
@@ -95,6 +96,7 @@ const DataSelector = props =>
                 onLabelClick={(event, data) => props.setPrimaryField(data.value)}
             />
             : null }
+
     </div>
 
 

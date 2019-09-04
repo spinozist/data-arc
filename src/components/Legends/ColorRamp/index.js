@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 // import API from "../../utils/API";
 import colormap from 'colormap';
 
-const colorRampWidth = 80;
+const colorRampWidth = 70;
 const lableWidth = (100 - colorRampWidth)/2
 
 const ColorRamp = props => {
@@ -58,7 +58,7 @@ const ColorRamp = props => {
 
     return (
 
-        <div style={{width: '100%', height: '5%'}}>
+        <div style={{width: '100%', height: '30px'}}>
             <div
                 style={{
                     // position: 'relative',

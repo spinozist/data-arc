@@ -3,116 +3,76 @@ import { Map as LeafletMap, TileLayer, LayersControl, ZoomControl } from 'react-
 import Control from 'react-leaflet-control';
 import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
+import InteractiveLegend from '../InteractiveLegend';
+// import { Dropdown } from 'semantic-ui-react';
 // import L from 'leaflet';
 // import Loader from 'react-loader-spinner';
 import { FiHome } from "react-icons/fi";
-
 import API from '../../utils/API.js';
 import OpenDataManifest from '../../config/OpenDataManifest';
+import defaults from '../../config/defaults';
+import { Icon, InlineIcon } from '@iconify/react';
+import table from '@iconify/icons-mdi/table';
+import chartScatterPlot from '@iconify/icons-mdi/chart-scatter-plot';
+import chartBar from '@iconify/icons-mdi/chart-bar';
+// import chartLine from '@iconify/icons-mdi/chart-line';
+// import LayoutWrapper from '../LayoutWrapper';
+
+
+
 
 const Map = props => {
 
-  // console.log(props.boundingGEO)
+  const iconStyle = {backgroundColor: 'white', borderRadius: '5px', padding: '5px'}
+  const iconSize = '50px';
+  const iconColor = 'black';
+  const iconPosition = 'bottomright';
 
-  // console.log(props.data);
-  // console.log(DataLabels['Social']);
+  const icons = [
+    {ref: table}, 
+    {ref: chartScatterPlot},
+    {ref: chartBar}, 
+    // {ref: chartLine}
+  ];
 
-  const [overlayData, setOverlayData] = useState({
-    overlay_one: null,
-    overlay_two: null,
-    overlay_three: null,
-  });
-
-  const [bounds , setBounds] = useState();
-
-  // const [viewport, setViewport] = useState();
+  const [overlayData, setOverlayData] = useState({}),
+        [bounds , setBounds] = useState();
 
   const handleBounds = boundingGEO => {
     const pointArray = boundingGEO ? 
-      boundingGEO.features[0].geometry.type === 'MultiPolygon' ?
-      boundingGEO.features[0].geometry.coordinates[0][0]
-      : boundingGEO.features[0].geometry.coordinates[0]
-      : [[-85.4, 34.8],[-83.4, 32.8],[-84, 33]];
-    
-    const lngArray = pointArray.map(point => parseFloat(point[0]));
-    const latArray = pointArray.map(point => parseFloat(point[1]));
-    const maxLng = Math.max.apply(Math, lngArray);
-    const maxLat = Math.max.apply(Math,latArray);
-    const minLng = Math.min.apply(Math,lngArray);
-    const minLat = Math.min.apply(Math,latArray);
-
-    const bounds = [[maxLat, minLng],[minLat,maxLng]]
-    
-    // console.log(lngArray);
-    // console.log(latArray);
-    // console.log(maxLng)
-  
-    // console.log(bounds);
+            boundingGEO.features[0].geometry.type === 'MultiPolygon' ?
+              boundingGEO.features[0].geometry.coordinates[0][0]
+              : boundingGEO.features[0].geometry.coordinates[0]
+                : defaults.data.bounds,
+        
+          lngArray = pointArray.map(point => parseFloat(point[0])),
+          latArray = pointArray.map(point => parseFloat(point[1])),
+          maxLng = Math.max.apply(Math, lngArray),
+          maxLat = Math.max.apply(Math,latArray),
+          minLng = Math.min.apply(Math,lngArray),
+          minLat = Math.min.apply(Math,latArray),
+          bounds = [[maxLat, minLng],[minLat,maxLng]]
 
     setBounds(bounds)
-  }
+  };
 
-  const apiOverlayData = (url1, url2, url3) => {
-
-    API.getData(url1)
+  const handleOverlayData = overlayArray => {
+    // console.log(overlayArray);
+    overlayArray.forEach(overlay =>
+      API.getData(overlay.url)
       .then(res => {
         const data = res.data.features;
-        
       setOverlayData({
-        ...overlayData,
-        overlay_one: data})
-    })
-      .catch(err => console.log(err));
+        // ...overlayData,
+        [overlay.name]: data})
+      })
+      .catch(err => console.log(err))
+    )
+  };
 
-    API.getData(url2)
-      .then(res => {
-        const data = res.data.features;
+  useEffect(() => handleOverlayData(defaults.data.overlayLayers), [])
 
-      setOverlayData({
-        ...overlayData,
-        overlay_two: data})
-    })
-      .catch(err => console.log(err));
-    
-    API.getData(url3)
-      .then(res => {
-        const data = res.data.features;
-
-      setOverlayData({
-        ...overlayData,
-        overlay_three: data})
-    })
-      .catch(err => console.log(err));
-  }
-
-  // const customControl = L.Control.extend({
-
-  //   options: {
-  //     position: 'topright'
-  //   },
-
-  //   onAdd: () => {
-  //     const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
- 
-  //     container.style.backgroundColor = 'white';
-  //     container.style.width = '30px';
-  //     container.style.height = '30px';
-  
-  //     container.onclick = () => {
-  //       console.log('buttonClicked');
-  //     }
-  //     return container
-  //   }
-  // })
-
-
-  useEffect(() => apiOverlayData(
-    'https://opendata.arcgis.com/datasets/63996663b8a040438defe56ef7ce31e3_0.geojson',
-    'https://opendata.arcgis.com/datasets/0248805ea42145d3b7d7194beafcc3d7_55.geojson',
-    'https://opendata.arcgis.com/datasets/91911cd123624a6b9b88cbf4266a2309_4.geojson'
-    ), [])
-
-  useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO])
+  useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO, props.layout])
 
   return (
     <LeafletMap
@@ -120,6 +80,7 @@ const Map = props => {
       // center={[33.8, -84.4]}
       // zoom={10.5}
       bounds={bounds}
+      boundsOptions={{padding: [50, 50]}}
       maxZoom={18}
       attributionControl={true}
       zoomControl={false}
@@ -131,21 +92,21 @@ const Map = props => {
       onViewportChange={() => setBounds()}
 
     > 
-        <div 
+        {/* <div 
           style={{
-                border: 'solid grey .8px', 
-                backgroundColor: 'white', 
-                textAlign: 'center', 
-                width: '60%', 
-                borderRadius: '5px', 
-                padding: '10px', 
-                position: 'absolute', 
-                top: '12px', 
-                left: '20%', 
-                zIndex: '998',
-                opacity: '.9'
-                }}>
-            <h2>
+            border: 'solid grey .8px', 
+            backgroundColor: 'white', 
+            textAlign: 'center', 
+            width: '70%', 
+            borderRadius: '5px', 
+            padding: '10px', 
+            position: 'absolute', 
+            top: '12px', 
+            left: '15%', 
+            zIndex: '998',
+            opacity: '.9',
+          }}>
+            <h2 style={{ lineHeight: '20px' }}>
               {
                 props.data && props.primaryField && props.labelManifest ?
                 OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField) ?
@@ -153,8 +114,9 @@ const Map = props => {
                 'No Variable Selected'
                 // DataManifest.map(item => item.Variable === props.primaryField ? item.Long : null)
                 : 'No Variable Selected'
-              }</h2>
-            <p>
+              }
+            </h2>
+            <p style={{ lineHeight: '10px' }}> 
               {
                 props.data && props.primaryField && props.labelManifest ?
                 OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField) ?
@@ -164,92 +126,86 @@ const Map = props => {
                 : null
               }
             </p>
-        </div>
+        </div> */}
         <ZoomControl position="topright" />
-
+        <Control position='topleft'>
+          <InteractiveLegend
+            geoLabel={defaults.geoOptions.find(option => option.value === props.geo)}
+            primaryField={props.primaryField}
+            labelManifest={props.labelManifest}
+            browseDataButton={props.dataButton}
+            baseMapInfo={defaults.data.tileLayers}
+            overLayersInfo={defaults.data.overlayLayers}
+            colorRamp={props.colorRamp}
+            // dataLayerInfo={'Test'}
+          />
+        </Control>
         <Control position="topright" >
-        <button style={{
-          padding: '5px',
-          borderRadius: '5px'
-        }}
-          onClick={() => {
+
+         <FiHome style={{height: '40px', width: '40px', padding: '5px', backgroundColor: 'white', borderRadius: '5px'}} onClick={() => {
             console.log('Reset View Button Clicked');
             handleBounds(props.boundingGEO)
-          }}
-        >
-         <FiHome style={{height: '25px', width: '25px'}} />
-        </button>
+          }} />
         </Control>
+        {
+          icons.map(icon => 
+          <Control position={iconPosition}>
+            <Icon 
+              style={iconStyle}
+              height={iconSize} 
+              width={iconSize} 
+              color={iconColor} 
+              icon={icon.ref}
+              onClick={() =>
+                props.setLayout({
+                ...props.layout,
+                mapWidth: {sm: 12, lg: 8},
+                sideBarWidth: {sm: 12, lg: 4},
+                tableVisible: icon.ref === table && props.layout.tableVisible === false ?
+                   true : icon.ref !== table ? props.layout.tableVisible : false,
+                scatterPlotVisible: icon.ref === chartScatterPlot && props.layout.scatterPlotVisible === false ?
+                true : icon.ref !== chartScatterPlot ? props.layout.scatterPlotVisible : false,
+                barChartVisible: icon.ref === chartBar && props.layout.barChartVisible === false ?
+                true : icon.ref !== chartBar ? props.layout.barChartVisible : false,
+                })
+              }/>
+          </Control>)
+        }
+
  
 
       { props.data ?
-       <GeoJSONLayer {...props}/> : null }
-
-      {/* <ImageOverlay
-        url={
-        <Loader 
-          type="Puff"
-          color="#00BFFF"
-          height="100"	
-          width="100"
-      />}
-      bounds={[[34, -84.5], [33.6, -84.1]]} 
-      attribution={'react-loader-spinner'}
-      opacity={1}
-      /> */}
+        <GeoJSONLayer {...props}/> 
+        : null 
+      }
 
     <LayersControl position="topleft">
-      <LayersControl.BaseLayer name="OpenStreetMap Dark">
-        <TileLayer
-          key={'tile-layer-dark'} 
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap: "Map tiles by Carto, under CC BY 3.0.</a> contributors'
-          url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
-        />
-      </LayersControl.BaseLayer>
-      <LayersControl.BaseLayer name="OpenStreetMap Mono">
-        <TileLayer
-          key={'tile-layer-mono'}
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
-        />
-      </LayersControl.BaseLayer>
-      <LayersControl.BaseLayer name="OpenStreetMap Color">
-        <TileLayer
-          key={'tile-layer-color'}
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-      </LayersControl.BaseLayer>
-      <LayersControl.Overlay 
-        name="NPU Boundaries"
-        checked={true}>
-        { overlayData.overlay_three ?
-          <OverlayLayer 
-          borderWeight={1.5}
-          borderColor={"black"}
-          data={overlayData.overlay_three}/> : null } 
-      </LayersControl.Overlay>
-      <LayersControl.Overlay 
-        name="County Boundaries"
-        checked={false}>
-        { overlayData.overlay_one ?
-          <OverlayLayer 
-          borderWeight={2}
-          borderColor={"black"}
-          data={overlayData.overlay_one}/> : null } 
-      </LayersControl.Overlay>
-      <LayersControl.Overlay 
-        name="City Boundaries"
-        checked={false}>
-        { overlayData.overlay_two ?
-          <OverlayLayer 
-          borderWeight={1.5}
-          borderColor={"white"}
-          data={overlayData.overlay_two}/> : null } 
-      </LayersControl.Overlay>
-    </LayersControl>
+      {
+        defaults.data.tileLayers.map(tileLayer => 
+          <LayersControl.BaseLayer name={tileLayer.name}>
+            <TileLayer
+              key={tileLayer.key} 
+              attribution={tileLayer.attribution}
+              url={tileLayer.url}
+            />
+          </LayersControl.BaseLayer>
+      )}
+      { overlayData ?
+        defaults.data.overlayLayers.map(layer => 
+          <LayersControl.Overlay 
+          name={layer.name}
+          checked={layer.checked}>
+          { overlayData[layer.name] ?
+            <OverlayLayer 
+            borderWeight={layer.style.borderWeight}
+            borderColor={layer.style.borderColor}
+            data={overlayData[layer.name]}/> : null } 
+        </LayersControl.Overlay>
 
-       
+        ) : null
+      }
+    </LayersControl> 
+
       <TileLayer
       key={'tile-layer-default'}
       // url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png'

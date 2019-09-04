@@ -51,10 +51,10 @@ const ScatterPlot = props => {
   // console.log (indicatorList);  
 
   return (
-      <ResponsiveContainer height="90%" width="100%">
+      <ResponsiveContainer height="100%" width="100%">
         <ScatterChart
           margin={{
-            top: 40, right: 15, bottom: 20, left: 30,
+            top: 20, right: 15, bottom: 20, left: 20,
           }} >
           <CartesianGrid />
           <XAxis 
@@ -79,7 +79,7 @@ const ScatterPlot = props => {
               angle: -90
             }} 
             unit={null} />
-          <Tooltip
+          {/* <Tooltip
             cursor={{ strokeDasharray: '3 3' }} 
             animationEasing={'ease'}
             formatter={ value => 
@@ -89,7 +89,7 @@ const ScatterPlot = props => {
               : numeral(value).format('0,0')
               : value
               }
-          />
+          /> */}
           <Scatter 
             name={props.hoverField} 
             data={dataArray} 
