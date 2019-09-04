@@ -72,7 +72,7 @@ const Map = props => {
 
   useEffect(() => handleOverlayData(defaults.data.overlayLayers), [])
 
-  useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO, props.layout])
+  useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO])
 
   return (
     <LeafletMap

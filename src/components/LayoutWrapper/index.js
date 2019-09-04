@@ -145,7 +145,7 @@ const LayoutWrapper = props => {
         <Grid fluid style={{padding: '20px', height: '100vh'}}>
 
             <Row style={{height: '100%'}}>
-                <Col id='map-col' sm={layout.mapWidth.sm} lg={layout.mapWidth.lg} style={{padding: '5px', borderRadius: '10px', backgroundColor: 'white', height: '96%'}}>  
+                <Col id='map-col' sm={layout.mapWidth.sm} lg={layout.mapWidth.lg} style={{padding: '5px', borderRadius: '10px', backgroundColor: 'white', height: '100%'}}>  
                     { layout.mapVisible ? 
                     <MapWrapper
                         colorRamp={<ColorRamp primaryField={primaryField} data={data} layout={layout} />}
