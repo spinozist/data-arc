@@ -3,15 +3,17 @@ import { Map as LeafletMap, TileLayer, LayersControl, ZoomControl } from 'react-
 import Control from 'react-leaflet-control';
 import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
-import InteractiveLegend from '../InteractiveLegend';
+import BaseMapLegend from '../Legends/BaseMapLegend';
+import BoundaryLayerLegend from '../Legends/BoundaryLayerLegend';
+import DataLayerLegend from '../Legends/DataLayerLegend';
+
 // import { Dropdown } from 'semantic-ui-react';
 // import L from 'leaflet';
 // import Loader from 'react-loader-spinner';
 import { FiHome } from "react-icons/fi";
 import API from '../../utils/API.js';
-import OpenDataManifest from '../../config/OpenDataManifest';
 import defaults from '../../config/defaults';
-import { Icon, InlineIcon } from '@iconify/react';
+import { Icon } from '@iconify/react';
 import table from '@iconify/icons-mdi/table';
 import chartScatterPlot from '@iconify/icons-mdi/chart-scatter-plot';
 import chartBar from '@iconify/icons-mdi/chart-bar';
@@ -35,8 +37,18 @@ const Map = props => {
     // {ref: chartLine}
   ];
 
-  const [overlayData, setOverlayData] = useState({}),
-        [bounds , setBounds] = useState();
+  const [overLayers, setOverLayers] = useState(
+    {
+      Counties: defaults.data.overlayLayers.find(layer => layer.name === 'Counties').checked,
+      Cities: defaults.data.overlayLayers.find(layer => layer.name === 'Cities').checked,
+      NPUs: defaults.data.overlayLayers.find(layer => layer.name === 'NPUs').checked
+    }
+  )
+
+
+  const [overlayData, setOverlayData] = useState(),
+        [bounds , setBounds] = useState(),
+        [baseMap, setBaseMap] = useState('tile-layer-mono');
 
   const handleBounds = boundingGEO => {
     const pointArray = boundingGEO ? 
@@ -57,20 +69,29 @@ const Map = props => {
   };
 
   const handleOverlayData = overlayArray => {
-    // console.log(overlayArray);
-    overlayArray.forEach(overlay =>
-      API.getData(overlay.url)
-      .then(res => {
-        const data = res.data.features;
-      setOverlayData({
-        // ...overlayData,
-        [overlay.name]: data})
-      })
-      .catch(err => console.log(err))
-    )
+    var dataArray = [];
+      const getLayers = () => overlayArray.map(overlay =>
+        API.getData(overlay.url)
+        .then(res => {
+          const name = overlay.name;
+
+          dataArray.push([name, res.data.features])
+          // console.log(overlayData);
+          // const data = res.data.features;
+          // setOverlayData({
+          //   ...overlayData,
+          //   [name]: res.data.features
+          // })
+        })
+        .catch(err => console.log(err))
+      )
+    getLayers();
+    console.log(dataArray)
+    // const dataObj = Object.fromEntries(dataArray);
+    setOverlayData(dataArray)
   };
 
-  useEffect(() => handleOverlayData(defaults.data.overlayLayers), [])
+  useEffect(() => handleOverlayData(defaults.data.overlayLayers), [props.primaryField])
 
   useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO])
 
@@ -129,15 +150,28 @@ const Map = props => {
         </div> */}
         <ZoomControl position="topright" />
         <Control position='topleft'>
-          <InteractiveLegend
+          <BaseMapLegend
+            legendInfo={defaults.data.tileLayers} 
+            setBaseMap={setBaseMap}
+            baseMap={baseMap}
+          />
+
+        </Control>
+        <Control position='topleft'>
+          <BoundaryLayerLegend
+            legendInfo={defaults.data.overlayLayers}
+            setOverLayers={setOverLayers}
+            overLayers={overLayers}
+
+          />
+        </Control>
+        <Control position='topleft'>
+          <DataLayerLegend
             geoLabel={defaults.geoOptions.find(option => option.value === props.geo)}
             primaryField={props.primaryField}
             labelManifest={props.labelManifest}
             browseDataButton={props.dataButton}
-            baseMapInfo={defaults.data.tileLayers}
-            overLayersInfo={defaults.data.overlayLayers}
             colorRamp={props.colorRamp}
-            // dataLayerInfo={'Test'}
           />
         </Control>
         <Control position="topright" >
@@ -173,14 +207,64 @@ const Map = props => {
         }
 
  
+      {
+        overlayData ? 
+        // console.log(overlayData)
 
+        overlayData.map(layer => {
+          const layerName = layer[0];
+          const layerData = layer[1];
+          const visible = overLayers[layerName];
+          const borderWeight = defaults.data.overlayLayers.find(layer =>
+            layer.name === layerName).style.borderWeight;
+          const borderColor = defaults.data.overlayLayers.find(layer =>
+              layer.name === layerName).style.borderColor
+  
+
+          return (visible ?
+
+           <OverlayLayer 
+            borderWeight={borderWeight}
+            borderColor={borderColor}
+            data={layerData}/> 
+
+          : null)
+        })
+
+        // defaults.data.overlayLayers.map(layer => 
+
+        //   overlayData[layer.name] && overLayers[layer.name] ?
+        //     <OverlayLayer 
+        //     borderWeight={layer.style.borderWeight}
+        //     borderColor={layer.style.borderColor}
+        //     data={overlayData[layer.name]}/> : null
+  
+
+        // ) 
+        : null
+      }
+      
       { props.data ?
         <GeoJSONLayer {...props}/> 
         : null 
       }
 
-    <LayersControl position="topleft">
-      {
+      <TileLayer
+            key={baseMap}
+            attribution={defaults.data.tileLayers.find(layer =>
+              layer.key === baseMap).attribution}
+            url={defaults.data.tileLayers.find(layer =>
+              layer.key === baseMap).url}
+      />
+
+
+      
+
+
+
+
+    {/* <LayersControl position="topleft"> */}
+      {/* {
         defaults.data.tileLayers.map(tileLayer => 
           <LayersControl.BaseLayer name={tileLayer.name}>
             <TileLayer
@@ -189,8 +273,8 @@ const Map = props => {
               url={tileLayer.url}
             />
           </LayersControl.BaseLayer>
-      )}
-      { overlayData ?
+      )} */}
+      {/* { overlayData ?
         defaults.data.overlayLayers.map(layer => 
           <LayersControl.Overlay 
           name={layer.name}
@@ -203,15 +287,8 @@ const Map = props => {
         </LayersControl.Overlay>
 
         ) : null
-      }
-    </LayersControl> 
-
-      <TileLayer
-      key={'tile-layer-default'}
-      // url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png'
-      url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-      />
-     
+      } */}
+    {/* </LayersControl>       */}
 
     </LeafletMap>
 
