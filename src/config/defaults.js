@@ -70,7 +70,40 @@ export default {
                 url: 'https://opendata.arcgis.com/datasets/91911cd123624a6b9b88cbf4266a2309_4.geojson'
             }
 
-        ]
+        ],
+        overlayLayerInfo: {
+            Counties: {
+                name: 'Counties',
+                style: {
+                    borderWeight: 2,
+                    borderColor: 'black',
+                    borderType: 'solid'
+                },
+                checked: true,
+                url: 'https://opendata.arcgis.com/datasets/63996663b8a040438defe56ef7ce31e3_0.geojson'
+            },
+            Cities: {
+                name: 'Cities',
+                style: {
+                    borderWeight: 1,
+                    borderColor: 'purple',
+                    borderType: 'dashed'
+                },
+                checked: true,
+                url: 'https://opendata.arcgis.com/datasets/0248805ea42145d3b7d7194beafcc3d7_55.geojson'
+            },
+            NPUs: {
+                name: 'NPUs',
+                style: {
+                    borderWeight: 1,
+                    borderColor: 'red',
+                    borderType: 'solid'
+                },
+                checked: false,
+                url: 'https://opendata.arcgis.com/datasets/91911cd123624a6b9b88cbf4266a2309_4.geojson'
+            }
+
+        }
     },
     categoryOptions: [
         {

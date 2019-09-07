@@ -16,6 +16,7 @@
     "moment": "^2.24.0",
     "numeral": "^2.0.6",
     "react": "^16.8.1",
+    "react-color": "^2.17.3",
     "react-dom": "^16.8.6",
     "react-flexbox-grid": "^2.1.2",
     "react-grid-layout": "^0.16.6",

@@ -43,7 +43,9 @@ const Map = props => {
       Cities: defaults.data.overlayLayers.find(layer => layer.name === 'Cities').checked,
       NPUs: defaults.data.overlayLayers.find(layer => layer.name === 'NPUs').checked
     }
-  )
+  );
+
+  const [boundaryLayerInfo, setBoundaryLayerInfo] = useState(defaults.data.overlayLayerInfo)
 
 
   const [overlayData, setOverlayData] = useState(),
@@ -68,12 +70,15 @@ const Map = props => {
     setBounds(bounds)
   };
 
-  const handleOverlayData = overlayArray => {
+  const handleOverlayData = obj => {
+    // console.log(obj);
     var dataArray = [];
-      const getLayers = () => overlayArray.map(overlay =>
-        API.getData(overlay.url)
+    const getLayers = () => Object.entries(obj)
+      .map(([key,data]) =>
+        API.getData(data.url)
         .then(res => {
-          const name = overlay.name;
+          const name = key;
+          // console.log(key)
 
           dataArray.push([name, res.data.features])
           // console.log(overlayData);
@@ -86,13 +91,13 @@ const Map = props => {
         .catch(err => console.log(err))
       )
     getLayers();
-    console.log(dataArray)
+    // console.log(dataArray)
     // const dataObj = Object.fromEntries(dataArray);
     setOverlayData(dataArray)
   };
 
-  useEffect(() => handleOverlayData(defaults.data.overlayLayers), [props.primaryField])
-
+  useEffect(() => handleOverlayData(boundaryLayerInfo), [])
+  useEffect(() => {}, [boundaryLayerInfo])
   useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO])
 
   return (
@@ -159,9 +164,10 @@ const Map = props => {
         </Control>
         <Control position='topleft'>
           <BoundaryLayerLegend
-            legendInfo={defaults.data.overlayLayers}
+            legendInfo={boundaryLayerInfo}
             setOverLayers={setOverLayers}
-            overLayers={overLayers}
+            setBoundaryLayerInfo={setBoundaryLayerInfo}
+              // overLayers={overLayers}
 
           />
         </Control>
@@ -214,18 +220,14 @@ const Map = props => {
         overlayData.map(layer => {
           const layerName = layer[0];
           const layerData = layer[1];
-          const visible = overLayers[layerName];
-          const borderWeight = defaults.data.overlayLayers.find(layer =>
-            layer.name === layerName).style.borderWeight;
-          const borderColor = defaults.data.overlayLayers.find(layer =>
-              layer.name === layerName).style.borderColor
+          const visible = boundaryLayerInfo[layerName].checked;
+          const style = boundaryLayerInfo[layerName].style;
   
 
           return (visible ?
 
            <OverlayLayer 
-            borderWeight={borderWeight}
-            borderColor={borderColor}
+            style={style}
             data={layerData}/> 
 
           : null)
