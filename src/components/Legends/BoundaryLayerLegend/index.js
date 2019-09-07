@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import { Checkbox, Popup, Button } from 'semantic-ui-react';
-import { HuePicker } from 'react-color';
+import { HuePicker, SketchPicker, CirclePicker } from 'react-color';
 import './style.css';
 
 const BoundaryLayerLegend = props => {
@@ -48,7 +48,7 @@ const BoundaryLayerLegend = props => {
                 <div style={{float: 'left', width: '95%'}}>
                     <h4 style={{paddingLeft: '10px',width: '30%', float: 'left'}}>{key}</h4>
                     
-                    <div
+                    {/* <div
                     id={key + 'symbol'} 
                     style={{
                         float: 'left',
@@ -58,15 +58,18 @@ const BoundaryLayerLegend = props => {
                         borderColor: data.style.borderColor,
                         borderWidth: data.style.borderWeight
                     }}>
-                    </div>
+                    </div> */}
                     
 
                     <Popup
-                        on='click'
+                        basic
+                        on='hover'
+                        hoverable
                         inverted 
                         children=
                         {
                         <div>
+                        <h4>Edit {key} Layer</h4>
                         <Button 
                             onClick={
                                 () => {
@@ -87,7 +90,8 @@ const BoundaryLayerLegend = props => {
                         >
                             Change Type
                         </Button>
-                        <HuePicker
+                        <SketchPicker
+                            disableAlpha
                             color={data.style.borderColor}
                             onChange={e => {
                                 console.log(e.hex)
@@ -103,12 +107,57 @@ const BoundaryLayerLegend = props => {
                                     })
                             }
                                 } />
+                            Change Thickness    
+                            <Button size='mini' circular icon='minus' onClick={() => {
+                                const current = data.style.borderWeight;
+                                console.log(current);                                
+                                props.setBoundaryLayerInfo({
+                                    ...legendInfo,
+                                    [key]: {
+                                        ...data,
+                                        style: {
+                                            ...data.style,
+                                            borderWeight: data.style.borderWeight - .5
+                                        }
+                                    } 
+                                    })
+                            }
+                                }/>
+                            <Button size='mini' circular icon='add' onClick={() => {
+                                const current = data.style.borderWeight;
+                                console.log(current);
+                                props.setBoundaryLayerInfo({
+                                    ...legendInfo,
+                                    [key]: {
+                                        ...data,
+                                        style: {
+                                            ...data.style,
+                                            borderWeight: data.style.borderWeight + .5
+                                        }
+                                    } 
+                                    })
+                            }
+                                }/>
+                            
                         </div>} 
-                        trigger={<Button 
-                                    circular fitted  
-                                    style={{float: 'right'}} 
-                                    size='mini' 
-                                    icon='paint brush'/>} />
+                        trigger={
+                            <div
+                            id={key + 'symbol'} 
+                            style={{
+                                float: 'left',
+                                height: '20px', 
+                                width: '20px',
+                                borderStyle: data.style.borderType, 
+                                borderColor: data.style.borderColor,
+                                borderWidth: data.style.borderWeight
+                            }}>
+                            </div>
+                            // <Button 
+                            //         circular fitted  
+                            //         style={{float: 'left'}} 
+                            //         size='tiny' 
+                            //         icon='paint brush'/>
+                            } />
 
                 </div>
 

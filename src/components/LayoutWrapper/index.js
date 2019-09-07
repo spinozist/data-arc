@@ -185,6 +185,7 @@ const LayoutWrapper = props => {
                         labelManifest={labelManifest} /> 
                     : <h1>Map not loading</h1> }
                 </Col>
+                {layout.sideBarWidth.sm > 0 || layout.sideBarWidth.lg > 0 ?
                 <Col className='no-scrollbar' sm={layout.sideBarWidth.sm} lg={layout.sideBarWidth.lg} style={{height: '100%', width: '100%', overflow: 'scroll'}}>
                 { layout.tableVisible && data && primaryField ?
                     <Row className='no-scrollbar' middle='sm' style={{margin: '5px', height: '50%', width: '100%', overflow: 'scroll'}}>
@@ -236,6 +237,7 @@ const LayoutWrapper = props => {
                             <Loader id='loader-box' type='Audio' />
                         </div> } */}
                 </Col>
+                : null }
             </Row>
         </Grid>
     );

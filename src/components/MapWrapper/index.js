@@ -30,20 +30,17 @@ const Map = props => {
   const iconColor = 'black';
   const iconPosition = 'bottomright';
 
-  const icons = [
-    {ref: table}, 
-    {ref: chartScatterPlot},
-    {ref: chartBar}, 
-    // {ref: chartLine}
-  ];
-
-  const [overLayers, setOverLayers] = useState(
-    {
-      Counties: defaults.data.overlayLayers.find(layer => layer.name === 'Counties').checked,
-      Cities: defaults.data.overlayLayers.find(layer => layer.name === 'Cities').checked,
-      NPUs: defaults.data.overlayLayers.find(layer => layer.name === 'NPUs').checked
-    }
-  );
+  const [icons, setIcons] = useState({
+    table: {
+      visible: props.layout.tableVisible,
+      ref: table}, 
+    scatterPlot : {
+      visible: props.layout.scatterPlotVisible,
+      ref: chartScatterPlot},
+    barChart: {
+      visible: props.layout.barChartVisible,
+      ref: chartBar}, 
+  });
 
   const [boundaryLayerInfo, setBoundaryLayerInfo] = useState(defaults.data.overlayLayerInfo)
 
@@ -96,9 +93,22 @@ const Map = props => {
     setOverlayData(dataArray)
   };
 
-  useEffect(() => handleOverlayData(boundaryLayerInfo), [])
-  useEffect(() => {}, [boundaryLayerInfo])
-  useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO])
+  const closeSideBar = () => {
+    const status = Object.entries(icons).map(([key, value]) =>
+      value.visible);
+    const close = () => !status[0] && !status[1] && !status[2] ? props.setLayout({
+      ...props.layout,
+      mapWidth: {sm: 12, lg: 12},
+      sideBarWidth: {sm: 0, lg: 0}
+    }) : null;
+    close();
+  }
+  
+
+  useEffect(() => handleOverlayData(boundaryLayerInfo), []);
+  useEffect(() => {}, [boundaryLayerInfo]);
+  useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO]);
+  useEffect(() => closeSideBar(), [icons])
 
   return (
     <LeafletMap
@@ -165,7 +175,7 @@ const Map = props => {
         <Control position='topleft'>
           <BoundaryLayerLegend
             legendInfo={boundaryLayerInfo}
-            setOverLayers={setOverLayers}
+            // setOverLayers={setOverLayers}
             setBoundaryLayerInfo={setBoundaryLayerInfo}
               // overLayers={overLayers}
 
@@ -188,26 +198,36 @@ const Map = props => {
           }} />
         </Control>
         {
-          icons.map(icon => 
+          Object.entries(icons).map(([key, value]) => 
           <Control position={iconPosition}>
             <Icon 
               style={iconStyle}
               height={iconSize} 
               width={iconSize} 
-              color={iconColor} 
-              icon={icon.ref}
-              onClick={() =>
+              color={value.visible ? 'grey' : iconColor} 
+              icon={value.ref}
+              onClick={() => {
                 props.setLayout({
-                ...props.layout,
-                mapWidth: {sm: 12, lg: 8},
-                sideBarWidth: {sm: 12, lg: 4},
-                tableVisible: icon.ref === table && props.layout.tableVisible === false ?
-                   true : icon.ref !== table ? props.layout.tableVisible : false,
-                scatterPlotVisible: icon.ref === chartScatterPlot && props.layout.scatterPlotVisible === false ?
-                true : icon.ref !== chartScatterPlot ? props.layout.scatterPlotVisible : false,
-                barChartVisible: icon.ref === chartBar && props.layout.barChartVisible === false ?
-                true : icon.ref !== chartBar ? props.layout.barChartVisible : false,
+                  ...props.layout,
+                  mapWidth: {sm: 12, lg: 8},
+                  sideBarWidth: {sm: 12, lg: 4},
+                  tableVisible: value.ref === table && props.layout.tableVisible === false ?
+                  true : value.ref !== table ? props.layout.tableVisible : false,
+                  scatterPlotVisible: value.ref === chartScatterPlot && props.layout.scatterPlotVisible === false ?
+                  true : value.ref !== chartScatterPlot ? props.layout.scatterPlotVisible : false,
+                  barChartVisible: value.ref === chartBar && props.layout.barChartVisible === false ?
+                  true : value.ref !== chartBar ? props.layout.barChartVisible : false,
                 })
+                setIcons({
+                  ...icons,
+                  [key]: {
+                    ...value,
+                    visible: value.visible ? false : true
+                  }
+                })  
+              }
+
+
               }/>
           </Control>)
         }
