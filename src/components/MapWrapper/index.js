@@ -26,24 +26,33 @@ import chartBar from '@iconify/icons-mdi/chart-bar';
 const Map = props => {
 
   const iconStyle = {backgroundColor: 'white', borderRadius: '5px', padding: '5px'}
-  const iconSize = '50px';
-  const iconColor = 'black';
+  const iconSize = '70px';
+  const iconColor = 'teal';
   const iconPosition = 'bottomright';
 
   const [icons, setIcons] = useState({
     table: {
       visible: props.layout.tableVisible,
-      ref: table}, 
+      ref: table
+    }, 
     scatterPlot : {
       visible: props.layout.scatterPlotVisible,
-      ref: chartScatterPlot},
+      ref: chartScatterPlot
+    },
     barChart: {
       visible: props.layout.barChartVisible,
-      ref: chartBar}, 
+      ref: chartBar
+    }, 
   });
 
   const [boundaryLayerInfo, setBoundaryLayerInfo] = useState(defaults.data.overlayLayerInfo)
 
+  const [legendStyle, setLegendStyle] = useState({
+    padding: '20px',
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    width: '300px'
+  })
 
   const [overlayData, setOverlayData] = useState(),
         [bounds , setBounds] = useState(),
@@ -169,25 +178,29 @@ const Map = props => {
             legendInfo={defaults.data.tileLayers} 
             setBaseMap={setBaseMap}
             baseMap={baseMap}
+            style={legendStyle}
           />
 
         </Control>
         <Control position='topleft'>
           <BoundaryLayerLegend
             legendInfo={boundaryLayerInfo}
-            // setOverLayers={setOverLayers}
+            style={legendStyle}
             setBoundaryLayerInfo={setBoundaryLayerInfo}
-              // overLayers={overLayers}
-
           />
+
         </Control>
         <Control position='topleft'>
           <DataLayerLegend
+           {...props}
+            setLayout={props.setLayout}
+            layout={props.layout}
             geoLabel={defaults.geoOptions.find(option => option.value === props.geo)}
             primaryField={props.primaryField}
             labelManifest={props.labelManifest}
             browseDataButton={props.dataButton}
             colorRamp={props.colorRamp}
+            style={legendStyle}
           />
         </Control>
         <Control position="topright" >
@@ -201,7 +214,9 @@ const Map = props => {
           Object.entries(icons).map(([key, value]) => 
           <Control position={iconPosition}>
             <Icon 
-              style={iconStyle}
+              style={{
+                ...iconStyle,
+                opacity: value.visible ? .7 : 1}}
               height={iconSize} 
               width={iconSize} 
               color={value.visible ? 'grey' : iconColor} 
@@ -266,8 +281,8 @@ const Map = props => {
         : null
       }
       
-      { props.data ?
-        <GeoJSONLayer {...props}/> 
+      { props.data && props.geoJSON?
+        <GeoJSONLayer {...props} baseMap={baseMap}/> 
         : null 
       }
 

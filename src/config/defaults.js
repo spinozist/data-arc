@@ -15,6 +15,20 @@ export default {
         sideBarWidth: {sm: 0, lg: 0}
     },
     data: {
+        tray: {
+            TotPop_00: {
+                category: "Change since 2000",
+                text: "# Total population, 2000",
+                value: "TotPop_00",
+                serviceID: 0
+            },
+            TotalHH_00: {
+                category: "Change since 2000",
+                text: "# Total Households, 2000",
+                value: "TotPop_00",
+                serviceID: 0
+            }
+        },
         baseUrl: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
         hoverField: 'GEOID',
         selectedFields: ['NAME', 'GEOID'],
@@ -40,36 +54,6 @@ export default {
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                 url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
             }
-        ],
-        overlayLayers: [
-            {
-                name: 'Counties',
-                style: {
-                    borderWeight: 2,
-                    borderColor: 'black'
-                },
-                checked: true,
-                url: 'https://opendata.arcgis.com/datasets/63996663b8a040438defe56ef7ce31e3_0.geojson'
-            },
-            {
-                name: 'Cities',
-                style: {
-                    borderWeight: 1,
-                    borderColor: 'purple'
-                },
-                checked: false,
-                url: 'https://opendata.arcgis.com/datasets/0248805ea42145d3b7d7194beafcc3d7_55.geojson'
-            },
-            {
-                name: 'NPUs',
-                style: {
-                    borderWeight: 1,
-                    borderColor: 'red'
-                },
-                checked: false,
-                url: 'https://opendata.arcgis.com/datasets/91911cd123624a6b9b88cbf4266a2309_4.geojson'
-            }
-
         ],
         overlayLayerInfo: {
             Counties: {
@@ -112,8 +96,7 @@ export default {
             value: 0,
             manifest: 'Change',
             primaryField: 'TotPop_00',
-            secondaryField: 'TotalHH_00'
-            
+            secondaryField: 'TotalHH_00',            
         },
         {
             key: 'serviceID-1',

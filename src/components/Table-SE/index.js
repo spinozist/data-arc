@@ -1,34 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StickyTable, Row, Cell } from 'react-sticky-table';
 // import numeral from 'numeral';
-import OpenDataManifest from '../../config/OpenDataManifest';
+// import OpenDataManifest from '../../config/OpenDataManifest';
 import 'react-sticky-table/dist/react-sticky-table.css';
 
 const TableSE = props => {
 
-    const selectedFields = props.selectedFields;
-
-    const sortField = props.sortField;
-    const sortOrder = props.sortOrder;
-
-    let featureArray = props.data ? props.data.features : null;
-
-    featureArray = sortField ? featureArray.filter(a => a.properties[sortField] !== 'NA') : featureArray;
+    const dataTray = props.dataTray ? props.dataTray : null;
+    const fields = [props.hoverField, 'NAME'];
     
-    featureArray = sortField === 'NAME' ? featureArray.sort(sortOrder === 'hilo' ? (a,b) => 
-        a.properties[sortField] > b.properties[sortField] ? 
-        1 : -1 : (a,b) => a.properties[sortField] < b.properties[sortField] ? 1 : -1)
-        : featureArray;
+    Object.keys(dataTray).map(key => fields.push(key));
+    
+    // console.log(fields);
+    // console.log(dataTray);
+    // const sortField = props.sortField;
+    // const sortOrder = props.sortOrder;
 
-    featureArray =  sortField !== 'NAME' ? featureArray.sort(sortOrder === 'hilo' ? (a,b) => 
-        parseFloat(a.properties[sortField]) > parseFloat(b.properties[sortField]) ? 
-        1 : -1 : (a,b) => parseFloat(a.properties[sortField]) < parseFloat(b.properties[sortField]) ? 1 : -1)
-        : featureArray;
+    const dataObj = props.data ? props.data : null;
+
+    console.log(dataObj)
+
+    const [sort, setSort] = useState({field: fields[3], direction: 'hilo'});
+    // featureArray = sortField ? featureArray.filter(a => a.properties[sortField] !== 'NA') : featureArray;
+    
+    // featureArray = sortField === 'NAME' ? featureArray.sort(sortOrder === 'hilo' ? (a,b) => 
+    //     a.properties[sortField] > b.properties[sortField] ? 
+    //     1 : -1 : (a,b) => a.properties[sortField] < b.properties[sortField] ? 1 : -1)
+    //     : featureArray;
+
+    // featureArray =  sortField !== 'NAME' ? featureArray.sort(sortOrder === 'hilo' ? (a,b) => 
+    //     parseFloat(a.properties[sortField]) > parseFloat(b.properties[sortField]) ? 
+    //     1 : -1 : (a,b) => parseFloat(a.properties[sortField]) < parseFloat(b.properties[sortField]) ? 1 : -1)
+    //     : featureArray;
         
     return (
+        // <div>
+
+        // </div>
+
           <StickyTable style={{width: '100%', height: '100%', borderRadius: '10px'}} stickHeaderCount={1}>
             <Row >
-                {selectedFields ? selectedFields.map((columnLabel,index) => 
+                {fields ? fields.map((columnLabel,index) => 
                     <Cell
                         style={{
                             height: '30px',
@@ -40,18 +52,31 @@ const TableSE = props => {
                         key={"column-" + columnLabel} 
                         title={columnLabel}
                         value={columnLabel}
-                        onClick={() => props.handleSortField(columnLabel, props.sortOrder === 'lohi' ? 'hilo' : 'lohi')}
+                        onClick={() => 
+                            setSort({field: columnLabel, direction: sort.direction === 'hilo' ? 'lohi' : 'hilo'})
+                            // props.handleSortField(columnLabel, props.sortOrder === 'lohi' ? 'hilo' : 'lohi')
+                        }
                     >
-                        {columnLabel && OpenDataManifest[props.labelManifest].find(field => field.Variable === columnLabel) ? 
-                            OpenDataManifest[props.labelManifest].find(field => field.Variable === columnLabel).Long : columnLabel }
+                        {dataTray[columnLabel] ? dataTray[columnLabel].text : columnLabel}
                     </Cell>
                 ) : null }
             </Row>
 
-            {featureArray ? featureArray.map((feature, i) => {
+            {dataObj ? Object.entries(dataObj)
+                .sort(([,a],[,b]) => 
+                    sort.field === 'GEOID' || sort.field === 'NAME' ?
+                    sort.direction === 'hilo' ?
+                    a[sort.field] > b[sort.field] ? -1 : 1
+                    : a[sort.field] < b[sort.field] ? -1 : 1 :
+
+                    sort.direction === 'hilo' ?
+                    parseFloat(a[sort.field]) > parseFloat(b[sort.field]) ? -1 : 1
+                    : parseFloat(a[sort.field]) < parseFloat(b[sort.field]) ? -1 : 1
+                )
+                .map(([key, value], i) => {
                 
-                const id = feature.properties[props.hoverField];
-                // console.log(feature);
+                const id = key;
+                // console.log(id);
                 return(
                     <Row
                     key={'row-'+ id + i}
@@ -60,8 +85,8 @@ const TableSE = props => {
                     id={'row-' + id}
                     // onMouseEnter={() => props.handleHover(feature.properties[props.hoverField])}
                     >
-                        {selectedFields ? selectedFields.map((fieldName, j) => {
-                            const value = feature.properties[fieldName];
+                        {fields ? fields.map((fieldName, j) => {
+                            const cellValue = value[fieldName];
                             // const datatype = OpenDataManifest[props.labelManifest]
                             //     .find(obj => obj.Variable === fieldName).Type;
                             // console.log(datatype + '(' + typeof value + '): ' + value);
@@ -74,12 +99,13 @@ const TableSE = props => {
                             textAlign: 'center'
                         }}
                         key={'cell' + fieldName + '-' + j}>
-                           {value}
+                           {cellValue}
                         </Cell>
                         )}) : null }
                     </Row>
                     )
-            }) : null }
+            })
+            : null }
 
 
             

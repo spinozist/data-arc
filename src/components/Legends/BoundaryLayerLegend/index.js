@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import { Checkbox, Popup, Button } from 'semantic-ui-react';
 import { HuePicker, SketchPicker, CirclePicker } from 'react-color';
+import LayerEditor from '../../LayerEditor';
 import './style.css';
 
 const BoundaryLayerLegend = props => {
@@ -16,6 +17,9 @@ const BoundaryLayerLegend = props => {
         
     }
 
+    const numberOfItems = Object.keys(legendInfo).length;
+    const height = 50 + numberOfItems * 40; 
+
     useEffect(() => console.log(legendInfo), [legendInfo]);
     useEffect(() => updateSymbolStyle(), [legendInfo]);
 
@@ -23,11 +27,12 @@ const BoundaryLayerLegend = props => {
         <div 
             style={{
                 marginBottom: '5px',
-                backgroundColor: 'white',
-                padding: '5px',
-                width: '400px',
-                borderRadius: '10px',
-                overflow: 'auto'
+                backgroundColor: props.style.backgroundColor,
+                padding: props.style.padding,
+                width: props.style.width,
+                borderRadius: props.style.borderRadius,
+                overflow: 'visible',
+                height: height + 'px'
             }}>
 
         <h2>Boundary Layer(s)</h2>
@@ -45,8 +50,8 @@ const BoundaryLayerLegend = props => {
                     checked={data.checked} 
                 />
 
-                <div style={{float: 'left', width: '95%'}}>
-                    <h4 style={{paddingLeft: '10px',width: '30%', float: 'left'}}>{key}</h4>
+                <div style={{float: 'left', width: '90%'}}>
+                    <h4 style={{paddingLeft: '10px',width: '40%', float: 'left'}}>{key}</h4>
                     
                     {/* <div
                     id={key + 'symbol'} 
@@ -60,89 +65,25 @@ const BoundaryLayerLegend = props => {
                     }}>
                     </div> */}
                     
-
                     <Popup
-                        basic
+                        // style={{ zIndex: '99999'}}
+                        // basic
+                        position={'right center'}
                         on='hover'
                         hoverable
-                        inverted 
-                        children=
-                        {
-                        <div>
-                        <h4>Edit {key} Layer</h4>
-                        <Button 
-                            onClick={
-                                () => {
-                                    const currentStyle = data.style;
-                                    console.log(data)
-                                    props.setBoundaryLayerInfo({
-                                    ...legendInfo,
-                                    [key]: {
-                                        ...data,
-                                        style: {
-                                            ...data.style,
-                                            borderType: currentStyle.borderType === 'dashed' ? 'solid' : 'dashed'
-                                        }
-                                    } 
-                                    })
-                                }
-                        }
-                        >
-                            Change Type
-                        </Button>
-                        <SketchPicker
-                            disableAlpha
-                            color={data.style.borderColor}
-                            onChange={e => {
-                                console.log(e.hex)
-                                props.setBoundaryLayerInfo({
-                                    ...legendInfo,
-                                    [key]: {
-                                        ...data,
-                                        style: {
-                                            ...data.style,
-                                            borderColor: e.hex
-                                        }
-                                    } 
-                                    })
-                            }
-                                } />
-                            Change Thickness    
-                            <Button size='mini' circular icon='minus' onClick={() => {
-                                const current = data.style.borderWeight;
-                                console.log(current);                                
-                                props.setBoundaryLayerInfo({
-                                    ...legendInfo,
-                                    [key]: {
-                                        ...data,
-                                        style: {
-                                            ...data.style,
-                                            borderWeight: data.style.borderWeight - .5
-                                        }
-                                    } 
-                                    })
-                            }
-                                }/>
-                            <Button size='mini' circular icon='add' onClick={() => {
-                                const current = data.style.borderWeight;
-                                console.log(current);
-                                props.setBoundaryLayerInfo({
-                                    ...legendInfo,
-                                    [key]: {
-                                        ...data,
-                                        style: {
-                                            ...data.style,
-                                            borderWeight: data.style.borderWeight + .5
-                                        }
-                                    } 
-                                    })
-                            }
-                                }/>
-                            
-                        </div>} 
+                        pinned
+                        // inverted
+                        wide
+                        children={
+                            <LayerEditor 
+                                {...props}
+                                layer={key} 
+                                data={data} 
+                                legendInfo={legendInfo} />
+                            } 
                         trigger={
                             <div
-                            id={key + 'symbol'} 
+                            id={key + 'symbol'}
                             style={{
                                 float: 'left',
                                 height: '20px', 
@@ -152,12 +93,7 @@ const BoundaryLayerLegend = props => {
                                 borderWidth: data.style.borderWeight
                             }}>
                             </div>
-                            // <Button 
-                            //         circular fitted  
-                            //         style={{float: 'left'}} 
-                            //         size='tiny' 
-                            //         icon='paint brush'/>
-                            } />
+                        } />
 
                 </div>
 

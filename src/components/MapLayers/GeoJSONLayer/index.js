@@ -24,14 +24,17 @@ const GeoJSONLayer = props => {
 
   colors = reverse ? colors.reverse() : colors;
   
-  const valueArray = props.data ? props.data.features
-    .filter(feature => feature.properties[props.primaryField] !== 'NA')
-        .map(feature => {
-      
-        const variable = parseFloat(feature.properties[props.primaryField]);
-        // const normalizer=props.normalizedBy ? feature.properties[props.normalizedBy] : 1
-        // console.log(variable ? variable : null);
-        return variable}) : null;
+  const primaryField = props.primaryField;
+  // console.log(primaryField)
+
+  const valueArray = props.data ? Object.entries(props.data)
+  // .filter(([key, value]) => value[props.primaryField] !== 'NA')
+  .map(([key,value]) => {
+
+      // console.log(key);
+      // console.log(value[primaryField])
+      return parseFloat(value[primaryField] !== 'N/A' ? value[primaryField] : null )
+    }) : null;
 
     const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
     const minValue = valueArray !== null ? Math.min(...valueArray) : 'Value array not load yet';
@@ -41,12 +44,16 @@ const GeoJSONLayer = props => {
   // console.log(props.data)
     // console.log(maxValue);
     // console.log(minValue);
-
-
-  const geojsonData = props.data ? 
-    props.data.features.filter(feature => feature.properties[props.primaryField] !== 'NA') : null;
-  // console.log(geojsonData);
   
+  const geoJSONGeometry = props.geoJSON ? props.geoJSON : null
+   
+  // console.log(geoJSONGeometry);
+
+  // const geojsonData = props.data ? 
+  //   Object.entries(props.data).filter(([key,value]) => value[props.primaryField] !== 'NA') : null;
+  
+  // console.log(geojsonData);
+
 //   props.geographyFilter ? 
 //   //If there's a filter type
 //   props.data.filter(feature => 
@@ -100,7 +107,7 @@ const GeoJSONLayer = props => {
 
       <GeoJSON
       key={'geojson-layer'}
-      data={ geojsonData }
+      data={ geoJSONGeometry }
     //   pointToLayer={props.data.point ? (feature, latlng) => {
         
     //     const variable=feature.properties[props.data.primaryField];
@@ -132,10 +139,16 @@ const GeoJSONLayer = props => {
 
 
       style={ feature => {
-        const variable = feature.properties ? parseFloat(feature.properties[props.primaryField]) : null;
-        const normalizer = props.normalizedBy ? parseFloat(feature.properties[props.normalizedBy]) : 1;
 
-        // console.log(props.data.primaryField);
+        const featureID = feature.properties[props.hoverField];
+
+
+        const joinedFeature = props.data ? props.data[featureID] : null;
+
+        const variable = joinedFeature ? joinedFeature[props.primaryField] : null;
+          
+        const normalizer = props.normalizedBy ? joinedFeature[props.normalizedBy] : 1;
+
         const value = variable/normalizer;
         const distFromMin = value - minValue;
         const range = maxValue - minValue;
@@ -144,13 +157,12 @@ const GeoJSONLayer = props => {
         // const opacity = value;
         const color = value ? colors[Math.floor(value === 0 ? 0 : binningRatio * indexRange)] : null;
 
-        const featureID = feature.properties[props.hoverField];
 
 
         // console.log(featureID);
 
           return ({
-            color: props.hoverID === featureID ? 'black' : '#1a1d62',
+            color: props.hoverID === featureID ? props.baseMap === 'tile-layer-dark' ? 'white' : 'black' : '#1a1d62',
             weight: props.hoverID === featureID ? 3 : 0.4,
             fillColor: color,
             fillOpacity: !value ? 0 : props.hoverID === featureID ? 1 : props.layout.colorOpacity,
