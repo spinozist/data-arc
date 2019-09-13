@@ -28,7 +28,7 @@ const GeoJSONLayer = props => {
   // console.log(primaryField)
 
   const valueArray = props.data ? Object.entries(props.data)
-  .filter(([key, value]) => value[props.primaryField] !== 'NA' && value[props.primaryField] !== 'NA')
+  .filter(([key, value]) => value[props.primaryField] !== 'NA' && value[props.primaryField] !== 'NA' && value[props.primaryField] !== null)
   .map(([key,value]) => {
 
       // console.log(key);
@@ -71,9 +71,8 @@ const GeoJSONLayer = props => {
   //   fillOpacity: 0.8
   // };
 
-  const addFeatureFunctions = (feature, layer) => {
+  const addFeatureFunctions = (feature, layer, value) => {
           
-    
     const featureID = feature.properties[props.hoverField];
 
     layer.bindTooltip(String(featureID))
@@ -94,8 +93,12 @@ const GeoJSONLayer = props => {
   //   // }
   //   // }) 
 
+  useEffect(() => {}, [props.primaryField])
+
 
   return (
+
+    props.primaryField ?
 
       <GeoJSON
       key={'geojson-layer'}
@@ -161,9 +164,11 @@ const GeoJSONLayer = props => {
 
     //   onMouse
 
-      onEachFeature={(feature, layer) => props.dataLoaded && props.primaryField && props.data ? addFeatureFunctions(feature, layer) : null }
-    />
-  );
+      onEachFeature={(feature, layer) => 
+        props.dataLoaded && props.primaryField && props.data ? 
+        addFeatureFunctions(feature, layer, props.data[feature.properties[props.hoverField]][props.primaryField]) : null }
+    /> : null
+  ) 
 };
 
 export default GeoJSONLayer;

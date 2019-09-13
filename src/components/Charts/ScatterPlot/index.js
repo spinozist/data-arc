@@ -23,7 +23,7 @@ const ScatterPlot = props => {
   colors = reverse ? colors.reverse() : colors;
 
   const valueArray = props.data ? Object.entries(props.data)
-  .filter(([key, value]) => value[primaryField] !== 'N/A' && value[primaryField] !== 'NA' )
+  .filter(([key, value]) => value[primaryField] !== 'NA' && value[primaryField] !== 'NA' && value[primaryField] !== null)
   .map(([key,value]) => {
 
     return parseFloat(value[primaryField])
@@ -36,7 +36,7 @@ const ScatterPlot = props => {
     .filter(([key, value]) => value[primaryField] !== 'N/A' || value[primaryField] !== 'NA' || value[primaryField] !== null)
     .map(([key,value]) => 
       ({
-        x: parseFloat(value[props.primaryField]),
+        x: parseFloat(value[primaryField]),
         y: parseFloat(value[props.secondaryField]),
         name: value[props.hoverField]
       })
@@ -53,9 +53,9 @@ const ScatterPlot = props => {
             // hide
             type="number" 
             dataKey="x" 
-            name={props.data ? props.primaryField : null } 
+            name={props.data ? primaryField : null } 
             label={{
-              value: props.dataTray ? props.dataTray[props.primaryField].text : 'x',
+              value: props.dataTray ? props.dataTray[primaryField].text : 'x',
               position: 'bottom'
             }}
             unit={null} />
@@ -95,7 +95,7 @@ const ScatterPlot = props => {
               .filter(a => a.x !== 'NA' || a.y !== 'NA' || a.x !== 'N/A' ||a.y !== 'N/A' )
               .map((feature, index) => {
                 
-                const value=parseFloat(feature.x);
+                const value = parseFloat(feature.x);
                 const distFromMin = value - minValue;
                 const range = maxValue - minValue;
                 const binningRatio = distFromMin/range;

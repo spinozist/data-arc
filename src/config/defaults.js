@@ -21,14 +21,14 @@ export default {
                 text: "# Total population, 2000",
                 value: "TotPop_00",
                 serviceID: 0,
-                manifest: 'Change'
+                manifest: 'Change since 2000'
             },
             TotalHH_00: {
                 category: "Change since 2000",
                 text: "# Total Households, 2000",
                 value: "TotPop_00",
                 serviceID: 0,
-                manifest: 'Change'
+                manifest: 'Change since 2000'
             }
         },
         baseUrl: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
@@ -91,6 +91,48 @@ export default {
 
         }
     },
+    categoryOptionsNEW : [
+        {
+            key: 'serviceID-0',
+            text: 'Change since 2000',
+            value: 0,
+            category: 'Change',
+            primaryField: 'TotPop_00',
+            secondaryField: 'TotalHH_00',            
+        },
+        {
+            key: 'serviceID-1',
+            text: 'Demography',
+            value: 1,
+            category: 'Demography',
+            primaryField: 'mMedianAge_e',
+            secondaryField: 'rPopDensity'
+            
+        }, 
+        {
+            key: 'serviceID-3',
+            text: 'Economy',
+            value: 3,
+            category: 'Economy',
+            primaryField: 'InLabForce_e'
+
+        },
+        {
+            key: 'serviceID-5',
+            text: 'Housing',
+            value: 5,
+            category: 'Housing',
+            primaryField: 'TotalHU_e'
+        },
+        {
+            key: 'serviceID-7',
+            text: 'Social',
+            value: 7,
+            category: 'Social',
+            primaryField: 'TotalHH_e'
+        }
+    
+    ],
     categoryOptions: [
         {
             key: 'serviceID-0',
@@ -104,7 +146,7 @@ export default {
             key: 'serviceID-1',
             text: 'Demography',
             value: 1,
-            manifest: 'Demography',
+            manifest: 'Demographic',
             primaryField: 'mMedianAge_e',
             secondaryField: 'rPopDensity'
             
@@ -121,7 +163,7 @@ export default {
             key: 'serviceID-3',
             text: 'Economy',
             value: 3,
-            manifest: 'Economy',
+            manifest: 'Economic',
             primaryField: 'InLabForce_e'
 
         },

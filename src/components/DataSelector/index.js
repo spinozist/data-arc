@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Dropdown, Radio, Button, Icon } from 'semantic-ui-react';
+import { Dropdown, Radio, Button, Icon, Input } from 'semantic-ui-react';
 import defaults from '../../config/defaults';
 import dataManifest from '../../config/OpenDataManifest';
+
+import testDataManifest from '../../config/datamanifest';
 import colormap from 'colormap';
 // import CSVExportButton from '../CSVExportButton';
 import './style.css';
 
 
 
-
 const DataSelector = props => {
+
+    const [showFilters, setShowFilters] = useState(false);
+
+    // console.log(testDataManifest.map((item, i) => i < 10 ? item : null))
+
     const [queryResults, setQueryResults] = useState();
 
     const [query, setQuery] = useState({MOE: false, manifest: 'Change', catValue: 0});
@@ -19,6 +25,8 @@ const DataSelector = props => {
     const initialTray = props.GlobalDataTray;
 
     const [dataTray, setDataTray] = useState(initialTray);
+
+    const [search, setSearch] = useState();
 
     const categoryColorIndices = {
         "Change since 2000": 5,
@@ -49,9 +57,9 @@ const DataSelector = props => {
         const topic = queryObj ? queryObj.topic : null;
         // const MOE = queryObj ? queryObj.MOE : false;
         
-        const results = manifest ? dataManifest[manifest]
+        const results = manifest ? testDataManifest
             .filter(result => result.Topic !== 'N/A' )
-            .filter(result => manifest === 'RaceX' ? result.Category === category : true)
+            .filter(result => category ? result.Category === category : true)
             .map(result => 
             ({
                 key: result.Variable,
@@ -59,7 +67,7 @@ const DataSelector = props => {
                 value: result.Variable,
                 topic: result.Topic,
                 category: result.Category,
-                manifest: manifest,
+                manifest: result.Category,
                 MOE: result.ESTMOE === 'MOE' ? true : false,
                 content: (
                     <div 
@@ -149,8 +157,20 @@ const DataSelector = props => {
     return(
     <div style={{height: '80vh', width: '100%'}}>
         <div style={{float: 'left', width: '40%'}}>
+        
+        <Input
+            fluid 
+            placeholder='Search...'
+            value={search}
+            onChange={(e, data) => setSearch(data.value)}
+            style={{
+                float: 'left',
+                margin: '10px',
+                width: '100%',
+                height:'50px',
+            }}  />
 
-        { defaults.categoryOptions ? 
+        { defaults.categoryOptions && showFilters? 
             <Dropdown
                 label='Filter by Category' 
                 style={{
@@ -161,7 +181,7 @@ const DataSelector = props => {
                         zIndex: '9999'
                 }} 
                 id='cat-selector' 
-                value={query.catValue} 
+                value={query.catValue}
                 onChange={(event, data) => {
                     event.preventDefault()
                     // console.log(data);
@@ -181,12 +201,12 @@ const DataSelector = props => {
                     // handleTopicOptions()
                     // props.setServiceID(optionObject.value)
                 }} 
-                placeholder='Select Data Category' 
+                placeholder='Filter by Category' 
                 selection 
                 options={defaults.categoryOptions}
             />
             : null }
-        { queryResults && topicOptions ? 
+        { queryResults && topicOptions && showFilters ? 
         <Dropdown 
             selection 
             style={{ 
@@ -203,11 +223,11 @@ const DataSelector = props => {
                 setQuery({...query, topic: data.value})
             }
             }
-            placeholder='Select Topic' 
+            placeholder='Filter by Topic' 
             options={topicOptions}
         />
         : null }
-        { queryResults ? 
+        { queryResults && showFilters ? 
             <Radio 
                 toggle
                 checked={query.MOE ? true : false} 
@@ -261,7 +281,11 @@ const DataSelector = props => {
 
         <div style={{ width: '55%', height: '60%', float: 'right', overflow: 'auto', textAlign: 'left'}}>
             { queryResults && query ?
-                queryResults.map(result =>
+                queryResults
+                .filter(result => 
+                    // Expand Search Functionality
+                    search ? result.text.toUpperCase().includes(search.toUpperCase()) : true)
+                .map(result =>
                 <div
                 onClick={() => addToDataTray(result)}
                 style={{

@@ -15,12 +15,11 @@ const CSVExportButton = props => {
         // const sortField = props.sortField;
         // const sortOrder = props.sortOrder;
     
-        const featureArray = props.data && props.selectedFields ? 
-            props.data.features.map(feature => {
-                const entries = props.selectedFields.map(field => 
-                    [field, feature.properties[field]]);
-                return Object.fromEntries(entries);
-            }) : console.log('No Data for CSV Button');
+        const data = props.data ? 
+            Object.values(props.data)
+            : console.log('No Data for CSV Button');
+        
+        console.log(data);
 
         const csvOptions = 
             { 
@@ -45,10 +44,15 @@ const CSVExportButton = props => {
                  id='csv-button'
                  basic={ props.basic ? props.basic : false }
                  color={ props.color ? props.color : 'teal'}
-                 style={{ margin: props.margin ? props.margin : '10px'}}
-                 onClick={featureArray ? () =>
+                 style={{
+                    padding: '5px',  
+                    margin: props.margin ? props.margin : '10px',
+                    float: props.float ? props.float : 'left',
+                    borderRadius: props.borderRadius ? props.borderRadius : null,
+                    height: props.height ? props.height : null}}
+                 onClick={data ? () =>
                     // console.log(featureArray) 
-                    csvExporter.generateCsv(featureArray) 
+                    csvExporter.generateCsv(data) 
                     : console.log('No Data for CSV Button')}
                 >
                     {props.text ? props.text : 'Download CSV'}

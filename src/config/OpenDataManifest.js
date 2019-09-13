@@ -1,5 +1,5 @@
 export default {
-  Change : [
+  "Change since 2000" : [
  {
    "Variable": "LogRecNo",
    "Description": "Logical record number (Unique ID to link across tables)",
@@ -1473,7 +1473,7 @@ export default {
    "Notes": "Table H44 from Census 2000, Table B25044 from ACS"
  }
 ],
-  Demography : [
+  Demographic : [
   {
     "Variable": "LogRecNo",
     "Description": "Logical record number (Unique ID to link across tables)",
@@ -4035,7 +4035,7 @@ export default {
     "Notes": ""
   }
  ],
-  Economy: [
+  Economic: [
   {
     "Variable": "LogRecNo",
     "Description": "Logical record number (Unique ID to link across tables)",

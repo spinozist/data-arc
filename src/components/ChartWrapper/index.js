@@ -21,7 +21,7 @@ const dataTrayOptions = Object.entries(props.dataTray).map(([key, value]) =>
 useEffect(() => setChartType(props.chartType), [props.data, props.selectedVariable]);
 
 return(
-    <div id='chart-wrapper' style={{margin: '5px', borderRadius: '10px', backgroundColor: 'white', height: '100%', width: '100%'}}>
+    <div id='chart-wrapper' style={{ float: 'left',margin: '0 -2px 5px 5px', borderRadius: '10px 10px 0 0', backgroundColor: 'white', height: '100%', width: '100%'}}>
         
         {  chartType === 'scatterplot' && props.dataLoaded && props.data ?
         <ScatterPlot
@@ -33,6 +33,35 @@ return(
         }
         {
             chartType === 'scatterplot' && props.dataLoaded && props.data ?
+            <div 
+                style={{
+                    marginBottom: '10px',
+                    padding: '5px',
+                    float: 'left',
+                    width: '100%',
+                    backgroundColor: 'white',
+                    borderRadius: '0 0 10px 10px'    
+                }} 
+                id='scatter-plot-controls'>
+            <Popup
+            position={'left center'}
+            on='hover'
+            hoverable
+            pinned  
+            children={props.dataTray ? 
+                <Dropdown 
+                    selection
+                    scrolling 
+                    value={props.primaryField} 
+                    onChange={(event, data) => {
+                        // props.setPreviousServiceID(props.serviceID)
+                        props.setPrimaryField(data.value)
+                    }} 
+                    // placeholder='Select Geography' 
+                    options={dataTrayOptions} /> : null
+              }
+            trigger={<Button basic style={{margin: '5px', float: 'right'}}>Change X-axis</Button>} />
+
             <Popup
             position={'left center'}
             on='hover'
@@ -50,8 +79,8 @@ return(
                     // placeholder='Select Geography' 
                     options={dataTrayOptions} /> : null
               }
-            trigger={<Button>Change Y-axis</Button>} />
-            : null
+            trigger={<Button basic style={{margin: '5px', float: 'right'}}>Change Y-axis</Button>} />
+            </div> : null
   
         }
 

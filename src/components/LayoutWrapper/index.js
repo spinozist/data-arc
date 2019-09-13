@@ -9,6 +9,7 @@ import API from '../../utils/API'
 import ColorRamp from '../Legends/ColorRamp';
 import ModalWrapper from '../ModalWrapper';
 import { Button } from 'semantic-ui-react';
+import CSVExportButton from '../CSVExportButton';
 // import NewUserForm from '../NewUserForm';
 // import DataManifest from '../../config/DataManifest.json'
 import OpenDataManifest from '../../config/OpenDataManifest';
@@ -25,7 +26,7 @@ const LayoutWrapper = props => {
 
     const [serviceID, setServiceID] = useState(0);
     // const [prevServiceID, setPreviousServiceID] = useState();
-    const [labelManifest, setLabelManifest] = useState('Change');
+    const [labelManifest, setLabelManifest] = useState('Change since 2000');
     const [sortField, setSortField] = useState('NAME');
     const [sortOrder, setSortOrder] = useState('hilo');
     const [sumLevel, setSumLevel] = useState(defaults.data.sumLevel);
@@ -226,8 +227,45 @@ const LayoutWrapper = props => {
                 </Col>
                 {layout.sideBarWidth.sm > 0 || layout.sideBarWidth.lg > 0 ?
                 <Col className='no-scrollbar' sm={layout.sideBarWidth.sm} lg={layout.sideBarWidth.lg} style={{height: '100%', width: '100%', overflow: 'scroll'}}>
+                    { testData && layout.tableVisible ?
+                    <div 
+                        style={{
+                            float: 'left',
+                            width: '100%',
+                            margin: '0 10px -10px 10px',
+                            backgroundColor: 'white',
+                            borderRadius: '10px 10px 0 0'}}>
+
+                    <CSVExportButton
+                    // {...props}
+                    data={testData}
+                    // selectedFields={props.selectedFields}
+                    text={<small>Download CSV</small>}
+                    color='teal'
+                    basic={false}
+                    float='right'
+                    // height='20px'
+                    // borderRadius='50%'
+                    // margin= <= default set to '10px'
+                    />
+                    </div>    
+
+                        : null
+                         
+                } 
                 { layout.tableVisible && primaryField ?
-                    <Row className='no-scrollbar' middle='sm' style={{margin: '5px', height: '50%', width: '100%', overflow: 'scroll'}}>
+
+                    <Row className='no-scrollbar' middle='sm' 
+                        style={{
+                            margin: '0 15px 10px 10px',
+                            borderRadius: '0 0 10px 10px',
+                            height: '50%',
+                            width: '100%',
+                            overflow: 'scroll',
+                            backgroundColor: 'white',
+                            padding: '10px'
+                        }}>
+
                         {testData ? 
                         <TableSE
                             selectedFields={selectedFields} 
@@ -250,14 +288,16 @@ const LayoutWrapper = props => {
 
                     </Row> :  null 
                 }
+                
                 { layout.scatterPlotVisible && primaryField ? 
 
-                    <Row center='sm' middle='sm' style={{margin: '5px', height: '40%', width: '100%', zIndex: '99999'}}>
+                    <Row center='sm' middle='sm' style={{margin: '5px', height: '40%', width: '100%'}}>
                         { testData && dataLoaded  ? 
                         <ChartWrapper
                         dataTray={dataTray}
                         dataLoaded={dataLoaded} 
                         primaryField={primaryField}
+                        setPrimaryField={setPrimaryField}
                         secondaryField={secondaryField}
                         setSecondaryField={setSecondaryField}
                         data={testData} 
@@ -273,12 +313,13 @@ const LayoutWrapper = props => {
                     </Row> : null }
                 { layout.barChartVisible && primaryField ? 
 
-                    <Row center='sm' middle='sm' style={{margin: '5px', height: '40%', width: '100%', zIndex: '99999'}}>
-                        { data ?
+                    <Row center='sm' middle='sm' style={{position: 'relative', top: layout.scatterPlotVisible ? '60px' : null, margin: '5px', height: '40%', width: '100%'}}>
+                        { testData && dataLoaded ?
                         <ChartWrapper 
                             primaryField={primaryField}
                             secondaryField={secondaryField}
-                            data={data} 
+                            data={testData}
+                            dataTray={dataTray} 
                             layout={layout}
                             handleHover={setHoverID}
                             hoverID={hoverID} 

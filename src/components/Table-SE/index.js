@@ -18,7 +18,7 @@ const TableSE = props => {
     const [sort, setSort] = useState({field: fields[3], direction: 'hilo'});
     
     return (
-        <StickyTable style={{width: '100%', height: '100%', borderRadius: '10px'}} stickHeaderCount={1}>
+        <StickyTable style={{width: '100%', height: '100%'}} stickHeaderCount={1}>
             <Row >
             {fields ? fields.map((columnLabel,index) => 
                 <Cell
@@ -43,6 +43,8 @@ const TableSE = props => {
 
             {dataObj ? Object.entries(dataObj)
                 .sort(([,a],[,b]) => 
+                    // b[sort.field] === null || b[sort.field] === 'NA' || b[sort.field] === 'N/A' ? 1 :
+
                     sort.field === 'GEOID' || sort.field === 'NAME' ?
                     sort.direction === 'hilo' ?
                     a[sort.field] > b[sort.field] ? -1 : 1
