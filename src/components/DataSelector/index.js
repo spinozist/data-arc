@@ -20,15 +20,21 @@ const DataSelector = props => {
 
     const [dataTray, setDataTray] = useState(initialTray);
 
-    const categories = Object.keys(dataManifest).map(key => key)
+    const categoryColorIndices = {
+        "Change since 2000": 5,
+        Demographic: 15,
+        Economic: 25,
+        Housing: 35,
+        Social: 45
+    }
 
-    console.log(categories);
+    // console.log(categories);
     console.log(dataTray);
 
     const catColors = colormap(
         {
         colormap: 'phase',
-        nshades: categories.length + 3,
+        nshades: 50,
         format: 'hex',
         alpha: 1
         });
@@ -282,9 +288,9 @@ const DataSelector = props => {
                 style={{
                     border: 'solid',
                     borderWidth: '4px',
-                    opacity: key === props.primaryField ? '1' : '.7',
-                    backgroundColor: catColors[categories.indexOf(value.category) + 3],
-                    borderColor: catColors[categories.indexOf(value.category) + 3],
+                    opacity: '1',
+                    backgroundColor: catColors[categoryColorIndices[value.category]],
+                    borderColor: key === props.primaryField ? 'black' : catColors[categoryColorIndices[value.category]],
                     // color: catColors[categories.indexOf(value.category)],
                     float: 'left', borderRadius: '20px', margin: '5px', padding: '5px'}}>
                     {value.text}

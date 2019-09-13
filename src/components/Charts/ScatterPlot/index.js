@@ -1,6 +1,5 @@
 import React from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-// import { Dropdown } from 'react-bootstrap';
 // import dataConfig from "../../../config/dataConfig";
 import colormap from 'colormap';
 import numeral from 'numeral';
@@ -11,6 +10,7 @@ const ScatterPlot = props => {
   const numberOfBins = props.layout.numberOfBins;
   const colorMap = props.layout.colorMap;
   const reverse = props.layout.colorMapReverse;
+  const primaryField = props.primaryField;
 
 
   let colors = colormap({
@@ -22,39 +22,31 @@ const ScatterPlot = props => {
 
   colors = reverse ? colors.reverse() : colors;
 
-  const valueArray = props.data ? props.data.features
-    .filter(feature => feature.properties[props.primaryField] !== 'NA')
-    .map(feature => {
-    
-      const variable = parseFloat(feature.properties[props.primaryField]);
-      const normalizer = props.data.normalizedBy ? parseFloat(feature.properties[props.data.normalizedBy]) : 1
+  const valueArray = props.data ? Object.entries(props.data)
+  .filter(([key, value]) => value[primaryField] !== 'N/A' && value[primaryField] !== 'NA' )
+  .map(([key,value]) => {
 
-      return variable/normalizer}) : null;
+    return parseFloat(value[primaryField])
+    }) : null;
 
   const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
   const minValue = valueArray !== null ? Math.min(...valueArray) : 'Value array not load yet';
 
-  const dataArray = props.data ? props.data.features
-    .filter(feature => feature.properties[props.primaryField] !== 'NA')
-    .map(feature => 
+  const dataArray = props.data ? Object.entries(props.data)
+    .filter(([key, value]) => value[primaryField] !== 'N/A' || value[primaryField] !== 'NA' || value[primaryField] !== null)
+    .map(([key,value]) => 
       ({
-        x: parseFloat(feature.properties[props.primaryField]),
-        y: parseFloat(feature.properties[props.secondaryField]),
-        name: feature.properties[props.hoverField]
+        x: parseFloat(value[props.primaryField]),
+        y: parseFloat(value[props.secondaryField]),
+        name: value[props.hoverField]
       })
       ) : null;
-
-  // const dataObject = dataConfig.filter(item => item.name === props.data.geography);
-
-  // const indicatorList = dataObject && props.data.geography ? dataObject[0].variableOptions : null;
-
-  // console.log (indicatorList);  
 
   return (
       <ResponsiveContainer height="100%" width="100%">
         <ScatterChart
           margin={{
-            top: 20, right: 15, bottom: 20, left: 20,
+            top: 20, right: 20, bottom: 20, left: 20,
           }} >
           <CartesianGrid />
           <XAxis 
@@ -63,22 +55,24 @@ const ScatterPlot = props => {
             dataKey="x" 
             name={props.data ? props.primaryField : null } 
             label={{
-              value: props.data ? props.primaryField : 'x',
+              value: props.dataTray ? props.dataTray[props.primaryField].text : 'x',
               position: 'bottom'
             }}
             unit={null} />
-          <YAxis 
+
+            <YAxis 
             // hide
             orientation="right"
             type="number" 
             dataKey="y" 
             name={props.data ? props.secondaryField : null } 
             label={{
-              value: props.data ? props.secondaryField : 'y',
-              position: 'right',
+              value: props.dataTray ? props.dataTray[props.secondaryField].text : 'y',
+              position: 'center',
               angle: -90
             }} 
             unit={null} />
+
           {/* <Tooltip
             cursor={{ strokeDasharray: '3 3' }} 
             animationEasing={'ease'}
@@ -98,52 +92,37 @@ const ScatterPlot = props => {
             >
             {
               dataArray ? dataArray
-              .filter(a => a.x !== 'NA')
+              .filter(a => a.x !== 'NA' || a.y !== 'NA' || a.x !== 'N/A' ||a.y !== 'N/A' )
               .map((feature, index) => {
                 
                 const value=parseFloat(feature.x);
-                // const name=feature.name;
-
-                // console.log(feature);
-        
-                // console.log(props.primaryField);
                 const distFromMin = value - minValue;
                 const range = maxValue - minValue;
                 const binningRatio = distFromMin/range;
                 const indexRange = numberOfBins - 1;
-                // const opacity = value;
                 const color = colors[Math.floor(value === 0 ? 0 : binningRatio * indexRange)];
-                
 
                 return <Cell 
                   key={`cell-${index}`} 
                   fill={color} 
-                  // stroke={props.hoverID && name === props.hoverID ? 'black' : null}
-                  // strokeWidth={props.hoverID && name === props.hoverID ? 2 : null}
                   />
               }) : null
             }
           </Scatter>
           <Scatter 
             name={props.hoverField} 
-            data={props.hoverID && dataArray ? dataArray.filter(e => e.name === props.hoverID) : null} fill={colors[numberOfBins-1]}
+            data={props.hoverID && dataArray ? 
+              dataArray.filter(e => e.name === props.hoverID) : null} fill={colors[numberOfBins-1]}
             >
             {
               dataArray ? dataArray.filter(e => e.name === props.hoverID).map((feature, index) => {
                 
                 const value=parseFloat(feature.x);
-                // const name=feature.name;
-
-                // console.log(feature);
-        
-                // console.log(props.primaryField);
                 const distFromMin = value - minValue;
                 const range = maxValue - minValue;
                 const binningRatio = distFromMin/range;
                 const indexRange = numberOfBins - 1;
-                // const opacity = value;
                 const color = colors[Math.floor(value === 0 ? 0 : binningRatio * indexRange)];
-                
 
                 return <Cell 
                   key={`cell-${index}`} 
@@ -155,6 +134,7 @@ const ScatterPlot = props => {
             }
           </Scatter>
         </ScatterChart>
+
       </ResponsiveContainer>
   );
 };

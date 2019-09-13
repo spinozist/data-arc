@@ -11,55 +11,34 @@ const TableSE = props => {
     
     Object.keys(dataTray).map(key => fields.push(key));
     
-    // console.log(fields);
-    // console.log(dataTray);
-    // const sortField = props.sortField;
-    // const sortOrder = props.sortOrder;
-
     const dataObj = props.data ? props.data : null;
 
     console.log(dataObj)
 
     const [sort, setSort] = useState({field: fields[3], direction: 'hilo'});
-    // featureArray = sortField ? featureArray.filter(a => a.properties[sortField] !== 'NA') : featureArray;
     
-    // featureArray = sortField === 'NAME' ? featureArray.sort(sortOrder === 'hilo' ? (a,b) => 
-    //     a.properties[sortField] > b.properties[sortField] ? 
-    //     1 : -1 : (a,b) => a.properties[sortField] < b.properties[sortField] ? 1 : -1)
-    //     : featureArray;
-
-    // featureArray =  sortField !== 'NAME' ? featureArray.sort(sortOrder === 'hilo' ? (a,b) => 
-    //     parseFloat(a.properties[sortField]) > parseFloat(b.properties[sortField]) ? 
-    //     1 : -1 : (a,b) => parseFloat(a.properties[sortField]) < parseFloat(b.properties[sortField]) ? 1 : -1)
-    //     : featureArray;
-        
     return (
-        // <div>
-
-        // </div>
-
-          <StickyTable style={{width: '100%', height: '100%', borderRadius: '10px'}} stickHeaderCount={1}>
+        <StickyTable style={{width: '100%', height: '100%', borderRadius: '10px'}} stickHeaderCount={1}>
             <Row >
-                {fields ? fields.map((columnLabel,index) => 
-                    <Cell
-                        style={{
-                            height: '30px',
-                            textAlign: 'center', 
-                            verticalAlign: 'middle', 
-                            backgroundColor: '#d5bdbd',
-                            padding: '4px'
-                        }}
-                        key={"column-" + columnLabel} 
-                        title={columnLabel}
-                        value={columnLabel}
-                        onClick={() => 
-                            setSort({field: columnLabel, direction: sort.direction === 'hilo' ? 'lohi' : 'hilo'})
-                            // props.handleSortField(columnLabel, props.sortOrder === 'lohi' ? 'hilo' : 'lohi')
-                        }
-                    >
-                        {dataTray[columnLabel] ? dataTray[columnLabel].text : columnLabel}
-                    </Cell>
-                ) : null }
+            {fields ? fields.map((columnLabel,index) => 
+                <Cell
+                    style={{
+                        height: '30px',
+                        textAlign: 'center', 
+                        verticalAlign: 'middle', 
+                        backgroundColor: '#d5bdbd',
+                        padding: '4px'
+                    }}
+                    key={"column-" + columnLabel} 
+                    title={columnLabel}
+                    value={columnLabel}
+                    onClick={() => 
+                        setSort({field: columnLabel, direction: sort.direction === 'hilo' ? 'lohi' : 'hilo'})
+                    }
+                >
+                    {dataTray[columnLabel] ? dataTray[columnLabel].text : columnLabel}
+                </Cell>
+            ) : null }
             </Row>
 
             {dataObj ? Object.entries(dataObj)
@@ -95,8 +74,8 @@ const TableSE = props => {
                         <Cell 
                         style={{
                             backgroundColor: id === props.hoverID ? 'orange' : i % 2 === 0 ? props.layout.tableBanding[0] : props.layout.tableBanding[1],
-                            // backgroundColor: i % 2 === 0 ? props.layout.tableBanding[0] : props.layout.tableBanding[1],
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            verticalAlign: 'middle'
                         }}
                         key={'cell' + fieldName + '-' + j}>
                            {cellValue}
@@ -106,10 +85,7 @@ const TableSE = props => {
                     )
             })
             : null }
-
-
-            
-          </StickyTable>
+        </StickyTable>
     )
 }
 

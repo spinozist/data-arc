@@ -117,7 +117,7 @@ const Map = props => {
   useEffect(() => handleOverlayData(boundaryLayerInfo), []);
   useEffect(() => {}, [boundaryLayerInfo]);
   useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO]);
-  useEffect(() => closeSideBar(), [icons])
+  useEffect(() => closeSideBar(), [icons]);
 
   return (
     <LeafletMap
@@ -137,117 +137,80 @@ const Map = props => {
       onViewportChange={() => setBounds()}
 
     > 
-        {/* <div 
-          style={{
-            border: 'solid grey .8px', 
-            backgroundColor: 'white', 
-            textAlign: 'center', 
-            width: '70%', 
-            borderRadius: '5px', 
-            padding: '10px', 
-            position: 'absolute', 
-            top: '12px', 
-            left: '15%', 
-            zIndex: '998',
-            opacity: '.9',
-          }}>
-            <h2 style={{ lineHeight: '20px' }}>
-              {
-                props.data && props.primaryField && props.labelManifest ?
-                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField) ?
-                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField).Long :
-                'No Variable Selected'
-                // DataManifest.map(item => item.Variable === props.primaryField ? item.Long : null)
-                : 'No Variable Selected'
-              }
-            </h2>
-            <p style={{ lineHeight: '10px' }}> 
-              {
-                props.data && props.primaryField && props.labelManifest ?
-                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField) ?
-                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField).Source :
-                null
-                // DataManifest.map(item => item.Variable === props.primaryField ? item.Long : null)
-                : null
-              }
-            </p>
-        </div> */}
-        <ZoomControl position="topright" />
-        <Control position='topleft'>
-          <BaseMapLegend
-            legendInfo={defaults.data.tileLayers} 
-            setBaseMap={setBaseMap}
-            baseMap={baseMap}
-            style={legendStyle}
-          />
+      <ZoomControl position="topright" />
+      <Control position='topleft'>
+        <BaseMapLegend
+          legendInfo={defaults.data.tileLayers} 
+          setBaseMap={setBaseMap}
+          baseMap={baseMap}
+          style={legendStyle}
+        />
 
+      </Control>
+      <Control position='topleft'>
+        <BoundaryLayerLegend
+          legendInfo={boundaryLayerInfo}
+          style={legendStyle}
+          setBoundaryLayerInfo={setBoundaryLayerInfo}
+        />
+
+      </Control>
+      <Control position='topleft'>
+        <DataLayerLegend
+          {...props}
+          setLayout={props.setLayout}
+          layout={props.layout}
+          geoLabel={defaults.geoOptions.find(option => option.value === props.geo)}
+          primaryField={props.primaryField}
+          labelManifest={props.labelManifest}
+          browseDataButton={props.dataButton}
+          colorRamp={props.colorRamp}
+          style={legendStyle}
+        />
+      </Control>
+      <Control position="topright" >
+
+        <FiHome style={{height: '40px', width: '40px', padding: '5px', backgroundColor: 'white', borderRadius: '5px'}} onClick={() => {
+          console.log('Reset View Button Clicked');
+          handleBounds(props.boundingGEO)
+        }} />
+      </Control>
+      {
+        Object.entries(icons).map(([key, value]) => 
+        <Control position={iconPosition}>
+          <Icon 
+            style={{
+              ...iconStyle,
+              opacity: value.visible ? .7 : 1
+            }}
+            height={iconSize} 
+            width={iconSize} 
+            color={value.visible ? 'grey' : iconColor} 
+            icon={value.ref}
+            onClick={() => {
+              props.setLayout({
+                ...props.layout,
+                mapWidth: {sm: 12, lg: 8},
+                sideBarWidth: {sm: 12, lg: 4},
+                tableVisible: value.ref === table && props.layout.tableVisible === false ?
+                true : value.ref !== table ? props.layout.tableVisible : false,
+                scatterPlotVisible: value.ref === chartScatterPlot && props.layout.scatterPlotVisible === false ?
+                true : value.ref !== chartScatterPlot ? props.layout.scatterPlotVisible : false,
+                barChartVisible: value.ref === chartBar && props.layout.barChartVisible === false ?
+                true : value.ref !== chartBar ? props.layout.barChartVisible : false,
+              })
+              setIcons({
+                ...icons,
+                [key]: {
+                  ...value,
+                  visible: value.visible ? false : true
+                }
+              })  
+            }}
+            />
         </Control>
-        <Control position='topleft'>
-          <BoundaryLayerLegend
-            legendInfo={boundaryLayerInfo}
-            style={legendStyle}
-            setBoundaryLayerInfo={setBoundaryLayerInfo}
-          />
-
-        </Control>
-        <Control position='topleft'>
-          <DataLayerLegend
-           {...props}
-            setLayout={props.setLayout}
-            layout={props.layout}
-            geoLabel={defaults.geoOptions.find(option => option.value === props.geo)}
-            primaryField={props.primaryField}
-            labelManifest={props.labelManifest}
-            browseDataButton={props.dataButton}
-            colorRamp={props.colorRamp}
-            style={legendStyle}
-          />
-        </Control>
-        <Control position="topright" >
-
-         <FiHome style={{height: '40px', width: '40px', padding: '5px', backgroundColor: 'white', borderRadius: '5px'}} onClick={() => {
-            console.log('Reset View Button Clicked');
-            handleBounds(props.boundingGEO)
-          }} />
-        </Control>
-        {
-          Object.entries(icons).map(([key, value]) => 
-          <Control position={iconPosition}>
-            <Icon 
-              style={{
-                ...iconStyle,
-                opacity: value.visible ? .7 : 1}}
-              height={iconSize} 
-              width={iconSize} 
-              color={value.visible ? 'grey' : iconColor} 
-              icon={value.ref}
-              onClick={() => {
-                props.setLayout({
-                  ...props.layout,
-                  mapWidth: {sm: 12, lg: 8},
-                  sideBarWidth: {sm: 12, lg: 4},
-                  tableVisible: value.ref === table && props.layout.tableVisible === false ?
-                  true : value.ref !== table ? props.layout.tableVisible : false,
-                  scatterPlotVisible: value.ref === chartScatterPlot && props.layout.scatterPlotVisible === false ?
-                  true : value.ref !== chartScatterPlot ? props.layout.scatterPlotVisible : false,
-                  barChartVisible: value.ref === chartBar && props.layout.barChartVisible === false ?
-                  true : value.ref !== chartBar ? props.layout.barChartVisible : false,
-                })
-                setIcons({
-                  ...icons,
-                  [key]: {
-                    ...value,
-                    visible: value.visible ? false : true
-                  }
-                })  
-              }
-
-
-              }/>
-          </Control>)
-        }
-
- 
+        )
+      }
       {
         overlayData ? 
         // console.log(overlayData)
@@ -267,21 +230,10 @@ const Map = props => {
 
           : null)
         })
-
-        // defaults.data.overlayLayers.map(layer => 
-
-        //   overlayData[layer.name] && overLayers[layer.name] ?
-        //     <OverlayLayer 
-        //     borderWeight={layer.style.borderWeight}
-        //     borderColor={layer.style.borderColor}
-        //     data={overlayData[layer.name]}/> : null
-  
-
-        // ) 
         : null
       }
       
-      { props.data && props.geoJSON?
+      { props.data && props.geoJSON && props.dataLoaded ?
         <GeoJSONLayer {...props} baseMap={baseMap}/> 
         : null 
       }

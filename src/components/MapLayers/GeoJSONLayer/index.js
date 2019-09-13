@@ -28,7 +28,7 @@ const GeoJSONLayer = props => {
   // console.log(primaryField)
 
   const valueArray = props.data ? Object.entries(props.data)
-  // .filter(([key, value]) => value[props.primaryField] !== 'NA')
+  .filter(([key, value]) => value[props.primaryField] !== 'NA' && value[props.primaryField] !== 'NA')
   .map(([key,value]) => {
 
       // console.log(key);
@@ -73,16 +73,8 @@ const GeoJSONLayer = props => {
 
   const addFeatureFunctions = (feature, layer) => {
           
-    // const variable=feature.properties[props.data.primaryField];
-    // const normalizer=props.data.normalizedBy ? feature.properties[props.data.normalizedBy] : 1
-
-    // const value = variable/normalizer;
-
-    // console.log(feature.geometry.type);
     
     const featureID = feature.properties[props.hoverField];
-    // const value = feature.properties[props.primaryField];
-    // console.log(String(value))
 
     layer.bindTooltip(String(featureID))
       .on('mouseover', e => {
@@ -154,26 +146,22 @@ const GeoJSONLayer = props => {
         const range = maxValue - minValue;
         const binningRatio = distFromMin/range;
         const indexRange = numberOfBins - 1;
-        // const opacity = value;
+        
         const color = value ? colors[Math.floor(value === 0 ? 0 : binningRatio * indexRange)] : null;
 
-
-
-        // console.log(featureID);
-
-          return ({
+          return props.data ? ({
             color: props.hoverID === featureID ? props.baseMap === 'tile-layer-dark' ? 'white' : 'black' : '#1a1d62',
             weight: props.hoverID === featureID ? 3 : 0.4,
             fillColor: color,
             fillOpacity: !value ? 0 : props.hoverID === featureID ? 1 : props.layout.colorOpacity,
             zIndex: props.hoverID === featureID ? 999 : 998
-          })
+          }) : null
         }
       }
 
     //   onMouse
 
-      onEachFeature={(feature, layer) => addFeatureFunctions(feature, layer)}
+      onEachFeature={(feature, layer) => props.dataLoaded && props.primaryField && props.data ? addFeatureFunctions(feature, layer) : null }
     />
   );
 };

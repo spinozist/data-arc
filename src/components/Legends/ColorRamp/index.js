@@ -39,7 +39,7 @@ const ColorRamp = props => {
         console.log(primaryField)
 
         const valueArray = data ? Object.entries(data)
-        // .filter(([key, value]) => value[props.primaryField] !== 'NA')
+        .filter(([key, value]) => value[props.primaryField] !== 'N/A' && value[props.primaryField] !== 'NA')
         .map(([key,value]) => {
 
             // console.log(key);

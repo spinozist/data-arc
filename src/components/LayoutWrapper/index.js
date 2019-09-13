@@ -24,7 +24,7 @@ const LayoutWrapper = props => {
     const [layout, setLayout] = useState(defaults.layout);
 
     const [serviceID, setServiceID] = useState(0);
-    const [prevServiceID, setPreviousServiceID] = useState();
+    // const [prevServiceID, setPreviousServiceID] = useState();
     const [labelManifest, setLabelManifest] = useState('Change');
     const [sortField, setSortField] = useState('NAME');
     const [sortOrder, setSortOrder] = useState('hilo');
@@ -33,45 +33,25 @@ const LayoutWrapper = props => {
     const [hoverField, setHoverField] = useState(defaults.data.hoverField);
     const [hoverID, setHoverID] = useState();
     const [fieldOptions, setFieldOptions] = useState();
-    const [secondaryField, setSecondaryField] = useState();
 
     const [data, setData] = useState();
-
-    // Test data state
-    const [testData, setTestData] = useState();
-    // **
 
     const [MOE, setMOE] = useState(defaults.data.MOE);
     const [boundingGEO, setBoundingGEO] = useState();
 
     const [geoJSON, setGeoJSON] = useState();
-
+    const [testData, setTestData] = useState();
     const [dataTray, setDataTray] = useState(defaults.data.tray);
     const [primaryField, setPrimaryField] = useState(defaults.categoryOptions[0].primaryField)
-
-
-    const [fileType, setFileType] = useState('geojson');
-
+    const [secondaryField, setSecondaryField] = useState(defaults.categoryOptions[0].secondaryField);
     const [dataSelectorModal, setDataSelectorModal] = useState(false);
+    const [dataLoaded, setDataLoaded] = useState()
 
 
-    const getData = (baseurl, categoryID, geo, fields) => {
+    const handleData = (baseurl, geo) => {
        
-        // const optionObject = defaults.categoryOptions.find(option =>
-        //     option.value === categoryID)
-
-        // setLabelManifest(optionObject.manifest);
-
-        // setPrimaryField(categoryID !== prevServiceID ? 
-        //     optionObject.primaryField : primaryField);
-
-        // setSecondaryField(categoryID !== prevServiceID ?
-        //     optionObject.secondaryField : secondaryField);
-            
-        // setSelectedFields(categoryID !== prevServiceID ? 
-        //     [ 'NAME', 'GEOID', optionObject.primaryField, optionObject.secondaryField ] 
-        //         : selectedFields);
-        // setData();
+        setDataLoaded(false);
+        
         setTestData();
         setGeoJSON();
         
@@ -86,26 +66,24 @@ const LayoutWrapper = props => {
         API.getData(`${baseurl}/0/query?where=SumLevel='${geo}'&outFields=${geoJSONFields}&f=geojson`)
             .then(res => {
 
-                // console.log(res.data)
-                var dataObj = new Object();
+                var dataObj = {};
                 res.data.features.forEach(feature => 
                     dataObj[feature.properties[geoJSONFields[0]]] = {});
                 console.log(dataObj);
-                // setTestData(dataObj);
-
-
-
                 setGeoJSON(res.data)
                 return dataObj
             })
-            .then(dataObj => addData(dataObj))
+            .then(dataObj => addData(dataObj, baseurl, geo))
             .catch(err => console.log(err));    
 
-        // API for data
+    }
+
+    // API for data (without geometry)
+
+    const addData = (dataObj, baseurl, geo) =>  {
+        const serviceIDs = [];
 
         console.log(dataTray)
-        
-        const serviceIDs = [];
 
         const getServiceIDs = () => dataTray ?
             Object.values(dataTray).forEach(result => 
@@ -116,41 +94,38 @@ const LayoutWrapper = props => {
 
         console.log(serviceIDs);
         
-        const addData = dataObj =>  serviceIDs ?
-            serviceIDs.map(serviceID => {
+        serviceIDs.map(serviceID => {
 
-                const fields = Object.entries(dataTray).filter(([key, value]) => value.serviceID === serviceID).map(([key, value]) => key);
+            const fields = Object.entries(dataTray).filter(([key, value]) => value.serviceID === serviceID).map(([key, value]) => key);
 
-                console.log(fields);
-                console.log(dataObj);
+            console.log(fields);
+            console.log(dataObj);
 
-                fields.push('GEOID', 'NAME');
+            fields.push('GEOID', 'NAME');
 
-                const dataURL = `${baseurl}${serviceID}/query?where=SumLevel='${geo}'&outFields=${fields}&returnGeometry=false&f=${fileType}`;
+            const dataURL = `${baseurl}${serviceID}/query?where=SumLevel='${geo}'&outFields=${fields}&returnGeometry=false&f=geojson`;
 
-                API.getData(dataURL)
-                    .then(res => {
-                        // handleOptionsArray(res.data, categoryID, MOE);
-                        // console.log(res.data);
-                        res.data.features.map(feature => {
-                            const propertiesObj = feature.properties;
-                            const featureID = propertiesObj.GEOID;
-                            Object.entries(propertiesObj)
-                                .map(([key, value]) => dataObj[featureID][key] = value);
-                        })
-
-                        // setData(res.data);
-                        return dataObj
+            API.getData(dataURL)
+                .then(res => {
+                    // handleOptionsArray(res.data, categoryID, MOE);
+                    // console.log(res.data);
+                    res.data.features.map(feature => {
+                        const propertiesObj = feature.properties;
+                        const featureID = propertiesObj.GEOID;
+                        Object.entries(propertiesObj)
+                            .map(([key, value]) => dataObj[featureID][key] = value);
                     })
-                    .then(dataObj => 
-                        setTestData(dataObj))
-                    .catch(err => 
-                        console.log(err))
-                    
 
-            })
-            : null ;
-            
+                    return dataObj
+                })
+                .then(dataObj => {
+                    setTestData(dataObj)
+                    setDataLoaded(true);
+                })
+                .catch(err => console.log(err))
+                
+        });
+
     }
 
     const handleBoundingGeo = boundingGEO => {
@@ -167,51 +142,7 @@ const LayoutWrapper = props => {
         setSortOrder(sortOrder);
     }
     
-    // const handleOptionsArray = (data, categoryID, MOE) => {
-        
-    //     setFieldOptions();
-    //     setMOE(MOE)
-
-    //     const optionObject = defaults.categoryOptions.find(option =>
-    //         option.value === categoryID);
-        
-    //     const optionsArray = fileType === 'json' ?
-    //     data.fields.map(field => 
-    //         ({
-    //             key : field.name,
-    //             text : field.alias,
-    //             value : field.name
-    //         })
-    //     ) : fileType === 'geojson' ? 
-    //         OpenDataManifest[optionObject.manifest]
-    //             .filter(fieldObject => 
-    //                 optionObject.manifest === 'RaceX' ? 
-    //                 fieldObject.Category === 'N/A' ||
-    //                 fieldObject.Category === optionObject.subcategory 
-    //                 : true )
-    //             .filter(fieldObject =>
-    //                 !MOE ? 
-    //                 fieldObject.ESTMOE !== 'MOE'
-    //                 : true)
-    //             .map((fieldObj, i) => 
-    //                 ({
-    //                     key : fieldObj.Variable + i,
-    //                     text : fieldObj.Long, 
-    //                     value : fieldObj.Variable 
-    //                 })
-    //     ) : fieldOptions;
-    
-    //     setFieldOptions(optionsArray);
-    // }
-
-    useEffect(() => getData(
-        defaults.data.baseUrl, 
-        serviceID, 
-        sumLevel, 
-        '*'), [
-            dataTray,
-            sumLevel]);
-    // useEffect(() => handleOptionsArray(data, serviceID, MOE), [MOE]);
+    useEffect(() => handleData(defaults.data.baseUrl, sumLevel),[dataTray,sumLevel]);
     
     return (
         <Grid fluid style={{padding: '20px', height: '100vh'}}>
@@ -230,15 +161,16 @@ const LayoutWrapper = props => {
                 >  
                     { layout.mapVisible ? 
                     <MapWrapper
+                        dataLoaded={dataLoaded}
                         colorRamp={
-                            testData ?
+                            testData && dataLoaded && geoJSON ?
                             <ColorRamp 
                                 primaryField={primaryField} 
                                 data={testData} 
                                 layout={layout}
                             /> : 
                             <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
-                                <Loader id='loader-box' type='Audio' height={40} width={100} />
+                                <Loader id='loader-box' type='ThreeDots' height={40} width={100} />
                             </div>
                         }
                         setLayout={setLayout}
@@ -248,28 +180,25 @@ const LayoutWrapper = props => {
                             open={dataSelectorModal}
                             centered={false}
                             header={<h2>Browse Data</h2>} 
-                            trigger={<Button onClick={() => setDataSelectorModal(true)} color='teal'>Browse Data</Button>} 
+                            trigger={
+                                <Button 
+                                    onClick={() => setDataSelectorModal(true)} 
+                                    color='teal'
+                                >
+                                    Browse Data
+                                </Button>} 
                             content={
                                 <DataSelector
                                     setGlobalDataTray={setDataTray}
                                     setModalStatus={setDataSelectorModal}
                                     GlobalDataTray={dataTray}
-                                    setServiceID={setServiceID}
-                                    setSelectedFields={setSelectedFields}
-                                    setFieldOptions={setFieldOptions}
-                                    setLabelManifest={setLabelManifest}
                                     setSumLevel={setSumLevel}
                                     setPrimaryField={setPrimaryField}
                                     primaryField={primaryField}
-                                    serviceID={serviceID}
                                     sumLevel={sumLevel}
                                     data={data}
-                                    selectedFields={selectedFields}
-                                    fieldOptions={fieldOptions}
                                     hoverField={hoverField}
                                     MOE={MOE}
-                                    // handleOptionsArray={handleOptionsArray}
-                                    setPreviousServiceID={setPreviousServiceID}
                                 />
                             }
                         />}
@@ -283,11 +212,17 @@ const LayoutWrapper = props => {
                         data={testData}
                         dataTray={dataTray}
                         geoJSON={geoJSON}
-                        labelManifest={labelManifest}
-                        setPreviousServiceID={setPreviousServiceID}
                         setSumLevel={setSumLevel}
-                        serviceID={serviceID} /> 
+                        /> 
                     : <h1>Map not loading</h1> }
+                    {
+                        !dataLoaded && !testData ?
+                        <div style={{zIndex: '99999', color: 'teal', position: 'absolute', bottom: '50%', width: '100%', textAlign: 'center'}}>
+                        <h2>Data Layer Loading...</h2>
+                        <Loader id='loader-box' color='teal' type='Circles' />
+                        </div>
+                        : null
+                    }
                 </Col>
                 {layout.sideBarWidth.sm > 0 || layout.sideBarWidth.lg > 0 ?
                 <Col className='no-scrollbar' sm={layout.sideBarWidth.sm} lg={layout.sideBarWidth.lg} style={{height: '100%', width: '100%', overflow: 'scroll'}}>
@@ -309,7 +244,7 @@ const LayoutWrapper = props => {
                             MOE={MOE}
                         /> : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
-                            <Loader id='loader-box' type='Grid' />
+                            <Loader id='loader-box' type='ThreeDots' />
                         </div>
                         }
 
@@ -318,18 +253,21 @@ const LayoutWrapper = props => {
                 { layout.scatterPlotVisible && primaryField ? 
 
                     <Row center='sm' middle='sm' style={{margin: '5px', height: '40%', width: '100%', zIndex: '99999'}}>
-                        { data  ? 
-                        <ChartWrapper 
+                        { testData && dataLoaded  ? 
+                        <ChartWrapper
+                        dataTray={dataTray}
+                        dataLoaded={dataLoaded} 
                         primaryField={primaryField}
                         secondaryField={secondaryField}
-                        data={data} 
+                        setSecondaryField={setSecondaryField}
+                        data={testData} 
                         layout={layout}
                         handleHover={setHoverID}
                         hoverID={hoverID} 
                         chartType={'scatterplot'}
                         /> : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
-                        <Loader id='loader-box' type='Grid' />
+                        <Loader id='loader-box' type='ThreeDots' />
                     </div>}
                         
                     </Row> : null }
@@ -347,7 +285,7 @@ const LayoutWrapper = props => {
                             chartType={'bar-chart'}
                         /> : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
-                            <Loader id='loader-box' type='Grid' />
+                            <Loader id='loader-box' type='ThreeDots' />
                         </div>}
                     </Row> : null }
                 </Col>

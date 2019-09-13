@@ -20,13 +20,15 @@ export default {
                 category: "Change since 2000",
                 text: "# Total population, 2000",
                 value: "TotPop_00",
-                serviceID: 0
+                serviceID: 0,
+                manifest: 'Change'
             },
             TotalHH_00: {
                 category: "Change since 2000",
                 text: "# Total Households, 2000",
                 value: "TotPop_00",
-                serviceID: 0
+                serviceID: 0,
+                manifest: 'Change'
             }
         },
         baseUrl: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',

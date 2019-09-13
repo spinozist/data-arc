@@ -4,9 +4,7 @@ import OpenDataManifest from '../../../config/OpenDataManifest';
 import colorScale from 'colormap/colorScale';
 import defaults from '../../../config/defaults';
 
-// import defaults from '../../config/defaults';
 import './style.css';
-import { propEach } from '@turf/meta';
   
 const colorRampOptions = colorScale ? Object.entries(colorScale).map(([key,value]) => {
   const numberOfBins = value ? value.length : null;
@@ -27,7 +25,9 @@ const colorRampOptions = colorScale ? Object.entries(colorScale).map(([key,value
 
 const DataLayerLegend = props => {
 
+    const primaryField = props.primaryField;
     const dataTray = props.dataTray;
+
     const fieldOptions = Object.entries(dataTray).map(([key, value]) =>
       ({
          key: key,
@@ -66,7 +66,7 @@ const DataLayerLegend = props => {
                       // placeholder='Select Geography' 
                       options={defaults.geoOptions}
                   />
-                  : null }/>
+                  : null }/> 
             <Popup
               position={'right center'}
               on='hover'
@@ -77,7 +77,7 @@ const DataLayerLegend = props => {
                 <Dropdown 
                     selection
                     scrolling 
-                    value={props.primaryField} 
+                    value={primaryField} 
                     onChange={(event, data) => {
                         // props.setPreviousServiceID(props.serviceID)
                         props.setPrimaryField(data.value)
@@ -91,10 +91,10 @@ const DataLayerLegend = props => {
                 marginBottom: '0px',
                 lineHeight: '20px' }}>
                 {
-                  props.primaryField && props.dataTray && props.dataTray[props.primaryField] ?
-                  props.dataTray[props.primaryField].text :
+                  primaryField && props.dataTray && props.dataTray[primaryField] && props.data ?
+                  props.dataTray[primaryField].text :
                   'Data loading...'
-                  // DataManifest.map(item => item.Variable === props.primaryField ? item.Long : null)
+                  // DataManifest.map(item => item.Variable === primaryField ? item.Long : null)
                 }
               </h4>
   
@@ -102,11 +102,11 @@ const DataLayerLegend = props => {
             <p style={{paddingLeft: '10px', lineHeight: '20px' }}> 
               Source:&nbsp;
               {
-                props.primaryField && props.dataTray ?
-                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField) ?
-                OpenDataManifest[props.labelManifest].find(item => item.Variable === props.primaryField).Source :
+                primaryField && props.dataTray ?
+                OpenDataManifest[props.dataTray[primaryField].manifest].find(item => item.Variable === primaryField) ?
+                OpenDataManifest[props.dataTray[primaryField].manifest].find(item => item.Variable === primaryField).Source :
                 'Unable to find field information'
-                // DataManifest.map(item => item.Variable === props.primaryField ? item.Long : null)
+                // DataManifest.map(item => item.Variable === primaryField ? item.Long : null)
                 : null
               }
               <Popup
