@@ -13,8 +13,6 @@ const TableSE = props => {
     
     const dataObj = props.data ? props.data : null;
 
-    console.log(dataObj)
-
     const [sort, setSort] = useState({field: fields[3], direction: 'hilo'});
     
     return (
@@ -43,7 +41,6 @@ const TableSE = props => {
 
             {dataObj ? Object.entries(dataObj)
                 .sort(([,a],[,b]) => 
-                    // b[sort.field] === null || b[sort.field] === 'NA' || b[sort.field] === 'N/A' ? 1 :
 
                     sort.field === 'GEOID' || sort.field === 'NAME' ?
                     sort.direction === 'hilo' ?
@@ -57,32 +54,30 @@ const TableSE = props => {
                 .map(([key, value], i) => {
                 
                 const id = key;
-                // console.log(id);
                 return(
                     <Row
-                    key={'row-'+ id + i}
-                    onMouseEnter={() => props.handleHover(id)}
-                    onMouseOut={() => props.handleHover()}
-                    id={'row-' + id}
-                    // onMouseEnter={() => props.handleHover(feature.properties[props.hoverField])}
+                        key={'row-'+ id + i}
+                        onMouseEnter={() => props.handleHover(id)}
+                        onMouseOut={() => props.handleHover()}
+                        id={'row-' + id}
                     >
-                        {fields ? fields.map((fieldName, j) => {
+                        { fields ? fields.map((fieldName, j) => {
+                            
                             const cellValue = value[fieldName];
-                            // const datatype = OpenDataManifest[props.labelManifest]
-                            //     .find(obj => obj.Variable === fieldName).Type;
-                            // console.log(datatype + '(' + typeof value + '): ' + value);
-
-                        return(
-                        <Cell 
-                        style={{
-                            backgroundColor: id === props.hoverID ? 'orange' : i % 2 === 0 ? props.layout.tableBanding[0] : props.layout.tableBanding[1],
-                            textAlign: 'center',
-                            verticalAlign: 'middle'
-                        }}
-                        key={'cell' + fieldName + '-' + j}>
-                           {cellValue}
-                        </Cell>
-                        )}) : null }
+                            
+                            return(
+                                <Cell 
+                                    style={{
+                                        backgroundColor: id === props.hoverID ? 'orange' : i % 2 === 0 ? props.layout.tableBanding[0] : props.layout.tableBanding[1],
+                                        textAlign: 'center',
+                                        verticalAlign: 'middle'
+                                    }}
+                                    key={'cell' + fieldName + '-' + j}
+                                >
+                                    {cellValue}
+                                </Cell>
+                            )
+                        }) : null }
                     </Row>
                     )
             })
