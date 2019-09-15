@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dropdown, Popup } from 'semantic-ui-react';
 import dataManifest from '../../../config/datamanifest';
 import colorScale from 'colormap/colorScale';
@@ -20,8 +20,6 @@ const colorRampOptions = colorScale ? Object.entries(colorScale).map(([key,value
       // content: (content)
     })
   }) : null;
-
-
 
 const DataLayerLegend = props => {
 
@@ -67,10 +65,11 @@ const DataLayerLegend = props => {
                 /> : null 
               }
             />
-          {  primaryField && 
+          { primaryField && 
             dataTray && 
             dataTray[primaryField] && 
             props.data &&
+            props.dataLoaded &&
             dataManifest.find(dataInfo => 
               dataInfo.Variable === dataTray[primaryField].value) ?
 

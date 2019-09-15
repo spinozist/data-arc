@@ -11,6 +11,7 @@ const ScatterPlot = props => {
   const colorMap = props.layout.colorMap;
   const reverse = props.layout.colorMapReverse;
   const primaryField = props.primaryField;
+  const secondaryField = props.secondaryField ? props.secondaryField: props.primaryField 
 
 
   let colors = colormap({
@@ -37,7 +38,7 @@ const ScatterPlot = props => {
     .map(([key,value]) => 
       ({
         x: parseFloat(value[primaryField]),
-        y: parseFloat(value[props.secondaryField]),
+        y: parseFloat(value[secondaryField]),
         name: value[props.hoverField]
       })
       ) : null;
@@ -65,9 +66,9 @@ const ScatterPlot = props => {
             orientation="right"
             type="number" 
             dataKey="y" 
-            name={props.data ? props.secondaryField : null } 
+            name={props.data ? secondaryField : null } 
             label={{
-              value: props.dataTray ? props.dataTray[props.secondaryField].text : 'y',
+              value: props.dataTray ? props.dataTray[secondaryField].text : 'y',
               position: 'center',
               angle: -90
             }} 

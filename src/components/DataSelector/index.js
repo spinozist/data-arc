@@ -63,6 +63,8 @@ const DataSelector = props => {
                 value: result.Variable,
                 topic: result.Topic,
                 category: result.Category,
+                source: result.Source,
+                type: result.Type,
                 manifest: result.Topic.includes('x Race') ? 'RaceX' : result.Category,
                 MOE: result.ESTMOE === 'MOE' ? true : false,
                 content: (
@@ -134,6 +136,8 @@ const DataSelector = props => {
     
     const removeFromDataTray = key => {
         const tempTray = dataTray;
+        // const removeSecondaryField = () => key === props.secondaryField ? props.secondaryField(props.primaryField) : null;
+        // removeSecondaryField();
         delete tempTray[key];
 
         setDataTray({
@@ -144,10 +148,14 @@ const DataSelector = props => {
     const runSearchFilter = (search, result) => {
         const searchArray =  search.split(' ');
         const booleanArray = searchArray.map(item => 
-            result ? result.text.toUpperCase().includes(item.toUpperCase()) : null)
-            // console.log(searchArray);
-            // console.log(booleanArray);
-            return booleanArray.includes(false) ? false : true;
+            result ? 
+            result.text.toUpperCase().includes(item.toUpperCase()) ? true : 
+            result.category.toUpperCase().includes(item.toUpperCase()) ? true : 
+            result.topic.toUpperCase().includes(item.toUpperCase()) ? true : 
+            result.source.toUpperCase().includes(item.toUpperCase()) ? true : false
+            : null);
+
+        return booleanArray.includes(false) ? false : true;
             
     }
 
@@ -156,134 +164,25 @@ const DataSelector = props => {
 
     return(
         <div style={{height: '80vh', width: '100%'}}>
-            <div style={{float: 'left', width: '40%'}}>
+            <div id='search-results column' style={{float: 'left', width: '50%'}}>
             
-            <Input
-                fluid 
-                placeholder='Search...'
-                value={search}
-                onChange={(e, data) => setSearch(data.value)}
-                style={{
-                    float: 'left',
-                    margin: '10px',
-                    width: '100%',
-                    height:'50px',
-                }}  
-            />
-
-            {/* { defaults.categoryOptions && showFilters? 
-                <Dropdown
-                    label='Filter by Category' 
+                <Input
+                    fluid 
+                    placeholder='Search...'
+                    value={search}
+                    onChange={(e, data) => setSearch(data.value)}
                     style={{
                         float: 'left',
-                            margin: '10px',
-                            width: '100%',
-                            height:'50px',
-                            zIndex: '9999'
-                    }} 
-                    id='cat-selector' 
-                    value={query.catValue}
-                    onChange={(event, data) => {
-                        event.preventDefault()
-                        // console.log(data);
-
-                        // console.log(data);
-                        const optionObject = data.options.find(option =>
-                            option.value === data.value);
-                        console.log(optionObject)
-                        
-                        setQuery({
-                            MOE: query.MOE,
-                            manifest: optionObject.manifest,
-                            catValue: optionObject.value,
-                            category: optionObject.manifest === 'RaceX' ? 
-                                optionObject.subcategory 
-                                : optionObject.manifest})
-                        // handleTopicOptions()
-                        // props.setServiceID(optionObject.value)
-                    }} 
-                    placeholder='Filter by Category' 
-                    selection 
-                    options={defaults.categoryOptions}
+                        margin: '10px',
+                        width: '100%',
+                        height:'50px',
+                    }}  
                 />
-                : null }
-            { queryResults && topicOptions && showFilters ? 
-            <Dropdown 
-                selection 
-                style={{ 
-                    float: 'left', 
-                    margin: '10px', 
-                    height:'50px', 
-                    width: '100%', 
-                    zIndex: '1000'
-                }} 
-                id='topic-selector' 
-                value={query ? query.topic : null} 
-                onChange={(event, data) => {
-                    console.log(data.value)
-                    setQuery({...query, topic: data.value})
-                }
-                }
-                placeholder='Filter by Topic' 
-                options={topicOptions}
-            />
-            : null }
-            { queryResults && showFilters ? 
-                <Radio 
-                    toggle
-                    checked={query.MOE ? true : false} 
-                    style={{
-                        float: 'left',
-                        margin: '10px'
-                    }} 
-                    label={'Include Margin of Error (MOE)'}
-                    // onClick={event => console.log(props.MOE)}
-                    onClick={() => setQuery({...query, MOE: query.MOE ? false : true})}
-                    
-                    // onClick={() => props.handleOptionsArray(props.data, props.serviceID, 
-                    //     props.MOE ? false : true)}
-                /> 
-            : null} */}
-
-            
-            {/* { props.sumLevel ? 
-                <Dropdown 
-                    selection 
-                    style={{ 
-                        float: 'left', 
-                        margin: '10px', 
-                        height:'50px', 
-                        width: '100%', 
-                        zIndex: '1000'
-                    }} 
-                    id='geo-selector' 
-                    value={props.sumLevel} 
-                    onChange={(event, data) => {
-                        props.setPreviousServiceID(props.serviceID)
-                        props.setSumLevel(data.value)
-                    }} 
-                    placeholder='Select Geography' 
-                    options={defaults.geoOptions}
-                />
-                : null } */}
-            </div>
-
-            {/* { props.data && props.selectedFields ?
-                <CSVExportButton
-                    // {...props}
-                    data={props.data}
-                    selectedFields={props.selectedFields}
-                    text='CSV'
-                    color='teal'
-                    basic='true'
-                    // margin= <= default set to '10px'
-                />
-                : null } */}
-
-            <div style={{ width: '55%', height: '60%', float: 'right', overflow: 'auto', textAlign: 'left'}}>
+                <div style={{ width: '100%', height: '60vh', float: 'left', overflow: 'auto', textAlign: 'left'}}>
                 { queryResults && query ?
                     queryResults
                     .filter( result => search && result ? runSearchFilter(search, result) : true)
+
                     .map( result =>
                         <div
                         onClick={() => addToDataTray(result)}
@@ -302,8 +201,12 @@ const DataSelector = props => {
                     : null
                 }
             
+                </div>
+
+
             </div>
-            <div style={{ marginTop: '20px', width: '100%', height: '30%', float: 'right', overflow: 'auto', textAlign: 'left'}}>
+  
+            <div style={{ marginTop: '20px', width: '45%', height: '80%', float: 'right', overflow: 'auto', textAlign: 'left'}}>
                 { dataTray ?
                     Object.entries(dataTray).map(([key, value]) =>
                     <div

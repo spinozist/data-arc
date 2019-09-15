@@ -8,7 +8,7 @@ import BoundaryLayerLegend from '../Legends/BoundaryLayerLegend';
 import DataLayerLegend from '../Legends/DataLayerLegend';
 
 // import { Dropdown } from 'semantic-ui-react';
-// import L from 'leaflet';
+import L from 'leaflet';
 // import Loader from 'react-loader-spinner';
 import { FiHome } from "react-icons/fi";
 import API from '../../utils/API.js';
@@ -113,7 +113,6 @@ const Map = props => {
     close();
   }
   
-
   useEffect(() => handleOverlayData(boundaryLayerInfo), []);
   useEffect(() => {}, [boundaryLayerInfo]);
   useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO]);
@@ -211,6 +210,7 @@ const Map = props => {
         </Control>
         )
       }
+      
       {
         overlayData ? 
         // console.log(overlayData)
@@ -233,7 +233,10 @@ const Map = props => {
         : null
       }
       
-      { props.data && props.geoJSON && props.dataLoaded ?
+      { props.data &&
+        props.geoJSON &&
+        props.primaryField &&  
+        props.dataLoaded ?
         <GeoJSONLayer {...props} baseMap={baseMap}/> 
         : null 
       }

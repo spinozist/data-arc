@@ -95,7 +95,7 @@ const LayoutWrapper = props => {
                             const propertiesObj = feature.properties;
                             const featureID = propertiesObj.GEOID;
                             Object.entries(propertiesObj)
-                                .map(([key, value]) => dataObj[featureID][key] = value);
+                                .map(([key, value]) => dataObj[featureID][key] = value)
                         });
 
                         return dataObj
@@ -137,10 +137,8 @@ const LayoutWrapper = props => {
             .catch(err => console.log(err));    
     }
     
-    useEffect(() => 
-        handleData(defaults.data.baseUrl, sumLevel)
-            ,[dataTray,sumLevel]
-    );
+    useEffect(() => handleData(defaults.data.baseUrl, sumLevel) ,[dataTray, sumLevel]);
+
     
     return (
         <Grid fluid style={{padding: '20px', height: '100vh'}}>
@@ -206,7 +204,9 @@ const LayoutWrapper = props => {
                                     GlobalDataTray={dataTray}
                                     setSumLevel={setSumLevel}
                                     setPrimaryField={setPrimaryField}
+                                    setSecondaryField={setSecondaryField}
                                     primaryField={primaryField}
+                                    secondaryField={secondaryField}
                                     sumLevel={sumLevel}
                                     hoverField={hoverField}
                                     MOE={MOE}

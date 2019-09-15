@@ -93,12 +93,15 @@ const GeoJSONLayer = props => {
   //   // }
   //   // }) 
 
-  useEffect(() => {}, [props.primaryField])
+  // useEffect(() => {}, [props.primaryField])
 
 
   return (
 
-    props.primaryField ?
+    props.primaryField &&
+    props.data &&
+    props.dataLoaded && 
+    props.geoJSON ?
 
       <GeoJSON
       key={'geojson-layer'}
