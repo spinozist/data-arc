@@ -89,23 +89,23 @@ const DataSelector = props => {
              : null );
     }
 
-    const handleTopicOptions = queryResults => {
-        const topics = [];
-        console.log(queryResults ? queryResults : null)
-        const createArray = () => queryResults ? 
-            queryResults.forEach(result => 
-                topics.includes(result.topic) === false ? topics.push(result.topic) : null
-            ) : null;
-        createArray();
-        console.log(topics);
-        setTopicOptions(topics ? topics.map(topic => 
-            ({
-                key: topic,
-                text: topic,
-                value: topic
-            })
-        ) : null)
-    };
+    // const handleTopicOptions = queryResults => {
+    //     const topics = [];
+    //     console.log(queryResults ? queryResults : null)
+    //     const createArray = () => queryResults ? 
+    //         queryResults.forEach(result => 
+    //             topics.includes(result.topic) === false ? topics.push(result.topic) : null
+    //         ) : null;
+    //     createArray();
+    //     console.log(topics);
+    //     setTopicOptions(topics ? topics.map(topic => 
+    //         ({
+    //             key: topic,
+    //             text: topic,
+    //             value: topic
+    //         })
+    //     ) : null)
+    // };
 
     const addToDataTray = dataObj => {
         
@@ -141,7 +141,18 @@ const DataSelector = props => {
         })
     }
 
-    useEffect(() => runQuery(query), [query]);
+    const runSearchFilter = (search, result) => {
+        const searchArray =  search.split(' ');
+        const booleanArray = searchArray.map(item => 
+            result ? result.text.toUpperCase().includes(item.toUpperCase()) : null)
+            // console.log(searchArray);
+            // console.log(booleanArray);
+            return booleanArray.includes(false) ? false : true;
+            
+    }
+
+    useEffect(() => runQuery(query), [query, search]);
+    // useEffect(() => search && queryResults ? runSearchFilter(search, queryResults[0]) : console.log('No search input'), [search]);
 
     return(
         <div style={{height: '80vh', width: '100%'}}>
@@ -160,7 +171,7 @@ const DataSelector = props => {
                 }}  
             />
 
-            { defaults.categoryOptions && showFilters? 
+            {/* { defaults.categoryOptions && showFilters? 
                 <Dropdown
                     label='Filter by Category' 
                     style={{
@@ -232,7 +243,7 @@ const DataSelector = props => {
                     // onClick={() => props.handleOptionsArray(props.data, props.serviceID, 
                     //     props.MOE ? false : true)}
                 /> 
-            : null}
+            : null} */}
 
             
             {/* { props.sumLevel ? 
@@ -272,12 +283,7 @@ const DataSelector = props => {
             <div style={{ width: '55%', height: '60%', float: 'right', overflow: 'auto', textAlign: 'left'}}>
                 { queryResults && query ?
                     queryResults
-                    .filter( result => 
-                        search ? 
-                            result.text.toUpperCase()
-                                        .includes(search.toUpperCase())
-                            : false
-                    )
+                    .filter( result => search && result ? runSearchFilter(search, result) : true)
                     .map( result =>
                         <div
                         onClick={() => addToDataTray(result)}
