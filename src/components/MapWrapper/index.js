@@ -113,9 +113,11 @@ const Map = props => {
     close();
   }
   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => handleOverlayData(boundaryLayerInfo), []);
   useEffect(() => {}, [boundaryLayerInfo]);
   useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => closeSideBar(), [icons]);
 
   return (
@@ -123,6 +125,8 @@ const Map = props => {
       key={'leaflet-map'}
       // center={[33.8, -84.4]}
       // zoom={10.5}
+      // zoomDelta={.5}
+      zoomSnap={.5}
       bounds={bounds}
       boundsOptions={{padding: [50, 50]}}
       maxZoom={18}
