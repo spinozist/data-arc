@@ -127,6 +127,7 @@ const Map = props => {
       // zoom={10.5}
       // zoomDelta={.5}
       zoomSnap={.5}
+      zoomDelta={.5}
       bounds={bounds}
       boundsOptions={{padding: [50, 50]}}
       maxZoom={18}
@@ -150,6 +151,7 @@ const Map = props => {
         />
 
       </Control>
+
       <Control position='topleft'>
         <BoundaryLayerLegend
           legendInfo={boundaryLayerInfo}

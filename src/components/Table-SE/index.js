@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StickyTable, Row, Cell } from 'react-sticky-table';
 // import numeral from 'numeral';
 // import OpenDataManifest from '../../config/OpenDataManifest';
-import 'react-sticky-table/dist/react-sticky-table.css';
+// import 'react-sticky-table/dist/react-sticky-table.css';
 
 const TableSE = props => {
 
