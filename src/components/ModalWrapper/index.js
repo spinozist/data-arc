@@ -7,8 +7,6 @@ const ModalWrapper = props =>
       dimmer='blurring'
       trigger={props.trigger}
       centered={props.centered}
-      // closeIcon={true}
-      closeOnDimmerClick={false}
     >
       <Modal.Header>{props.header}</Modal.Header>
       <Modal.Content>

@@ -4,19 +4,26 @@
     border-radius: 5px;
   }
 
-  body {
-    background: rgb(230, 226, 213);
-  }
+body {
+  background: rgb(230, 226, 213);
+}
 
 
-  .no-scrollbar::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;  
-  }
+.no-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;  
+}
 
-  .no-scrollbar::-webkit-scrollbar-thumb {
-    background: #FF0000;
-  }
+.no-scrollbar::-webkit-scrollbar-thumb {
+  background: #FF0000;
+}
+
+.table-box {
+  height: 50vh;
+  width: 100%;
+  border-radius: 10px;
+  margin: 0 0 10px 5px;
+}
 
 @keyframes shadow-pulse
 {

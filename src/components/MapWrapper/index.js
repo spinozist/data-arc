@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Map as LeafletMap, TileLayer, LayersControl, ZoomControl } from 'react-leaflet';
+import { Map as LeafletMap, TileLayer, ZoomControl } from 'react-leaflet';
 import Control from 'react-leaflet-control';
 import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
 import BaseMapLegend from '../Legends/BaseMapLegend';
 import BoundaryLayerLegend from '../Legends/BoundaryLayerLegend';
 import DataLayerLegend from '../Legends/DataLayerLegend';
-
-// import { Dropdown } from 'semantic-ui-react';
-import L from 'leaflet';
-// import Loader from 'react-loader-spinner';
 import { FiHome } from "react-icons/fi";
 import API from '../../utils/API.js';
 import defaults from '../../config/defaults';
@@ -17,8 +13,6 @@ import { Icon } from '@iconify/react';
 import table from '@iconify/icons-mdi/table';
 import chartScatterPlot from '@iconify/icons-mdi/chart-scatter-plot';
 import chartBar from '@iconify/icons-mdi/chart-bar';
-// import chartLine from '@iconify/icons-mdi/chart-line';
-// import LayoutWrapper from '../LayoutWrapper';
 
 
 
@@ -59,10 +53,11 @@ const Map = props => {
         [baseMap, setBaseMap] = useState('tile-layer-mono');
 
   const handleBounds = boundingGEO => {
+    const boundingGeometry = boundingGEO ? boundingGEO.features[0].geometry : null;
     const pointArray = boundingGEO ? 
-            boundingGEO.features[0].geometry.type === 'MultiPolygon' ?
-              boundingGEO.features[0].geometry.coordinates[0][0]
-              : boundingGEO.features[0].geometry.coordinates[0]
+            boundingGeometry.type === 'MultiPolygon' ?
+              boundingGeometry.coordinates[0][0]
+              : boundingGeometry.coordinates[0]
                 : defaults.data.bounds,
         
           lngArray = pointArray.map(point => parseFloat(point[0])),
@@ -77,28 +72,14 @@ const Map = props => {
   };
 
   const handleOverlayData = obj => {
-    // console.log(obj);
-    var dataArray = [];
+    const dataArray = [];
     const getLayers = () => Object.entries(obj)
       .map(([key,data]) =>
         API.getData(data.url)
-        .then(res => {
-          const name = key;
-          // console.log(key)
-
-          dataArray.push([name, res.data.features])
-          // console.log(overlayData);
-          // const data = res.data.features;
-          // setOverlayData({
-          //   ...overlayData,
-          //   [name]: res.data.features
-          // })
-        })
+        .then(res => dataArray.push([key, res.data.features]))
         .catch(err => console.log(err))
       )
     getLayers();
-    // console.log(dataArray)
-    // const dataObj = Object.fromEntries(dataArray);
     setOverlayData(dataArray)
   };
 
@@ -126,11 +107,11 @@ const Map = props => {
       // center={[33.8, -84.4]}
       // zoom={10.5}
       // zoomDelta={.5}
-      zoomSnap={.5}
-      zoomDelta={.5}
+      zoomSnap={.3}
+      zoomDelta={.3}
       bounds={bounds}
       boundsOptions={{padding: [50, 50]}}
-      maxZoom={18}
+      maxZoom={15}
       attributionControl={true}
       zoomControl={false}
       doubleClickZoom={true}
@@ -180,6 +161,7 @@ const Map = props => {
           handleBounds(props.boundingGEO)
         }} />
       </Control>
+
       {
         Object.entries(icons).map(([key, value]) => 
         <Control position={iconPosition}>
@@ -254,39 +236,6 @@ const Map = props => {
             url={defaults.data.tileLayers.find(layer =>
               layer.key === baseMap).url}
       />
-
-
-      
-
-
-
-
-    {/* <LayersControl position="topleft"> */}
-      {/* {
-        defaults.data.tileLayers.map(tileLayer => 
-          <LayersControl.BaseLayer name={tileLayer.name}>
-            <TileLayer
-              key={tileLayer.key} 
-              attribution={tileLayer.attribution}
-              url={tileLayer.url}
-            />
-          </LayersControl.BaseLayer>
-      )} */}
-      {/* { overlayData ?
-        defaults.data.overlayLayers.map(layer => 
-          <LayersControl.Overlay 
-          name={layer.name}
-          checked={layer.checked}>
-          { overlayData[layer.name] ?
-            <OverlayLayer 
-            borderWeight={layer.style.borderWeight}
-            borderColor={layer.style.borderColor}
-            data={overlayData[layer.name]}/> : null } 
-        </LayersControl.Overlay>
-
-        ) : null
-      } */}
-    {/* </LayersControl>       */}
 
     </LeafletMap>
 

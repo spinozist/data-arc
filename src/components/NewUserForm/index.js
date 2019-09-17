@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'semantic-ui-react';
 import Auth from '../../utils/Auth'
 import './style.css';
-import API from '../../utils/API';
 // import API from '../../utils/API';
 
 // Rewrite as Class with State passing using ID and Handler with calls /api/needs/ POST request

@@ -45,7 +45,7 @@ const CSVExportButton = props => {
                  basic={ props.basic ? props.basic : false }
                  color={ props.color ? props.color : 'teal'}
                  style={{
-                    padding: '5px',  
+                    // padding: '5px',  
                     margin: props.margin ? props.margin : '10px',
                     float: props.float ? props.float : 'left',
                     borderRadius: props.borderRadius ? props.borderRadius : null,

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ScatterPlot from '../Charts/ScatterPlot';
 import SimpleBarChart from '../Charts/BarChart';
-// import ImageExportButton from '../ImageExportButton';
-import { Popup , Button, Dropdown } from 'semantic-ui-react';
-
+import ImageExportButton from '../ImageExportButton';
+import { Popup , Button, Dropdown, Icon } from 'semantic-ui-react';
+import './style.css'
 // import defaults from '../../config/defaults';
 
 const ChartWrapper = props => {
@@ -21,75 +21,138 @@ const dataTrayOptions = Object.entries(props.dataTray).map(([key, value]) =>
 useEffect(() => setChartType(props.chartType), [props.data, props.selectedVariable]);
 
 return(
-    <div id='chart-wrapper' style={{ float: 'left',margin: '0 -2px 5px 5px', borderRadius: '10px 10px 0 0', backgroundColor: 'white', height: '100%', width: '100%'}}>
+    <div className='chart-wrapper'>
         
         {  chartType === 'scatterplot' && props.dataLoaded && props.data ?
-        <ScatterPlot
-            key={'scatterplot'}
-            {...props}
-            hoverField={'GEOID'}
-        />
+            <div className='inner-box'>
+                <div className='chart-control-bar'>
+                    <Popup
+                    pinned
+                    hoverable
+                    on='hover'
+                    position='bottom left'
+                    children={
+                        <div style={{ textAlign: 'center'}}>
+                            <h5 style={{margin: '5px 0 5px 0'}}>
+                                Horizontal Axis:
+                            </h5>
+                            <Dropdown
+                                fluid
+                                selection
+                                scrolling 
+                                value={props.primaryField} 
+                                onChange={(event, data) => {
+                                    // props.setPreviousServiceID(props.serviceID)
+                                    props.setPrimaryField(data.value)
+                                }} 
+                                // placeholder='Select Geography' 
+                                options={dataTrayOptions} />
+                            <h5 style={{margin: '20px 0 5px 0'}}>
+                                Vertial Axis:
+                            </h5>
+                            <Dropdown
+                                fluid 
+                                selection
+                                scrolling 
+                                value={props.secondaryField} 
+                                onChange={(event, data) => {
+                                    // props.setPreviousServiceID(props.serviceID)
+                                    props.setSecondaryField(data.value)
+                                }} 
+                                // placeholder='Select Geography' 
+                                options={dataTrayOptions} />
+                        </div>    
+                    }
+                    trigger={ 
+                        <Icon name='bars' size={'large'} inverted style={{ marginTop: '3px', float: 'left'}} />
+                    } />
+                    {/* <Icon name='download' size={'large'} inverted style={{float: 'right'}} /> */}
+                    <Popup
+                    pinned
+                    hoverable
+                    on='hover'
+                    position='bottom right'
+                    children={
+                        <div style={{textAlign: 'center'}}>
+                            <h5>Export Image</h5>
+                            <ImageExportButton
+                            elementID={'scatterplot'}
+                            type={'png'}
+                            text={'PNG'}
+                            imageBGColor={'white'}
+                            imageFileName={'test'}
+                            />
+                            <ImageExportButton
+                            elementID={'scatterplot'}
+                            type={'jpg'}
+                            text={'JPG'}
+                            imageBGColor={'white'}
+                            imageFileName={'test'}
+                            />
+                        </div>
+                    }
+                    trigger={
+                        <Icon name='image' size={'big'} inverted style={{float: 'right'}} />
+                }
+                />
+                </div>
+                <div style={{height: '100%', width: '100%'}} id={'scatterplot'}>
+
+                    <ScatterPlot
+                        id={'scatterplot'}
+                        key={'scatterplot'}
+                        {...props}
+                        hoverField={'GEOID'}
+                    />`
+                </div>
+            </div>
         : null
         }
-        {
-            chartType === 'scatterplot' && props.dataLoaded && props.data ?
-            <div 
-                style={{
-                    marginBottom: '10px',
-                    padding: '5px',
-                    float: 'left',
-                    width: '100%',
-                    backgroundColor: 'white',
-                    borderRadius: '0 0 10px 10px'    
-                }} 
-                id='scatter-plot-controls'>
-            <Popup
-            position={'left center'}
-            on='hover'
-            hoverable
-            pinned  
-            children={props.dataTray ? 
-                <Dropdown 
-                    selection
-                    scrolling 
-                    value={props.primaryField} 
-                    onChange={(event, data) => {
-                        // props.setPreviousServiceID(props.serviceID)
-                        props.setPrimaryField(data.value)
-                    }} 
-                    // placeholder='Select Geography' 
-                    options={dataTrayOptions} /> : null
-              }
-            trigger={<Button basic style={{margin: '5px', float: 'right'}}>Change X-axis</Button>} />
-
-            <Popup
-            position={'left center'}
-            on='hover'
-            hoverable
-            pinned  
-            children={props.dataTray ? 
-                <Dropdown 
-                    selection
-                    scrolling 
-                    value={props.secondaryField} 
-                    onChange={(event, data) => {
-                        // props.setPreviousServiceID(props.serviceID)
-                        props.setSecondaryField(data.value)
-                    }} 
-                    // placeholder='Select Geography' 
-                    options={dataTrayOptions} /> : null
-              }
-            trigger={<Button basic style={{margin: '5px', float: 'right'}}>Change Y-axis</Button>} />
-            </div> : null
-  
-        }
+        
 
         {  chartType === 'bar-chart' ?
-        <SimpleBarChart
-            key={'simple-bar-chart'}
-            {...props}
-            hoverField={'GEOID'}
-        />
+            <div className='inner-box'>
+                <div className='chart-control-bar'>
+                {/* <Icon name='download' size={'large'} inverted style={{float: 'right'}} /> */}
+                <Popup
+                    pinned
+                    hoverable
+                    on='hover'
+                    position='bottom right'
+                    children={
+                        <div
+                        style={{textAlign: 'center'}}>
+                            <h5>Export Image</h5>
+                            <ImageExportButton
+                            elementID={'bar-chart'}
+                            type={'png'}
+                            text={'PNG'}
+                            imageBGColor={'white'}
+                            imageFileName={'test'}
+                            />
+                            <ImageExportButton
+                            elementID={'bar-chart'}
+                            type={'jpg'}
+                            text={'JPG'}
+                            imageBGColor={'white'}
+                            imageFileName={'test'}
+                            />
+                        </div>
+                    }
+                    trigger={
+                        <Icon name='image' size={'big'} inverted style={{float: 'right'}} />
+                }
+                />
+                </div>
+                <div style={{height: '100%', width: '100%'}} id={'bar-chart'}>
+
+                    <SimpleBarChart
+                        key={'simple-bar-chart'}
+                        {...props}
+                        hoverField={'GEOID'}
+                    />
+                </div>
+            </div>
         : null
         }
 

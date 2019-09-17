@@ -65,7 +65,7 @@ const DataLayerLegend = props => {
                 /> : null 
               }
             />
-          { primaryField && 
+          {/* { primaryField && 
             dataTray && 
             dataTray[primaryField] && 
             props.data &&
@@ -88,7 +88,7 @@ const DataLayerLegend = props => {
 
             : null
 
-          }             
+          }              */}
           <Popup
             position={'right center'}
             on='hover'
@@ -108,31 +108,54 @@ const DataLayerLegend = props => {
                   options={fieldOptions} /> : null
             }
             trigger={
-
-              <h4 
+              primaryField && props.dataTray && props.dataTray[primaryField] && props.data ?
+              <div 
                 style={{ 
                   paddingLeft: '10px',
                   marginBottom: '0px',
-                  lineHeight: '20px',
                   backgroundColor: props.data ? 'lightgrey' : null,
-                  padding: '5px',
+                  padding: '10px',
                   borderRadius: '5px',
                   textAlign: 'center' 
               }}>
+              <p 
+              style={{ 
+                // marginBottom: '-15px',
+                lineHeight: '10px' ,
+              }}
+            >
               {
-                primaryField && props.dataTray && props.dataTray[primaryField] && props.data ?
-                props.dataTray[primaryField].text :
-                'Data loading...'
-                // DataManifest.map(item => item.Variable === primaryField ? item.Long : null)
-              }
-            </h4>
+                dataTray[primaryField].category +
+                ' | ' +
+                dataManifest.find(dataInfo => 
+                  dataInfo.Variable === dataTray[primaryField].value).Topic                 }
+            </p>
+              
+            <h4 style={{ lineHeight: '20px'}}>{props.dataTray[primaryField].text}</h4>
+            <div 
+                    style={{
+                      width: '100%',
+                      textAlign: 'right',
+                      marginTop: '5px',
+                      marginLeft: '-10px'
+                    }}
+                  >
+
+                  Source:&nbsp;
+                  {
+                    dataManifest.find(dataInfo => 
+                    dataInfo.Variable === dataTray[primaryField].value).Source
+                  }
+                  </div> 
+            </div> :
+                <h4 style={{ width: '100%', textAlign: 'center', lineHeight: '20px'}}>Data loading...</h4>
 
             } /> 
           <p style={{
               paddingLeft: '10px', 
               lineHeight: '20px'
             }}> 
-            {
+            {/* {
               primaryField && 
               props.dataTray && 
               props.data &&
@@ -142,7 +165,7 @@ const DataLayerLegend = props => {
                   <div 
                     style={{
                       width: '100%',
-                      textAlign: 'left',
+                      textAlign: 'right',
                       marginTop: '5px',
                       marginLeft: '-10px'
                     }}
@@ -154,15 +177,22 @@ const DataLayerLegend = props => {
                     dataInfo.Variable === dataTray[primaryField].value).Source
                   }
                   </div> : null
-            }
+            } */}
             <Popup
               position={'top center'}
               on='hover'
               hoverable
               pinned 
               trigger={
-                <div style={{marginTop: '10px', marginBottom: '20px', width: '100%', height: '30px'}}>
-                {props.colorRamp}
+                <div 
+                  style={{
+                    marginTop: '10px',
+                    marginBottom: '20px',
+                    width: '100%',
+                    height: '30px'
+                  }}
+                >
+                  {props.colorRamp}
                 </div>
               }
               children={

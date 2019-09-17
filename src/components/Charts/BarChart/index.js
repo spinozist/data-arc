@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ComposedChart, Bar, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { ComposedChart, Bar, Cell, Label, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 // import { Dropdown } from 'react-bootstrap';
 import colormap from 'colormap';
 import numeral from 'numeral';
 import './style.css';
+// import { Label } from 'semantic-ui-react';
 
 
 
@@ -48,19 +49,32 @@ const SimpleBarChart = props => {
       id: value[props.hoverField]
       })
       ).sort(sortOrder === 'lohi' ? (a,b) => a.x > b.x ? 1 : -1 : (a,b) => a.x < b.x ? 1 : -1 ) : null;
-
+  
+  
   // console.log(dataArray);
 
   return (
-    <ResponsiveContainer id='diagram' key={"rc-bar-chart-container"} height="100%" width="100%">
+    <ResponsiveContainer id='diagram' key={"rc-bar-chart-container"} height="90%" width="95%">
      <ComposedChart
         key={"cc-bar-chart"}
         data={dataArray}
         margin={{
-          top: 40, right: 15, bottom: 20, left: 10,
+          top: 30, right: 20, bottom: 20, left: 30,
         }}>
         {/* <XAxis name={'bar-chart-axis'} dataKey="name" /> */}
-        <YAxis orientation='right' name={primaryField} dataKey='x' />
+        <YAxis 
+          orientation='right' 
+          name={primaryField} 
+          dataKey='x'
+          label={{
+            value: props.dataTray ? props.dataTray[primaryField].text : 'y',
+            position: 'right',
+            angle: -90,
+
+          }}
+        />
+
+        {/* <XAxis type='category' tick='false' dataKey='name'/> */}
         <Bar 
           key={"bar-" + primaryField}
           name={primaryField} 

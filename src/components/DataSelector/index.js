@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Radio, Button, Icon, Input } from 'semantic-ui-react';
-import defaults from '../../config/defaults';
+// import defaults from '../../config/defaults';
 
-import testDataManifest from '../../config/datamanifest';
+import dataManifest from '../../config/datamanifest';
 import colormap from 'colormap';
 // import CSVExportButton from '../CSVExportButton';
 import './style.css';
@@ -11,15 +11,15 @@ import './style.css';
 
 const DataSelector = props => {
 
-    const [showFilters, setShowFilters] = useState(false);
+    // const [showFilters, setShowFilters] = useState(false);
 
-    // console.log(testDataManifest.map((item, i) => i < 10 ? item : null))
+    // console.log(dataManifest.map((item, i) => i < 10 ? item : null))
 
     const [queryResults, setQueryResults] = useState();
 
     const [query, setQuery] = useState({MOE: false, manifest: 'Change', catValue: 0});
     
-    const [topicOptions, setTopicOptions] = useState();
+    // const [topicOptions, setTopicOptions] = useState();
 
     const initialTray = props.GlobalDataTray;
 
@@ -54,7 +54,7 @@ const DataSelector = props => {
         // const category = queryObj ? queryObj.category : null; 
         // const topic = queryObj ? queryObj.topic : null;
         
-        const results = queryObj ? testDataManifest
+        const results = queryObj ? dataManifest
             .filter(result => result.Topic !== 'N/A')
             .map(result => 
             ({
@@ -65,7 +65,9 @@ const DataSelector = props => {
                 category: result.Category,
                 source: result.Source,
                 type: result.Type,
-                manifest: result.Topic.includes('x Race') ? 'RaceX' : result.Category,
+                universe: result.Universe,
+                api: result.API,
+                api_param: result.API_Param1,
                 MOE: result.ESTMOE === 'MOE' ? true : false,
                 content: (
                     <div 
@@ -77,7 +79,8 @@ const DataSelector = props => {
                     Year(s): {result.Years} <br/>
                     Category: {result.Category}<br/>
                     Topic: {result.Topic}<br/>
-                    Source: {result.Source}</p>
+                    Source: {result.Source}<br/>
+                    Universe: {result.Universe}</p>
                     </div>
                 )
             })) : null;
@@ -111,14 +114,14 @@ const DataSelector = props => {
 
     const addToDataTray = dataObj => {
         
-        const RaceX = dataObj.manifest === 'RaceX' ? 1 : 0;
-        const serviceIDsByCategory = {
-            "Change since 2000": 0,
-            Demographic: 1,
-            Economic: 3,
-            Housing: 5,
-            Social: 7
-        }
+        // const RaceX = dataObj.manifest === 'RaceX' ? 1 : 0;
+        // const serviceIDsByCategory = {
+        //     "Change since 2000": 0,
+        //     Demographic: 1,
+        //     Economic: 3,
+        //     Housing: 5,
+        //     Social: 7
+        // }
 
         setDataTray({
             ...dataTray,
@@ -128,8 +131,8 @@ const DataSelector = props => {
                 value: dataObj.value,
                 category: dataObj.category,
                 topic: dataObj.topic,
-                manifest: dataObj.manifest,
-                serviceID: serviceIDsByCategory[dataObj.category] + RaceX
+                api: dataObj.api,
+                api_param: dataObj.api_param
             }
         });
     }
@@ -152,7 +155,8 @@ const DataSelector = props => {
             result.text.toUpperCase().includes(item.toUpperCase()) ? true : 
             result.category.toUpperCase().includes(item.toUpperCase()) ? true : 
             result.topic.toUpperCase().includes(item.toUpperCase()) ? true : 
-            result.source.toUpperCase().includes(item.toUpperCase()) ? true : false
+            result.source.toUpperCase().includes(item.toUpperCase()) ? true : 
+            result.type.toUpperCase().includes(item.toUpperCase()) ? true : false
             : null);
 
         return booleanArray.includes(false) ? false : true;
@@ -164,7 +168,7 @@ const DataSelector = props => {
 
     return(
         <div style={{height: '80vh', width: '100%'}}>
-            <div id='search-results column' style={{float: 'left', width: '50%'}}>
+            <div id='search-results column' style={{ float: 'left', width: '50%'}}>
             
                 <Input
                     fluid 
@@ -178,7 +182,7 @@ const DataSelector = props => {
                         height:'50px',
                     }}  
                 />
-                <div style={{ width: '100%', height: '60vh', float: 'left', overflow: 'auto', textAlign: 'left'}}>
+                <div style={{ marginTop: '20px', width: '100%', height: '60vh', float: 'left', overflow: 'auto', textAlign: 'left'}}>
                 { queryResults && query ?
                     queryResults
                     .filter( result => search && result ? runSearchFilter(search, result) : true)
@@ -231,17 +235,7 @@ const DataSelector = props => {
             
             </div>
             <div 
-                style={{float: 'left', height: '5%', width: '100%'}}>
-                    <Button 
-                        style={{float: 'right'}} 
-                        color={'red'} 
-                        onClick={() => {
-                            props.setModalStatus(false)
-                            props.setGlobalDataTray(initialTray)
-                        }}
-                    >
-                        Cancel
-                    </Button>
+                style={{paddingTop: '30px', float: 'left', height: '2%', width: '100%'}}>
                     <Button 
                         style={{float: 'right'}} 
                         color={'teal'} 
@@ -250,8 +244,20 @@ const DataSelector = props => {
                             props.setGlobalDataTray(dataTray)
                         }}
                     >
-                        Apply
+                        Apply Changes
                     </Button>
+                    <Button 
+                        style={{float: 'right'}} 
+                        color={'red'}
+                        basic 
+                        onClick={() => {
+                            props.setModalStatus(false)
+                            props.setGlobalDataTray(initialTray)
+                        }}
+                    >
+                        Cancel
+                    </Button>
+
             </div>
             
 

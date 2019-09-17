@@ -24,7 +24,7 @@ const ImageExportButton = props => {
         onClick={() => exportIMG(props.elementID, props.type)}
         basic
         color='teal'                    
-        style={{margin: '10px', height: '40px'}}
+        style={{margin: '5px', height: '40px'}}
         >
             {props.text}
         </Button>

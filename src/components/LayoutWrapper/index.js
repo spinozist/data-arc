@@ -8,13 +8,9 @@ import Loader from 'react-loader-spinner';
 import API from '../../utils/API'
 import ColorRamp from '../Legends/ColorRamp';
 import ModalWrapper from '../ModalWrapper';
-import { Button } from 'semantic-ui-react';
+import { Button, Icon, Popup } from 'semantic-ui-react';
 import CSVExportButton from '../CSVExportButton';
-// import NewUserForm from '../NewUserForm';
-// import DataManifest from '../../config/DataManifest.json'
-import OpenDataManifest from '../../config/OpenDataManifest';
 import defaults from '../../config/defaults';
-
 import './style.css';
 // import { readSync } from 'fs';
 
@@ -37,7 +33,7 @@ const LayoutWrapper = props => {
      [dataLoaded, setDataLoaded] = useState();
 
 
-    const handleData = (baseurl, geo) => {
+    const handleData = geo => {
        
         setDataLoaded(false);
         
@@ -60,53 +56,72 @@ const LayoutWrapper = props => {
 
         // Calls data using dataTray, maps it to dataObj 
         // created by returned GeoJSON, and then sets 
-        const addData = (dataObj, baseurl, geo) =>  {
+        const addData = (dataObj, geo) =>  {
         
             const serviceIDs = [];
+            const APIs = [];
 
             // Pushes to array of serviceIDs, 
             // necessary for creating multiple API calls
             const getServiceIDs = () => dataTray ?
                 Object.values(dataTray).forEach(result => 
-                    serviceIDs.includes(result.serviceID) === false ? 
-                        serviceIDs.push(result.serviceID) : null
+                    serviceIDs.includes(result.api_param) === false ? 
+                        serviceIDs.push(result.api_param) : null
                 ) : null;
-            
+
+            const getAPIs = () => dataTray ?
+            Object.values(dataTray).forEach(result => 
+                APIs.includes(result.api) === false ? 
+                    APIs.push(result.api) : null
+            ) : null;
+        
+            getAPIs();
             getServiceIDs();
 
+            console.log(APIs)
+            console.log(serviceIDs)
+            
+
+
+
             // Makes multiple API calls using array of
-            // serviceIDs along with arrays of field keys 
+            // API urls and serviceIDs along with arrays of field keys 
             // filtered from the data tray
-            serviceIDs.map(serviceID => {
+            APIs.map(api => {
 
-                const fields = 
-                    Object.entries(dataTray)
-                        .filter(([key, value]) => 
-                            value.serviceID === serviceID)
-                            .map(([key, value]) => key);
+                const baseURL = defaults.data.dataAPIs[api].url
 
-                fields.push('GEOID', 'NAME');
+                serviceIDs.map(serviceID => {
 
-                const dataURL = `${baseurl}${serviceID}/query?where=SumLevel='${geo}'&outFields=${fields}&returnGeometry=false&f=geojson`;
+                    const fields = 
+                        Object.entries(dataTray)
+                            .filter(([key, value]) => 
+                                value.api_param === serviceID)
+                                .map(([key, value]) => key);
 
-                API.getData(dataURL)
-                    .then(res => {
-                        res.data.features.map(feature => {
-                            const propertiesObj = feature.properties;
-                            const featureID = propertiesObj.GEOID;
-                            Object.entries(propertiesObj)
-                                .map(([key, value]) => dataObj[featureID][key] = value)
-                        });
+                    fields.push('GEOID', 'NAME');
 
-                        return dataObj
-                    })
-                    .then(dataObj => {
-                        setData(dataObj)
-                        setDataLoaded(true);
-                    })
-                    .catch(err => console.log(err))
-            });
+                    const dataURL = `${baseURL}${serviceID}/query?where=SumLevel='${geo}'&outFields=${fields}&returnGeometry=false&f=geojson`;
 
+                    API.getData(dataURL)
+                        .then(res => {
+                            res.data.features.map(feature => {
+                                const propertiesObj = feature.properties;
+                                const featureID = propertiesObj.GEOID;
+                                Object.entries(propertiesObj)
+                                    .map(([key, value]) => dataObj[featureID][key] = value)
+                            });
+
+                            // console.log(dataObj);
+                            return dataObj
+                        })
+                        .then(dataObj => {
+                            setData(dataObj)
+                            setDataLoaded(true);
+                        })
+                        .catch(err => console.log(err))
+                });
+            })
         }
 
 
@@ -114,9 +129,9 @@ const LayoutWrapper = props => {
         // API for geoJSON
 
         const geoJSONFields = [hoverField];
-        const dataURL = `${baseurl}/0/query?where=SumLevel='${geo}'&outFields=${geoJSONFields}&f=geojson`
+        const geoJSONURL = `${defaults.data.geoAPIs['OpenDataMain'].url}/0/query?where=SumLevel='${geo}'&outFields=${geoJSONFields}&f=geojson`
 
-        API.getData(dataURL)
+        API.getData(geoJSONURL)
             .then(res => {
 
                 // Initiate dataObj
@@ -133,11 +148,11 @@ const LayoutWrapper = props => {
                 // Pass along dataObj for data to be added to it
                 return dataObj
             })
-            .then(dataObj => addData(dataObj, baseurl, geo))
+            .then(dataObj => addData(dataObj,geo))
             .catch(err => console.log(err));    
     }
     
-    useEffect(() => handleData(defaults.data.baseUrl, sumLevel) ,[dataTray, sumLevel]);
+    useEffect(() => handleData(sumLevel) ,[dataTray, sumLevel]);
 
     
     return (
@@ -182,20 +197,20 @@ const LayoutWrapper = props => {
                                 layout={layout}
                             /> : 
                             <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
-                                <Loader id='loader-box' type='ThreeDots' height={40} width={100} />
+                                <Loader id='loader-box' color={'teal'} type='ThreeDots' height={40} width={100} />
                             </div>
                         }
                         dataButton={                
                             <ModalWrapper
                             open={dataSelectorModal}
                             centered={false}
-                            header={<h2>Browse Data</h2>} 
+                            header={<h2>Browse Data</h2>}
                             trigger={
                                 <Button 
                                     onClick={() => setDataSelectorModal(true)} 
                                     color='teal'
                                 >
-                                    Browse Data
+                                    Build Data Tray
                                 </Button>} 
                             content={
                                 <DataSelector
@@ -232,42 +247,77 @@ const LayoutWrapper = props => {
                 {/* Side Bar */}
 
                 {layout.sideBarWidth.sm > 0 || layout.sideBarWidth.lg > 0 ?
-                <Col className='no-scrollbar' sm={layout.sideBarWidth.sm} lg={layout.sideBarWidth.lg} style={{height: '100%', width: '100%', overflow: 'scroll'}}>
+
+                <Col 
+                    className='no-scrollbar' 
+                    sm={layout.sideBarWidth.sm} lg={layout.sideBarWidth.lg} 
+                    style={{padding: '0 10px 0 10px', height: '100%', width: '100%', overflow: 'scroll'}}>
                 
                 {/* Table */}
                 
-                { layout.tableVisible && primaryField ?
+                { layout.tableVisible && primaryField ? 
                     
+                    data ?
                     
-                    <Row className='no-scrollbar' middle='sm' 
-                        style={{
-                            margin: '0 15px 0 10px',
-                            borderRadius: '10px 10px 0 0',
-                            height: '50%',
-                            width: '100%',
-                            overflow: 'scroll',
-                            backgroundColor: 'white',
-                            padding: '10px'
-                        }}>    
-                        {data ? 
-                        <TableSE
-                            data={data}
-                            dataTray={dataTray}
-                            hoverID={hoverID}
-                            handleHover={setHoverID}
-                            hoverField={hoverField}
-                            layout={layout}
-                            MOE={MOE}
-                        /> : 
-                        <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
-                            <Loader id='loader-box' type='ThreeDots' />
+                    <div className='table-box'>
+                        <div className='chart-control-bar' style={{marginTop: '0'}}>
+                            <Popup
+                            pinned
+                            hoverable
+                            on='hover'
+                            position='bottom right'
+                            children={
+                                <div style={{textAlign: 'center'}}>
+                                <h5>Export Data</h5>
+                                <CSVExportButton
+                                // {...props}
+                                data={data}
+                                // selectedFields={props.selectedFields}
+                                text={'CSV'}
+                                color='teal'
+                                basic={true}
+                                // float='center'
+                                height='40px'
+                                // borderRadius='50%'
+                                margin={'5px'}
+                                />
+                                </div>
+                            }
+                            trigger={
+                                <Icon name='download' size={'large'} inverted style={{float: 'right'}} />
+                            }
+                            />
+                            </div>
+                        <div className='no-scrollbar' middle='sm' 
+                            style={{
+                                // margin: '0 15px 0 10px',
+                                borderRadius: '0 0 10px 10px',
+                                height: '90%',
+                                width: '100%',
+                                overflow: 'scroll',
+                                backgroundColor: 'white',
+                                // paddingBottom: '10px'
+                            }}> 
+                        
+                            <TableSE
+                                data={data}
+                                dataTray={dataTray}
+                                hoverID={hoverID}
+                                handleHover={setHoverID}
+                                hoverField={hoverField}
+                                layout={layout}
+                                MOE={MOE}
+                            /> 
                         </div>
-                        }
+                    </div> : 
+                    <div style={{position: 'relative', height: '50vh', paddingTop: '30%',width: '100%', textAlign: 'center'}}>
+                        <Loader id='loader-box' color={'grey'} type='ThreeDots' />
+                    </div>
+                    : null
 
-                    </Row> :  null 
                 }
                 {/* Table export bar */}
-                { data && layout.tableVisible ?
+                {/* { data && layout.tableVisible ?
                     <div 
                         style={{
                             float: 'left',
@@ -293,11 +343,11 @@ const LayoutWrapper = props => {
 
                         : null
                          
-                } 
+                }  */}
                 
                 { layout.scatterPlotVisible && primaryField ? 
 
-                    <Row center='sm' middle='sm' style={{margin: '5px', height: '40%', width: '100%'}}>
+                    <Row center='sm' middle='sm' style={{ marginBottom: '20px', height: '40vh', width: '100%'}}>
                         { data && dataLoaded  ? 
                         <ChartWrapper
                         dataTray={dataTray}
@@ -306,22 +356,24 @@ const LayoutWrapper = props => {
                         setPrimaryField={setPrimaryField}
                         secondaryField={secondaryField}
                         setSecondaryField={setSecondaryField}
-                        data={data} 
+                        data={data}
+                        geo={sumLevel} 
                         layout={layout}
                         handleHover={setHoverID}
                         hoverID={hoverID} 
                         chartType={'scatterplot'}
                         /> : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
-                        <Loader id='loader-box' type='ThreeDots' />
+                        <Loader id='loader-box' color={'grey'} type='ThreeDots' />
                     </div>}
                         
                     </Row> : null }
                 { layout.barChartVisible && primaryField ? 
 
-                    <Row center='sm' middle='sm' style={{position: 'relative', top: layout.scatterPlotVisible ? '60px' : null, margin: '5px', height: '40%', width: '100%'}}>
+                    <Row center='sm' middle='sm' style={{ height: '40vh', width: '100%'}}>
                         { data && dataLoaded ?
                         <ChartWrapper 
+                            geo={sumLevel} 
                             primaryField={primaryField}
                             secondaryField={secondaryField}
                             data={data}
@@ -332,7 +384,7 @@ const LayoutWrapper = props => {
                             chartType={'bar-chart'}
                         /> : 
                         <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
-                            <Loader id='loader-box' type='ThreeDots' />
+                            <Loader id='loader-box' color={'grey'} type='ThreeDots' />
                         </div>}
                     </Row> : null }
                 </Col>

@@ -5,7 +5,7 @@ export default {
         scatterPlotVisible: false,
         barChartVisible: false,
         // chartVisible: false,
-        colorMap: 'temperature',
+        colorMap: 'portland',
         numberOfBins: 72,
         colorMapReverse: true,
         chartType: 'bar-chart',
@@ -20,18 +20,27 @@ export default {
                 category: "Change since 2000",
                 text: "# Total population, 2000",
                 value: "TotPop_00",
-                serviceID: 0,
-                manifest: 'Change since 2000'
+                api: 'OpenDataMain',
+                api_param: 0,
             },
             TotalHH_00: {
                 category: "Change since 2000",
                 text: "# Total Households, 2000",
                 value: "TotPop_00",
-                serviceID: 0,
-                manifest: 'Change since 2000'
+                api: 'OpenDataMain',
+                api_param: 0,
             }
         },
-        baseUrl: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+        geoAPIs: {
+            OpenDataMain : {
+                url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+            }
+        },
+        dataAPIs: {
+            OpenDataMain : {
+                url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+            }
+        },
         hoverField: 'GEOID',
         selectedFields: ['NAME', 'GEOID'],
         sumLevel: 'NSA',

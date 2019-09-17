@@ -44,10 +44,10 @@ const ScatterPlot = props => {
       ) : null;
 
   return (
-      <ResponsiveContainer height="100%" width="100%">
+      <ResponsiveContainer height="90%" width="95%">
         <ScatterChart
           margin={{
-            top: 20, right: 20, bottom: 20, left: 20,
+            top: 30, right: 20, bottom: 20, left: 30,
           }} >
           <CartesianGrid />
           <XAxis 
@@ -68,8 +68,8 @@ const ScatterPlot = props => {
             dataKey="y" 
             name={props.data ? secondaryField : null } 
             label={{
-              value: props.dataTray ? props.dataTray[secondaryField].text : 'y',
-              position: 'center',
+              value: props.dataTray ? props.dataTray[secondaryField].text: 'y',
+              position: 'right',
               angle: -90
             }} 
             unit={null} />
