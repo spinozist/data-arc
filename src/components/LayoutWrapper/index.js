@@ -17,6 +17,8 @@ import './style.css';
 const LayoutWrapper = props => {
 
     // Initiate state variables and setter functions
+    const [dataTray, setDataTray] = useState(defaults.data.tray);
+
 
     const [layout, setLayout] = useState(defaults.layout),
      [sumLevel, setSumLevel] = useState(defaults.data.sumLevel),
@@ -26,9 +28,8 @@ const LayoutWrapper = props => {
      [boundingGEO, setBoundingGEO] = useState(),
      [geoJSON, setGeoJSON] = useState(),
      [data, setData] = useState(),
-     [dataTray, setDataTray] = useState(defaults.data.tray),
-     [primaryField, setPrimaryField] = useState(defaults.categoryOptions[0].primaryField),
-     [secondaryField, setSecondaryField] = useState(defaults.categoryOptions[0].secondaryField),
+     [primaryField, setPrimaryField] = useState(() => Object.keys(dataTray)[0]),
+     [secondaryField, setSecondaryField] = useState(() => Object.keys(dataTray)[1]),
      [dataSelectorModal, setDataSelectorModal] = useState(false),
      [dataLoaded, setDataLoaded] = useState();
 
@@ -124,12 +125,10 @@ const LayoutWrapper = props => {
             })
         }
 
-
-
         // API for geoJSON
 
         const geoJSONFields = [hoverField];
-        const geoJSONURL = `${defaults.data.geoAPIs['OpenDataMain'].url}/0/query?where=SumLevel='${geo}'&outFields=${geoJSONFields}&f=geojson`
+        const geoJSONURL = `${defaults.data.geoAPIs['OpenDataMain'].url}0/query?where=SumLevel='${geo}'&outFields=${geoJSONFields}&f=geojson`
 
         API.getData(geoJSONURL)
             .then(res => {
@@ -153,6 +152,7 @@ const LayoutWrapper = props => {
     }
     
     useEffect(() => handleData(sumLevel) ,[dataTray, sumLevel]);
+    useEffect(() => {}, [layout]);
 
     
     return (

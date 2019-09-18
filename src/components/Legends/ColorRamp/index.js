@@ -77,12 +77,12 @@ const ColorRamp = props => {
 
     return (
 
-        <div style={{ width: '100%', height: '30px'}}>
+        <div style={{ width: '100%', height: '40px'}}>
             <div
                 style={{
                     // position: 'relative',
                     // bottom: '60px',
-                    paddingTop: '2px',
+                    paddingTop: '8px',
                     borderRadius: '5px 0 0 5px',
                     // border: 'solid grey .8px',
                     color: 'white', 
@@ -116,13 +116,14 @@ const ColorRamp = props => {
                     // position: 'relative',
                     // bottom: '60px',
                     borderRadius: '0 5px 5px 0',
-                    paddingTop: '2px',
+                    paddingTop: '8px',
                     // border: 'solid grey .8px', 
                     color: 'white', 
                     backgroundColor: 'black', 
                     fontSize: '1.2em',
                     textAlign: 'center',
                     float: 'left',
+                
                     height: '100%',
                     width: String(lableWidth) + '%',
                     marginTop: marginTop + 'px',

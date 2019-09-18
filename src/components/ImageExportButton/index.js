@@ -2,6 +2,7 @@ import React from 'react';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
 import { Button } from 'semantic-ui-react';
+// import { notStrictEqual } from 'assert';
 
 const ImageExportButton = props => {
 
@@ -9,12 +10,10 @@ const ImageExportButton = props => {
     const imageBGColor = props.imageBGColor ? props.imageBGColor : null;;
 
     const exportIMG = (divID, type) => {
-    var node = document.getElementById(divID);
-
-
+        let node = document.getElementById(divID);
         domtoimage.toBlob(node, {bgcolor: imageBGColor})
         .then(blob => {
-            console.log(blob);
+            // console.log(blob);
             saveAs(blob, `${imageFileName}.${type}`)
         });
     }

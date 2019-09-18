@@ -210,7 +210,18 @@ const DataSelector = props => {
 
             </div>
   
-            <div style={{ marginTop: '20px', width: '45%', height: '80%', float: 'right', overflow: 'auto', textAlign: 'left'}}>
+            <div 
+                style={{ 
+                    // marginTop: '20px',
+                    width: '45%',
+                    height: '90%',
+                    float: 'right',
+                    overflow: 'auto',
+                    textAlign: 'left',
+                    boxShadow: 'inset 0 0 5px #000000',
+                    borderRadius: '10px',
+                    padding: '15px'
+                }}>
                 { dataTray ?
                     Object.entries(dataTray).map(([key, value]) =>
                     <div

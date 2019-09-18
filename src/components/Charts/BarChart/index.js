@@ -10,7 +10,7 @@ import './style.css';
 
 const SimpleBarChart = props => {
 
-  const [ sortOrder, setSortOrder] = useState('lohi');
+  const [ sortOrder, setSortOrder] = useState('hilo');
 
   // console.log('BAR CHART PROPS...')
   // console.log(props)
@@ -40,15 +40,40 @@ const SimpleBarChart = props => {
   const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
   const minValue = valueArray !== null ? Math.min(...valueArray) : 'Value array not load yet';
 
-  const dataArray = props.data ? Object.entries(props.data)
-  .filter(([key, value]) => value[primaryField] !== 'N/A' || value[primaryField] !== 'NA' || value[primaryField] !== null)
-  .map(([key,value]) => 
-  ({
-      x: parseFloat(value[primaryField]),
-      name: value['NAME'],
-      id: value[props.hoverField]
+  const dataArray = props.data ? 
+  Object.entries(props.data)
+    .filter(([key, value]) => value[primaryField] !== 'N/A' || value[primaryField] !== 'NA' || value[primaryField] !== null)
+    .map(([key,value]) => 
+      ({
+        x: parseFloat(value[primaryField]),
+        name: value['NAME'],
+        id: value[props.hoverField]
       })
-      ).sort(sortOrder === 'lohi' ? (a,b) => a.x > b.x ? 1 : -1 : (a,b) => a.x < b.x ? 1 : -1 ) : null;
+    )
+    .sort(
+        // sortOrder === 'lohi' ? (a,b) => a.x > b.x ? 1 : -1 : (a,b) => a.x < b.x ? 1 : -1 
+        (a,b) => {
+          // equal items sort equally
+          if (a.x === b.x) {
+              return 0;
+          }
+          // // nulls sort after anything else
+          // else if (a.x === null || a.x === 'NA' || a.x === 'N/A') {
+          //     return 1;
+          // }
+          // else if (b.x === null || b.x === 'NA' || b.x === 'N/A') {
+          //     return -1;
+          // }
+          // // otherwise, if we're ascending, lowest sorts first
+          else if (sortOrder === 'lohi') {
+              return a.x < b.x ? -1 : 1;
+          }
+          // // if descending, highest sorts first
+          else { 
+              return a.x < b.x ? 1 : -1;
+          }
+        }
+      ) : null;
   
   
   // console.log(dataArray);

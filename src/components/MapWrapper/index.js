@@ -14,12 +14,14 @@ import table from '@iconify/icons-mdi/table';
 import chartScatterPlot from '@iconify/icons-mdi/chart-scatter-plot';
 import chartBar from '@iconify/icons-mdi/chart-bar';
 
-
-
-
 const Map = props => {
 
-  const iconStyle = {backgroundColor: 'white', borderRadius: '5px', padding: '5px'}
+  const iconStyle = 
+    {
+      backgroundColor: 'white',
+      borderRadius: '5px',
+      padding: '5px'
+    };
   const iconSize = '70px';
   const iconColor = 'teal';
   const iconPosition = 'bottomright';
@@ -86,17 +88,22 @@ const Map = props => {
   const closeSideBar = () => {
     const status = Object.entries(icons).map(([key, value]) =>
       value.visible);
-    const close = () => !status[0] && !status[1] && !status[2] ? props.setLayout({
-      ...props.layout,
-      mapWidth: {sm: 12, lg: 12},
-      sideBarWidth: {sm: 0, lg: 0}
-    }) : null;
+    const close = () => 
+      !status[0] && 
+      !status[1] && 
+      !status[2] ? 
+        props.setLayout({
+          ...props.layout,
+          mapWidth: {sm: 12, lg: 12},
+          sideBarWidth: {sm: 0, lg: 0}
+        }) : null;
     close();
   }
+
   
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => handleOverlayData(boundaryLayerInfo), []);
-  useEffect(() => {}, [boundaryLayerInfo]);
+  useEffect(() => {}, [boundaryLayerInfo, props.primaryField]);
   useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => closeSideBar(), [icons]);
@@ -122,7 +129,6 @@ const Map = props => {
       onViewportChange={() => setBounds()}
 
     > 
-      <ZoomControl position="topright" />
       <Control position='topleft'>
         <BaseMapLegend
           legendInfo={defaults.data.tileLayers} 
@@ -144,23 +150,30 @@ const Map = props => {
       <Control position='topleft'>
         <DataLayerLegend
           {...props}
-          setLayout={props.setLayout}
-          layout={props.layout}
           geoLabel={defaults.geoOptions.find(option => option.value === props.geo)}
-          primaryField={props.primaryField}
-          labelManifest={props.labelManifest}
-          browseDataButton={props.dataButton}
-          colorRamp={props.colorRamp}
           style={legendStyle}
         />
       </Control>
       <Control position="topright" >
 
-        <FiHome style={{height: '40px', width: '40px', padding: '5px', backgroundColor: 'white', borderRadius: '5px'}} onClick={() => {
+        <FiHome 
+          style={{
+            height: '35px',
+            width: '35px',
+            padding: '5px',
+            backgroundColor: 'white',
+            borderRadius: '2px',
+            boxShadow: '0 0 3px 3px rgba(23, 17, 17, 0.42)'
+            // outline: '2px solid rgba(23, 17, 17, 0.42)'
+
+          }} 
+          onClick={() => {
           console.log('Reset View Button Clicked');
           handleBounds(props.boundingGEO)
         }} />
       </Control>
+      <ZoomControl position="topright" />
+
 
       {
         Object.entries(icons).map(([key, value]) => 
@@ -168,7 +181,8 @@ const Map = props => {
           <Icon 
             style={{
               ...iconStyle,
-              opacity: value.visible ? .7 : 1
+              opacity: value.visible ? .7 : 1,
+              boxShadow: !value.visible ? '0 0 3px 3px rgba(23, 17, 17, 0.42)' : null
             }}
             height={iconSize} 
             width={iconSize} 
@@ -228,7 +242,6 @@ const Map = props => {
         <GeoJSONLayer {...props} baseMap={baseMap}/> 
         : null 
       }
-
       <TileLayer
             key={baseMap}
             attribution={defaults.data.tileLayers.find(layer =>

@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StickyTable, Row, Cell } from 'react-sticky-table';
-// import numeral from 'numeral';
-// import OpenDataManifest from '../../config/OpenDataManifest';
-// import 'react-sticky-table/dist/react-sticky-table.css';
-// import 'react-sticky-table/dist/react-sticky-table.css';
 import './style.css'
-import { midpoint } from '@turf/turf';
+
 
 const TableSE = props => {
 
@@ -95,7 +91,11 @@ const TableSE = props => {
                             return(
                                 <Cell 
                                     style={{
-                                        backgroundColor: id === props.hoverID ? 'orange' : i % 2 === 0 ? props.layout.tableBanding[0] : props.layout.tableBanding[1],
+                                        backgroundColor: 
+                                            id === props.hoverID ? 
+                                                'orange' : i % 2 === 0 ? 
+                                                    props.layout.tableBanding[0] : 
+                                                        props.layout.tableBanding[1],
                                         textAlign: 'center',
                                         verticalAlign: 'middle'
                                     }}

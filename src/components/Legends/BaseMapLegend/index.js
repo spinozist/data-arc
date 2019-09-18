@@ -1,11 +1,13 @@
-import React from 'react';
-import { Radio } from 'semantic-ui-react'
+import React, { useState } from 'react';
+import { Radio, Icon } from 'semantic-ui-react'
 
 import './style.css';
 
 const BaseMapLegend = props => {
 
-    const legendInfo = props.legendInfo;
+    const [ legendOpen, setLegendOpen ] = useState(false);
+
+    const [legendInfo, setLegendInfo] = useState(props.legendInfo);
 
     return (
         <div 
@@ -17,19 +19,21 @@ const BaseMapLegend = props => {
                 borderRadius: props.style.borderRadius,
                 overflow: 'auto'
             }}>
-        <h2>Base Map(s)</h2>
-        {legendInfo.map(entry =>
-            <h5 
-                style={{paddingLeft: '10%', margin: '0 0 14px 0'}}
+        <h2>Base Map(s)<Icon name='ellipsis vertical' color={legendOpen ? 'grey' : 'black'} style={{float: 'right'}} onClick={() => setLegendOpen(legendOpen ? false : true)}/></h2>
+        {legendOpen  ? legendInfo.map(entry =>
+            <div 
+                style={{paddingLeft: '10%', fontSize: '1em', margin: '0 0 5px 0'}}
                 // onClick={() => props.setBaseMap(entry.key)}     
             >
             <Radio
-                label={entry.name}
+                // label={entry.name}
                 checked={props.baseMap === entry.key ? true : false}
                 onChange={() => props.setBaseMap(entry.key)}
             />
-            </h5>
-            )}
+                        {entry.name}
+
+            </div>
+            ) : null}
         </div>
     )
 }

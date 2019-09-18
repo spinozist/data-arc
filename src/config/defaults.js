@@ -7,7 +7,7 @@ export default {
         // chartVisible: false,
         colorMap: 'portland',
         numberOfBins: 72,
-        colorMapReverse: true,
+        colorMapReverse: false,
         chartType: 'bar-chart',
         colorOpacity: .8,
         tableBanding: ['#c8e4d6', '#f3eeeb'],
@@ -64,7 +64,38 @@ export default {
                 key: 'tile-layer-color',
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                 url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            },
+            {
+                name: 'ArcGIS Light Grey',
+                key: 'tile-arcgis-grey',
+                attribution: '',
+                url: 'http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+            },
+            {
+                name: 'ArcGIS Satellite',
+                key: 'tile-arcgis-satellite',
+                attribution: '',
+                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+            },
+            {
+                name: 'ArcGIS Street Map Color',
+                key: 'tile-arcgis-color',
+                attribution: '',
+                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'
+            },
+            {
+                name: 'National Geographic Color',
+                key: 'tile-natgeo',
+                attribution: '',
+                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}'
+            },
+            {
+                name: 'Wikimedia',
+                key: 'tile-wiki',
+                attribution: '',
+                url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png'
             }
+
         ],
         overlayLayerInfo: {
             Counties: {
@@ -100,121 +131,6 @@ export default {
 
         }
     },
-    categoryOptionsNEW : [
-        {
-            key: 'serviceID-0',
-            text: 'Change since 2000',
-            value: 0,
-            category: 'Change',
-            primaryField: 'TotPop_00',
-            secondaryField: 'TotalHH_00',            
-        },
-        {
-            key: 'serviceID-1',
-            text: 'Demography',
-            value: 1,
-            category: 'Demography',
-            primaryField: 'mMedianAge_e',
-            secondaryField: 'rPopDensity'
-            
-        }, 
-        {
-            key: 'serviceID-3',
-            text: 'Economy',
-            value: 3,
-            category: 'Economy',
-            primaryField: 'InLabForce_e'
-
-        },
-        {
-            key: 'serviceID-5',
-            text: 'Housing',
-            value: 5,
-            category: 'Housing',
-            primaryField: 'TotalHU_e'
-        },
-        {
-            key: 'serviceID-7',
-            text: 'Social',
-            value: 7,
-            category: 'Social',
-            primaryField: 'TotalHH_e'
-        }
-    
-    ],
-    categoryOptions: [
-        {
-            key: 'serviceID-0',
-            text: 'Change since 2000',
-            value: 0,
-            manifest: 'Change',
-            primaryField: 'TotPop_00',
-            secondaryField: 'TotalHH_00',            
-        },
-        {
-            key: 'serviceID-1',
-            text: 'Demography',
-            value: 1,
-            manifest: 'Demographic',
-            primaryField: 'mMedianAge_e',
-            secondaryField: 'rPopDensity'
-            
-        },
-        {
-            key: 'serviceID-2',
-            text: 'Demography by Race & Ethnicity',
-            value: 2,
-            manifest: 'RaceX',
-            subcategory: 'Demographic',
-            primaryField: 'BlackTotPop_e'
-        },
-        {
-            key: 'serviceID-3',
-            text: 'Economy',
-            value: 3,
-            manifest: 'Economic',
-            primaryField: 'InLabForce_e'
-
-        },
-        {
-            key: 'serviceID-4',
-            text: 'Economy by Race & Ethnicity',
-            value: 4,
-            manifest: 'RaceX',
-            subcategory: 'Economic',
-            primaryField: 'BlackCivLabFor1664_e'
-        },
-        {
-            key: 'serviceID-5',
-            text: 'Housing',
-            value: 5,
-            manifest: 'Housing',
-            primaryField: 'TotalHU_e'
-        },
-        {
-            key: 'serviceID-6',
-            text: 'Housing by Race & Ehtnicity',
-            value: 6,
-            manifest: 'RaceX',
-            subcategory: 'Housing',
-            primaryField: 'BlackOccHU_e'
-        },
-        {
-            key: 'serviceID-7',
-            text: 'Social',
-            value: 7,
-            manifest: 'Social',
-            primaryField: 'TotalHH_e'
-        },
-        {
-            key: 'serviceID-8',
-            text: 'Social by Race & Ethnicity',
-            value: 8,
-            manifest: 'RaceX',
-            subcategory: 'Social',
-            primaryField: 'BlackInCollGradSch_e'
-        }
-    ],
     geoOptions : [
         {
             key: 'geo-0',
@@ -265,6 +181,12 @@ export default {
             boundingGeo: 'COA' 
         },
         {
+            key: 'geo-12',
+            text: 'Atlanta City Council Districts',
+            value: 'AtlCityCouncil',
+            boundingGeo: 'COA'  
+        },
+        {
             key: 'geo-9',
             text: 'Regional Commissions',
             value: 'RC',
@@ -281,7 +203,13 @@ export default {
             text: 'US Congressional Districts',
             value: 'Congress',
             boundingGeo: 'State' 
-        }
+        },
+        // {
+        //     key: 'geo-11',
+        //     text: 'Zip Code Tabulation Areas (ZCTAs)',
+        //     value: 'ZCTA',
+        //     boundingGeo: 'State' 
+        // }
         // {
         //     key: 'geo-11',
         //     text: 'Census Tracts',

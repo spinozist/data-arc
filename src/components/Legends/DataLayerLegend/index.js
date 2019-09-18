@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Dropdown, Popup } from 'semantic-ui-react';
+import React, { useState } from 'react';
+import { Dropdown, Popup, Icon } from 'semantic-ui-react';
 import dataManifest from '../../../config/datamanifest';
 import colorScale from 'colormap/colorScale';
 import defaults from '../../../config/defaults';
@@ -23,195 +23,285 @@ const colorRampOptions = colorScale ? Object.entries(colorScale).map(([key,value
 
 const DataLayerLegend = props => {
 
-    const primaryField = props.primaryField;
-    const dataTray = props.dataTray;
+  const [ legendOpen, setLegendOpen ] = useState(true);
 
-    const fieldOptions = Object.entries(dataTray).map(([key, value]) =>
-      ({
-         key: key,
-         text: value.text,
-         value: key
-      })
-    );
+  const primaryField = props.primaryField;
+  const dataTray = props.dataTray;
 
-    return (
-        <div 
-          style={{
-            backgroundColor: props.style.backgroundColor,
-            padding: props.style.padding,
-            width: props.style.width,
-            borderRadius: props.style.borderRadius
-          }}
-        >
-          <h2>Data Layer(s)</h2>
-          <Popup
-              position={'right center'}
-              on='hover'
-              hoverable
-              pinned 
-              trigger={
-                <h3>{props.geoLabel.text}</h3>
-              } 
-              children={
-                props.geo ? 
-                <Dropdown 
-                    selection
-                    scrolling 
-                    value={props.geo} 
-                    onChange={(event, data) => 
-                        props.setSumLevel(data.value)
-                    } 
-                    options={defaults.geoOptions}
-                /> : null 
-              }
-            />
-          {/* { primaryField && 
-            dataTray && 
-            dataTray[primaryField] && 
-            props.data &&
-            props.dataLoaded &&
-            dataManifest.find(dataInfo => 
-              dataInfo.Variable === dataTray[primaryField].value) ?
+  // const fieldOptions = Object.entries(dataTray).map(([key, value]) =>
+  //   ({
+  //       key: key,
+  //       text: value.text,
+  //       value: key
+  //   })
+  // );
 
-            <p 
-              style={{ 
-                marginBottom: '-15px',
-                lineHeight: '10px' ,
-              }}
-            >
-              {
-                dataTray[primaryField].category +
-                ' | ' +
-                dataManifest.find(dataInfo => 
-                  dataInfo.Variable === dataTray[primaryField].value).Topic                 }
-            </p>
+//   const removeFromDataTray = key => {
+//     const tempTray = dataTray;
+//     // const removeSecondaryField = () => key === props.secondaryField ? props.secondaryField(props.primaryField) : null;
+//     // removeSecondaryField();
+//     delete tempTray[key];
 
-            : null
+//     props.setDataTray({
+//         ...tempTray
+//     })
+// }
 
-          }              */}
-          <Popup
+  return (
+      <div 
+        style={{
+          backgroundColor: props.style.backgroundColor,
+          padding: props.style.padding,
+          width: props.style.width,
+          borderRadius: props.style.borderRadius
+        }}
+      >
+        <h2>Data Layer(s)
+        <Icon name='ellipsis vertical' color={legendOpen ? 'grey' : 'black'} style={{float: 'right'}} onClick={() => setLegendOpen(legendOpen ? false : true)}/>
+
+        </h2>
+         { legendOpen ? 
+         <div>
+         <Popup
             position={'right center'}
             on='hover'
             hoverable
             pinned 
+            trigger={
+              <h3>{props.geoLabel.text}</h3>
+            } 
             children={
-              dataTray ? 
+              props.geo ? 
               <Dropdown 
                   selection
                   scrolling 
-                  value={primaryField} 
-                  onChange={(event, data) => {
-                      // props.setPreviousServiceID(props.serviceID)
-                      props.setPrimaryField(data.value)
-                  }} 
-                  // placeholder='Select Geography' 
-                  options={fieldOptions} /> : null
+                  value={props.geo} 
+                  onChange={(event, data) => 
+                      props.setSumLevel(data.value)
+                  } 
+                  options={defaults.geoOptions}
+              /> : null 
             }
-            trigger={
-              primaryField && props.dataTray && props.dataTray[primaryField] && props.data ?
-              <div 
-                style={{ 
-                  paddingLeft: '10px',
-                  marginBottom: '0px',
-                  backgroundColor: props.data ? 'lightgrey' : null,
-                  padding: '10px',
-                  borderRadius: '5px',
-                  textAlign: 'center' 
-              }}>
-              <p 
-              style={{ 
-                // marginBottom: '-15px',
-                lineHeight: '10px' ,
-              }}
-            >
-              {
-                dataTray[primaryField].category +
-                ' | ' +
-                dataManifest.find(dataInfo => 
-                  dataInfo.Variable === dataTray[primaryField].value).Topic                 }
-            </p>
-              
-            <h4 style={{ lineHeight: '20px'}}>{props.dataTray[primaryField].text}</h4>
-            <div 
-                    style={{
-                      width: '100%',
-                      textAlign: 'right',
-                      marginTop: '5px',
-                      marginLeft: '-10px'
-                    }}
-                  >
+          />
+        {/* { primaryField && 
+          dataTray && 
+          dataTray[primaryField] && 
+          props.data &&
+          props.dataLoaded &&
+          dataManifest.find(dataInfo => 
+            dataInfo.Variable === dataTray[primaryField].value) ?
 
-                  Source:&nbsp;
-                  {
-                    dataManifest.find(dataInfo => 
-                    dataInfo.Variable === dataTray[primaryField].value).Source
-                  }
-                  </div> 
-            </div> :
-                <h4 style={{ width: '100%', textAlign: 'center', lineHeight: '20px'}}>Data loading...</h4>
-
-            } /> 
-          <p style={{
-              paddingLeft: '10px', 
-              lineHeight: '20px'
-            }}> 
-            {/* {
-              primaryField && 
-              props.dataTray && 
-              props.data &&
+          <p 
+            style={{ 
+              marginBottom: '-15px',
+              lineHeight: '10px' ,
+            }}
+          >
+            {
+              dataTray[primaryField].category +
+              ' | ' +
               dataManifest.find(dataInfo => 
-                dataInfo.Variable === dataTray[primaryField].value) ?
+                dataInfo.Variable === dataTray[primaryField].value).Topic                 }
+          </p>
 
-                  <div 
+          : null
+
+        }              */}
+        <Popup
+          position={'right center'}
+          on='hover'
+          hoverable
+          flowing
+          pinned
+          children={
+            <div 
+                style={{ 
+                    // marginTop: '20px',
+                    width: '400px',
+                    height: '40vh',
+                    // float: 'right',
+                    overflow: 'auto',
+                    textAlign: 'left',
+                    boxShadow: 'inset 0 0 5px #000000',
+                    borderRadius: '10px',
+                    padding: '10px',
+                    fontSize: '.8em'
+                }}>
+                { dataTray ?
+                    Object.entries(dataTray).map(([key, value]) =>
+                    <div
+                    onClick={() => props.setPrimaryField(key)}
+                    // basic
+                    // color={}
                     style={{
-                      width: '100%',
-                      textAlign: 'right',
-                      marginTop: '5px',
-                      marginLeft: '-10px'
-                    }}
-                  >
-
-                  Source:&nbsp;
-                  {
-                    dataManifest.find(dataInfo => 
-                    dataInfo.Variable === dataTray[primaryField].value).Source
-                  }
-                  </div> : null
-            } */}
-            <Popup
-              position={'top center'}
-              on='hover'
-              hoverable
-              pinned 
-              trigger={
-                <div 
+                        border: 'solid',
+                        borderWidth: '4px',
+                        opacity: '1',
+                        backgroundColor: 'teal',
+                        borderColor: key === props.primaryField ? 'black' : 'teal',
+                        // color: catColors[categories.indexOf(value.category)],
+                        float: 'left', borderRadius: '20px', margin: '5px', padding: '2px'}}>
+                        {value.text}
+                    {/* <Icon 
+                        name='delete' 
+                        onClick={() => removeFromDataTray(key)}                
+                     /> */}
+                    </div>
+                ) : null 
+                }
+            
+            </div>
+            // dataTray ? 
+            // <Dropdown 
+            //     selection
+            //     scrolling 
+            //     value={primaryField} 
+            //     onChange={(event, data) => {
+            //         // props.setPreviousServiceID(props.serviceID)
+            //         props.setPrimaryField(data.value)
+            //     }} 
+            //     // placeholder='Select Geography' 
+            //     options={fieldOptions} /> : null
+          }
+          trigger={
+            primaryField && props.dataTray && props.dataTray[primaryField] && props.data ?
+            <div 
+              style={{ 
+                // padding: '10px',
+                marginBottom: '0px',
+                backgroundColor: 'white',
+                padding: '15px',
+                borderRadius: '5px',
+                textAlign: 'center',
+                boxShadow: 'inset 0 0 5px #000000'
+            }}>
+            <p 
+            style={{ 
+              // marginBottom: '-15px',
+              lineHeight: '10px' ,
+            }}
+          >
+            {
+              dataTray[primaryField].category +
+              ' | ' +
+              dataManifest.find(dataInfo => 
+                dataInfo.Variable === dataTray[primaryField].value).Topic                 }
+          </p>
+            
+          <h4 style={{ lineHeight: '20px'}}>{props.dataTray[primaryField].text}</h4>
+          <div 
                   style={{
-                    marginTop: '10px',
-                    marginBottom: '20px',
                     width: '100%',
-                    height: '30px'
+                    textAlign: 'center',
+                    marginTop: '5px',
+                    marginLeft: '-10px'
                   }}
                 >
-                  {props.colorRamp}
-                </div>
-              }
-              children={
+
+                Source:&nbsp;
+                {
+                  dataManifest.find(dataInfo => 
+                  dataInfo.Variable === dataTray[primaryField].value).Source
+                }
+                </div> 
+          </div> :
+              <h4 style={{ width: '100%', textAlign: 'center', lineHeight: '20px'}}>Data loading...</h4>
+
+          } /> 
+        <div style={{
+            // paddingLeft: '10px', 
+            // lineHeight: '20px'
+          }}> 
+          {/* {
+            primaryField && 
+            props.dataTray && 
+            props.data &&
+            dataManifest.find(dataInfo => 
+              dataInfo.Variable === dataTray[primaryField].value) ?
+
+                <div 
+                  style={{
+                    width: '100%',
+                    textAlign: 'right',
+                    marginTop: '5px',
+                    marginLeft: '-10px'
+                  }}
+                >
+
+                Source:&nbsp;
+                {
+                  dataManifest.find(dataInfo => 
+                  dataInfo.Variable === dataTray[primaryField].value).Source
+                }
+                </div> : null
+          } */}
+          {
+          primaryField &&
+          props.dataTray &&
+          props.dataTray[primaryField] &&
+          props.data ?
+
+          <Popup
+            position={'top center'}
+            on='hover'
+            hoverable
+            pinned 
+            trigger={
+              <div 
+                style={{
+                  marginTop: '10px',
+                  marginBottom: '20px',
+                  width: '100%',
+                  height: '40px'
+                }}
+              >
+                {props.colorRamp}
+              </div>
+            }
+            children={
+              <div style={{ textAlign: 'center'}}>
+              <h5 style={{margin: '5px 0 5px 0'}}>
+                  Flip Color Ramp
+              </h5>
+              <div 
+                style={{float: 'left',
+                width: '100%',
+                textAlign: 'center',
+                marginBottom: '15px'}}
+                >
+                <Icon name='sort' size={'big'} rotated={'clockwise'} onClick={() => 
+                  props.setLayout({
+                    ...props.layout,
+                    colorMapReverse: props.layout.colorMapReverse ? false : true
+                  })}
+                />
+              </div>
+              <h5 style={{margin: '20px 0 5px 0'}}>
+                  Change Color Ramp
+              </h5>
                 <Dropdown
                   scrolling
                   value={props.layout.colorMap}
                   options={colorRampOptions}
-                  onChange={(e, data) => props.setLayout({...props.layout,  colorMap: data.value}) }/>
-              } 
-            />
+                  onChange={(e, data) => props.setLayout({...props.layout,  colorMap: data.value})}
+                />
 
-            <div style={{padding: '5px', textAlign: 'center'}}>
-            {props.browseDataButton}
-            </div>
 
-          </p>
-            {/* {dataLayerInfo} */}
+              </div>
+            } 
+          /> : null
+        }
+
+        <div style={{width: '100%',  height: '40px', padding: '5px', textAlign: 'center'}}>
+            {props.dataButton}
         </div>
-    )
+        </div>
+      </div> : null }
+
+
+          {/* {dataLayerInfo} */}
+      </div>
+  )
 
 }
 
