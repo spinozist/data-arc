@@ -273,8 +273,8 @@ const LayoutWrapper = props => {
                                 // {...props}
                                 data={data}
                                 // selectedFields={props.selectedFields}
-                                text={'CSV'}
-                                color='teal'
+                                text={'.CSV'}
+                                color='violet'
                                 basic={true}
                                 // float='center'
                                 height='40px'

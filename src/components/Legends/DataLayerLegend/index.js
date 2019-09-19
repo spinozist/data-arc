@@ -185,7 +185,10 @@ const DataLayerLegend = props => {
               dataTray[primaryField].category +
               ' | ' +
               dataManifest.find(dataInfo => 
-                dataInfo.Variable === dataTray[primaryField].value).Topic                 }
+                dataInfo.Variable === dataTray[primaryField].value ) ?
+              dataManifest.find(dataInfo => 
+                dataInfo.Variable === dataTray[primaryField].value ).Topic :
+                'info cannot be found'                }
           </p>
             
           <h4 style={{ lineHeight: '20px'}}>{props.dataTray[primaryField].text}</h4>

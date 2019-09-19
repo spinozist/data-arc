@@ -103,7 +103,7 @@ return(
                         key={'scatterplot'}
                         {...props}
                         hoverField={'GEOID'}
-                    />`
+                    />
                 </div>
             </div>
         : null

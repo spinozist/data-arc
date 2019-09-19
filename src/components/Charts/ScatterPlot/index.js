@@ -1,5 +1,5 @@
-import React from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import React, { useEffect, useState } from 'react';
+import { ScatterChart, Scatter, XAxis, YAxis, Label, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 // import dataConfig from "../../../config/dataConfig";
 import colormap from 'colormap';
 import numeral from 'numeral';
@@ -12,7 +12,26 @@ const ScatterPlot = props => {
   const reverse = props.layout.colorMapReverse;
   const primaryField = props.primaryField;
   const secondaryField = props.secondaryField ? props.secondaryField: props.primaryField 
+  const [yAxisOffset, setYAxisOffset] = useState(20);
+  const [yLabel, setYLabel] = useState(['Label loading...']);
+  const [xAxisOffset, setXAxisOffset] = useState(20);
+  const [xLabel, setXLabel] = useState(['Label loading...']);
+  const labelLineHeight = 15;
 
+  const labelBuilder = (xlabel, ylabel) => {
+    const xLabelLength = xlabel.length, yLabelLength = ylabel.length;
+
+    const xlabelParsed = xlabel.split(' '), ylabelParsed = ylabel.split(' ');
+
+    const xLabelArray = [], yLabelArray = [];
+
+    setYLabel([ylabel]);
+    setXLabel([xlabel])
+
+    console.log(xlabelParsed);
+    console.log(ylabelParsed);
+
+  }
 
   let colors = colormap({
     colormap: colorMap,
@@ -42,38 +61,62 @@ const ScatterPlot = props => {
         name: value[props.hoverField]
       })
       ) : null;
+  
+  useEffect(() => labelBuilder(
+    props.dataTray ? props.dataTray[primaryField].text: 'x',
+    props.dataTray ? props.dataTray[secondaryField].text: 'y'), 
+      [primaryField, secondaryField])
 
   return (
       <ResponsiveContainer height="90%" width="95%">
         <ScatterChart
           margin={{
-            top: 30, right: 20, bottom: 20, left: 30,
+            top: 30, right: yAxisOffset, bottom: xAxisOffset, left: 30,
           }} >
           <CartesianGrid />
-          <XAxis 
+            <XAxis 
             // hide
-            type="number" 
-            dataKey="x" 
-            name={props.data ? primaryField : null } 
-            label={{
-              value: props.dataTray ? props.dataTray[primaryField].text : 'x',
-              position: 'bottom'
-            }}
-            unit={null} />
+              type="number" 
+              dataKey="x" 
+              name={props.data ? primaryField : null }
+              tick={{ fontSize: '12'}} 
+            >
+              { props.dataTray && xLabel ?
+                xLabel.map((labelLine,i) => 
+                <Label dy={i * labelLineHeight * -1} position='bottom'>
+                  {labelLine}
+                </Label>)
+                : null
+              }
+
+
+            </XAxis>
 
             <YAxis 
             // hide
             orientation="right"
             type="number" 
-            dataKey="y" 
+            dataKey="y"
+            tick={{ fontSize: '12'}}
+            
             name={props.data ? secondaryField : null } 
-            label={{
-              value: props.dataTray ? props.dataTray[secondaryField].text: 'y',
-              position: 'right',
-              angle: -90
-            }} 
-            unit={null} />
+            >
+              { props.dataTray && yLabel ?
+                yLabel.map((labelLine,i) => 
+                <Label angle={-90} dx={i * labelLineHeight} position='right' style={{ textAnchor: 'middle'}}>
+                  {labelLine}
+                </Label>)
+                : null
+              }
+              {/* <Label angle={-90} position='right' style={{ textAnchor: 'middle'}}>
+                {props.dataTray ? props.dataTray[secondaryField].text : 'y'}
+              </Label>
+              <Label angle={-90} dx={20} position='right' style={{ textAnchor: 'middle'}}>
+                {props.dataTray ? props.dataTray[secondaryField].text : 'y'}
+              </Label> */}
 
+              
+            </YAxis>
           {/* <Tooltip
             cursor={{ strokeDasharray: '3 3' }} 
             animationEasing={'ease'}

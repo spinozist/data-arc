@@ -91,13 +91,18 @@ const SimpleBarChart = props => {
           orientation='right' 
           name={primaryField} 
           dataKey='x'
-          label={{
-            value: props.dataTray ? props.dataTray[primaryField].text : 'y',
-            position: 'right',
-            angle: -90,
+          tick={{ fontSize: '12'}}
+          // label={{
+          //   value: props.dataTray ? props.dataTray[primaryField].text : 'y',
+          //   position: 'right',
+          //   angle: -90,
 
-          }}
-        />
+          // }}
+        >
+          <Label angle={-90} position='right' style={{ textAnchor: 'middle'}}>
+              {props.dataTray ? props.dataTray[primaryField].text: 'y'}
+            </Label>
+        </YAxis>
 
         {/* <XAxis type='category' tick='false' dataKey='name'/> */}
         <Bar 

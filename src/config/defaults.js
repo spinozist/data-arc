@@ -26,10 +26,18 @@ export default {
             TotalHH_00: {
                 category: "Change since 2000",
                 text: "# Total Households, 2000",
-                value: "TotPop_00",
+                value: "TotalHH_00",
                 api: 'OpenDataMain',
                 api_param: 0,
+            },
+            pHHwChild_e : {
+                category: 'Social',
+                text: '% Households with one or more people under 18 years, 2017',
+                value: 'pHHwChild_e',
+                api: 'OpenDataMain',
+                api_param: 7,
             }
+
         },
         geoAPIs: {
             OpenDataMain : {
