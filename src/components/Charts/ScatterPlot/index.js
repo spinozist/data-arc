@@ -19,6 +19,7 @@ const ScatterPlot = props => {
   const labelLineHeight = 15;
 
   const labelBuilder = (xlabel, ylabel) => {
+    
     const xLabelLength = xlabel.length, yLabelLength = ylabel.length;
 
     const xlabelParsed = xlabel.split(' '), ylabelParsed = ylabel.split(' ');

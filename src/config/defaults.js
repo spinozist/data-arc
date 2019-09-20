@@ -41,12 +41,15 @@ export default {
         },
         geoAPIs: {
             OpenDataMain : {
-                url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+                url: 'https://services1.arcgis.com/Ug5xGQbHsD8zuZzM/arcgis/rest/services/ACSAllGeo2017/FeatureServer/'
+                // url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
             }
         },
         dataAPIs: {
             OpenDataMain : {
-                url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+                url: 'https://services1.arcgis.com/Ug5xGQbHsD8zuZzM/arcgis/rest/services/ACSAllGeo2017/FeatureServer/'
+
+                // url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
             }
         },
         hoverField: 'GEOID',
@@ -144,37 +147,45 @@ export default {
             key: 'geo-0',
             text: 'State of Georgia',
             value: 'State',
-            boundingGeo: 'State' 
+            boundingGeo: 'State',
+            boundingGeoOffSet: -2 
         },
         {
             key: 'geo-1',
             text: 'County',
             value: 'County',
-            boundingGeo: 'State'  
+            boundingGeo: 'State',
+            boundingGeoOffSet: -2   
         },        
         {
             key: 'geo-2',
             text: 'City',
             value: 'City',
-            boundingGeo: 'State' 
+            boundingGeo: 'State',
+            boundingGeoOffSet: -2    
         },
         {
             key: 'geo-3',
             text: 'GA House Districts',
             value: 'GAHouse',
-            boundingGeo: 'State'  
+            boundingGeo: 'State',
+            boundingGeoOffSet: -2   
+ 
         },
         {
             key: 'geo-4',
             text: 'GA Senate Districts',
             value: 'GASenate',
-            boundingGeo: 'State'  
+            boundingGeo: 'State',
+            boundingGeoOffSet: -2     
         },
         {
             key: 'geo-5',
             text: 'Atlanta Neighborhood Planning Units (NPUs)',
             value: 'NPU',
-            boundingGeo: 'COA'  
+            boundingGeo: 'COA',
+            boundingGeoOffSet: -.09   
+  
         },
         // {
         //     key: 'geo-6',
@@ -186,43 +197,54 @@ export default {
             key: 'geo-8',
             text: 'Atlanta Neighborhood Statistical Areas (NSAs)',
             value: 'NSA',
-            boundingGeo: 'COA' 
+            boundingGeo: 'COA',
+            boundingGeoOffSet: -.09    
         },
         {
             key: 'geo-12',
             text: 'Atlanta City Council Districts',
             value: 'AtlCityCouncil',
-            boundingGeo: 'COA'  
+            boundingGeo: 'COA',
+            boundingGeoOffSet: -.09     
         },
         {
             key: 'geo-9',
             text: 'Regional Commissions',
             value: 'RC',
-            boundingGeo: 'State' 
+            boundingGeo: 'State',
+            boundingGeoOffSet: -2   
+ 
         },
         {
             key: 'geo-10',
             text: 'Super Districts',
             value: 'SuperDistrict',
-            boundingGeo: 'ARC20' 
+            boundingGeo: 'ARC20',
+            boundingGeoOffSet: -.9  
         },
         {
             key: 'geo-7',
             text: 'US Congressional Districts',
             value: 'Congress',
-            boundingGeo: 'State' 
+            boundingGeo: 'State',
+            boundingGeoOffSet: -2   
+ 
         },
         // {
         //     key: 'geo-11',
         //     text: 'Zip Code Tabulation Areas (ZCTAs)',
         //     value: 'ZCTA',
-        //     boundingGeo: 'State' 
-        // }
-        // {
-        //     key: 'geo-11',
-        //     text: 'Census Tracts',
-        //     value: 'Tract',
-        // }
+        //     boundingGeo: 'State',
+        //     geoJSONURL: `https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2010/MapServer/8/query?outFields=GEOID%2C+NAME&f=geojson` 
+        // },
+        {
+            key: 'geo-11',
+            text: 'Census Tracts',
+            value: 'Tract',
+            boundingGeo: 'State',
+            boundingGeoOffSet: -2,   
+            geoJSONURL: `https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2010/MapServer/14/query?where=STATE=13&outFields=GEOID%2C+NAME&f=geojson`
+        }
     ],
     boundingGeoURL: {
         State: 'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/2/query?where=GEOID=13&f=geojson',

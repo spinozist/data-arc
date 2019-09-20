@@ -16,6 +16,15 @@ import chartBar from '@iconify/icons-mdi/chart-bar';
 
 const Map = props => {
 
+  const [offset, setOffSet] = useState(0);
+
+  const handleOffSet = () =>  props.layout.tableVisible || 
+    props.layout.barChartVisible ||
+    props.layout.scatterPlotVisible ?
+    setOffSet(defaults.geoOptions.find(option =>
+      option.value === props.geo).boundingGeoOffSet) : 
+    setOffSet(0);
+
   const iconStyle = 
     {
       backgroundColor: 'white',
@@ -66,7 +75,7 @@ const Map = props => {
           latArray = pointArray.map(point => parseFloat(point[1])),
           maxLng = Math.max.apply(Math, lngArray),
           maxLat = Math.max.apply(Math,latArray),
-          minLng = Math.min.apply(Math,lngArray),
+          minLng = Math.min.apply(Math,lngArray) - offset,
           minLat = Math.min.apply(Math,latArray),
           bounds = [[maxLat, minLng],[minLat,maxLng]]
 
@@ -103,10 +112,11 @@ const Map = props => {
   
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => handleOverlayData(boundaryLayerInfo), []);
-  useEffect(() => {}, [boundaryLayerInfo, props.primaryField]);
-  useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO]);
+  useEffect(() => {}, [boundaryLayerInfo, props.primaryField, offset, props.layout]);
+  useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO, offset]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => closeSideBar(), [icons]);
+  useEffect(() => handleOffSet(), [props.layout, props.geo]);
 
   return (
     <LeafletMap
@@ -237,8 +247,8 @@ const Map = props => {
       
       { props.data &&
         props.geoJSON &&
-        props.primaryField &&  
-        props.dataLoaded ?
+        props.primaryField ?
+        // props.dataLoaded ?
         <GeoJSONLayer {...props} baseMap={baseMap}/> 
         : null 
       }

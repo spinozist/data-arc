@@ -55,7 +55,6 @@ const CSVExportButton = props => {
                     csvExporter.generateCsv(data) 
                     : console.log('No Data for CSV Button')}
                 >
-                    TEXT
                     {props.text ? props.text : 'Download CSV'}
                 </Button> : null 
         )

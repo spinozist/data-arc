@@ -33,7 +33,6 @@ const LayoutWrapper = props => {
      [dataSelectorModal, setDataSelectorModal] = useState(false),
      [dataLoaded, setDataLoaded] = useState();
 
-
     const handleData = geo => {
        
         setDataLoaded(false);
@@ -113,7 +112,7 @@ const LayoutWrapper = props => {
                                     .map(([key, value]) => dataObj[featureID][key] = value)
                             });
 
-                            // console.log(dataObj);
+                            console.log(dataObj);
                             return dataObj
                         })
                         .then(dataObj => {
@@ -128,13 +127,20 @@ const LayoutWrapper = props => {
         // API for geoJSON
 
         const geoJSONFields = [hoverField];
-        const geoJSONURL = `${defaults.data.geoAPIs['OpenDataMain'].url}0/query?where=SumLevel='${geo}'&outFields=${geoJSONFields}&f=geojson`
+        const geoJSONURL = 
+        geo === 'Tract' ? defaults.geoOptions.find(item => 
+            item.value === 'Tract').geoJSONURL :
+        geo === 'ZCTA' ? defaults.geoOptions.find(item => 
+            item.value === 'ZCTA').geoJSONURL :
+        `${defaults.data.geoAPIs['OpenDataMain'].url}0/query?where=SumLevel='${geo}'&outSR=4326&outFields=${geoJSONFields}&f=geojson`
 
         API.getData(geoJSONURL)
             .then(res => {
 
                 // Initiate dataObj
                 var dataObj = {};
+
+                console.log(res)
 
                 // Map returned keys along wtih empty 
                 // valueObjects to the dataOj
@@ -148,7 +154,7 @@ const LayoutWrapper = props => {
                 return dataObj
             })
             .then(dataObj => addData(dataObj,geo))
-            .catch(err => console.log(err));    
+            .catch(err => console.error(err)); 
     }
     
     useEffect(() => handleData(sumLevel) ,[dataTray, sumLevel]);
