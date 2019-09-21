@@ -14,8 +14,9 @@ const TableSE = props => {
     const dataObj = props.data ? props.data : null;
 
     const [sort, setSort] = useState({field: 'NAME', direction: 'lohi'});
-    
-    useEffect(() => console.log(sort), [sort])
+        
+
+    useEffect(() => console.log(sort), [sort]);
 
     return (
         <StickyTable style={{width: '100%', height: '90%'}} stickHeaderCount={1}>

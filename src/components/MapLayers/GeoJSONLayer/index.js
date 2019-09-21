@@ -76,12 +76,20 @@ const GeoJSONLayer = props => {
     const featureID = feature.properties[props.hoverField];
 
     layer.bindTooltip(String(featureID))
-      .on('mouseover', e => {
-          props.handleHover(featureID)
-        })
-      .on('mouseout', () => {
-          props.handleHover()
-        });
+      .on('mouseover', () => props.handleHover(featureID))
+      .on('click', () => 
+        document
+          .getElementById('row-' + featureID) ?
+          
+        document
+          .getElementById('row-' + featureID)
+          .scrollIntoView(
+            {
+             block: 'center',
+             behavior: 'smooth'
+          }) : null
+      )
+      .on('mouseout', () => props.handleHover());
   }
 
 
@@ -93,7 +101,7 @@ const GeoJSONLayer = props => {
   //   // }
   //   // }) 
 
-  // useEffect(() => {}, [props.primaryField])
+  useEffect(() => {}, [props.layout, props.primaryField])
 
 
   return (

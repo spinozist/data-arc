@@ -31,7 +31,9 @@ const LayoutWrapper = props => {
      [primaryField, setPrimaryField] = useState(() => Object.keys(dataTray)[0]),
      [secondaryField, setSecondaryField] = useState(() => Object.keys(dataTray)[1]),
      [dataSelectorModal, setDataSelectorModal] = useState(false),
-     [dataLoaded, setDataLoaded] = useState();
+     [dataLoaded, setDataLoaded] = useState(),
+     [scrollID, setScrollID] = useState();
+
 
     const handleData = geo => {
        
@@ -128,10 +130,10 @@ const LayoutWrapper = props => {
 
         const geoJSONFields = [hoverField];
         const geoJSONURL = 
-        geo === 'Tract' ? defaults.geoOptions.find(item => 
-            item.value === 'Tract').geoJSONURL :
-        geo === 'ZCTA' ? defaults.geoOptions.find(item => 
-            item.value === 'ZCTA').geoJSONURL :
+        // geo === 'Tract' ? defaults.geoOptions.find(item => 
+        //     item.value === 'Tract').geoJSONURL :
+        // geo === 'ZCTA' ? defaults.geoOptions.find(item => 
+        //     item.value === 'ZCTA').geoJSONURL :
         `${defaults.data.geoAPIs['OpenDataMain'].url}0/query?where=SumLevel='${geo}'&outSR=4326&outFields=${geoJSONFields}&f=geojson`
 
         API.getData(geoJSONURL)
@@ -156,9 +158,14 @@ const LayoutWrapper = props => {
             .then(dataObj => addData(dataObj,geo))
             .catch(err => console.error(err)); 
     }
+
+    // const handleScrollToRow = () => 
+    //     layout.tableVisible ? document.getElementById('row-' + scrollID).scrollTo() : null
+    
     
     useEffect(() => handleData(sumLevel) ,[dataTray, sumLevel]);
     useEffect(() => {}, [layout]);
+    // useEffect(() => layout.tableVisible ? handleScrollToRow() : null, [scrollID])
 
     
     return (
@@ -181,6 +188,8 @@ const LayoutWrapper = props => {
                 >  
                     { layout.mapVisible ? 
                     <MapWrapper
+                        scrollID={scrollID}
+                        setScrollID={setScrollID}
                         dataLoaded={dataLoaded}
                         setLayout={setLayout}
                         layout={layout}

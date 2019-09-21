@@ -111,7 +111,18 @@ const SimpleBarChart = props => {
           dataKey={'x'} 
           fill={colors[0]}
           onMouseOver={point => props.handleHover(point.id)} 
-          onMouseOut={() => props.handleHover()}
+          // onMouseOut={() => props.handleHover()}
+          onClick={ point => 
+            document
+              .getElementById('row-' + point.id) ?
+              
+            document
+              .getElementById('row-' + point.id)
+              .scrollIntoView(
+                {
+                 block: 'center',
+                 behavior: 'smooth'
+              }) : null}
           >
           {
             dataArray ? dataArray.filter(a => a.x !== 'NA').map((feature, index) => {

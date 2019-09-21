@@ -132,8 +132,20 @@ const ScatterPlot = props => {
           <Scatter 
             name={props.hoverField} 
             data={dataArray} 
-            onMouseEnter={point => props.handleHover(point.name)} 
-            // fill={colors[0]}
+            onMouseOver={point => props.handleHover(point.name)}
+            // onMouseOut={() => props.handleHover()} 
+            onClick={ point => 
+            document
+              .getElementById('row-' + point.name) ?
+              
+            document
+              .getElementById('row-' + point.name)
+              .scrollIntoView(
+                {
+                 block: 'center',
+                 behavior: 'smooth'
+              }) : null}
+          
             >
             {
               dataArray ? dataArray

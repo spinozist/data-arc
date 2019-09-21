@@ -230,20 +230,19 @@ export default {
             boundingGeoOffSet: -2   
  
         },
-        // {
-        //     key: 'geo-11',
-        //     text: 'Zip Code Tabulation Areas (ZCTAs)',
-        //     value: 'ZCTA',
-        //     boundingGeo: 'State',
-        //     geoJSONURL: `https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2010/MapServer/8/query?outFields=GEOID%2C+NAME&f=geojson` 
-        // },
+        {
+            key: 'geo-11',
+            text: 'Zip Code Tabulation Areas (ZCTAs)',
+            value: 'ZCTA',
+            boundingGeo: 'State',
+            boundingGeoOffSet: -2   
+        },
         {
             key: 'geo-11',
             text: 'Census Tracts',
             value: 'Tract',
             boundingGeo: 'State',
             boundingGeoOffSet: -2,   
-            geoJSONURL: `https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2010/MapServer/14/query?where=STATE=13&outFields=GEOID%2C+NAME&f=geojson`
         }
     ],
     boundingGeoURL: {
