@@ -57,13 +57,19 @@ const ColorRamp = props => {
 
     return (
 
-        <div style={{ width: '100%', height: '40px'}}>
+        <div style={{ 
+                width: '100%',
+                height: '40px',
+                border: 'solid 2px black',
+                borderRadius: '5px',
+                backgroundColor: 'black'
+                }}>
             <div
                 style={{
                     // position: 'relative',
                     // bottom: '60px',
-                    paddingTop: '8px',
                     borderRadius: '5px 0 0 5px',
+                    paddingTop: '8px',
                     // border: 'solid grey .8px',
                     color: 'white', 
                     backgroundColor: 'black', 
