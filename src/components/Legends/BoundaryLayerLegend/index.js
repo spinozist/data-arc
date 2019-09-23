@@ -38,7 +38,7 @@ const BoundaryLayerLegend = props => {
                 height: legendOpen ? height + 'px' : null
             }}>
 
-        <h2>Boundary Layer(s)
+        <h2>Boundaries
         <Icon name='ellipsis vertical' color={legendOpen ? 'grey' : 'black'} style={{float: 'right'}} onClick={() => setLegendOpen(legendOpen ? false : true)}/>
         </h2>
         {

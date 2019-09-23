@@ -64,8 +64,8 @@ const ScatterPlot = props => {
       ) : null;
   
   useEffect(() => labelBuilder(
-    props.dataTray ? props.dataTray[primaryField].text: 'x',
-    props.dataTray ? props.dataTray[secondaryField].text: 'y'), 
+    props.dataTray && props.dataTray[primaryField] ? props.dataTray[primaryField].text: 'No variable selected',
+    props.dataTray && props.dataTray[secondaryField] ? props.dataTray[secondaryField].text: 'No variable selected'), 
       [primaryField, secondaryField])
 
   return (
@@ -170,11 +170,22 @@ const ScatterPlot = props => {
             name={props.hoverField} 
             data={props.hoverID && dataArray ? 
               dataArray.filter(e => e.name === props.hoverID) : null} fill={colors[numberOfBins-1]}
+              onClick={ point => 
+            document
+              .getElementById('row-' + point.name) ?
+              
+            document
+              .getElementById('row-' + point.name)
+              .scrollIntoView(
+                {
+                  block: 'center',
+                  behavior: 'smooth'
+              }) : null}
             >
             {
               dataArray ? dataArray.filter(e => e.name === props.hoverID).map((feature, index) => {
                 
-                const value=parseFloat(feature.x);
+                const value = parseFloat(feature.x);
                 const distFromMin = value - minValue;
                 const range = maxValue - minValue;
                 const binningRatio = distFromMin/range;

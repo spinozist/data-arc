@@ -199,6 +199,7 @@ const LayoutWrapper = props => {
                         handleHover={setHoverID}
                         hoverField={hoverField} 
                         primaryField={primaryField}
+                        secondaryField={secondaryField}
                         setPrimaryField={setPrimaryField} 
                         data={data}
                         dataTray={dataTray}

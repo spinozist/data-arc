@@ -41,22 +41,6 @@ const ColorRamp = props => {
         const valueArray = data ? Object.entries(data)
         .filter(([key, value]) => value[props.primaryField] !== 'NA' && value[props.primaryField] !== 'NA' && value[props.primaryField] !== null)
         .map(([key,value]) => {
-
-            // console.log(key);
-            // console.log(value[primaryField])
-
-            // const featureID = key;
-            // const value = data[featureID][primaryField]
-            // console.log(typeof primaryField);
-            // console.log(featureID);
-            // console.log(valueObj);
-            // console.log(valueObj);
-            // const variable = value[primaryField] !== 'N/A' ? value[props.primaryField] : null;
-            // const variable = parseFloat(value[props.primaryField]);
-            // console.log();
-            
-            //   const normalizer=props.normalizedBy ? feature.properties[props.normalizedBy] : 1
-            // console.log(variable ? variable : null);
             return parseFloat(value[primaryField] !== 'N/A' ? value[primaryField] : null )
         }) : null;
             
@@ -64,10 +48,6 @@ const ColorRamp = props => {
 
         const maxValue = valueArray !== null ? Math.max(...valueArray) : 'no data';
         
-        // console.log(valueArray);
-        // console.log(minValue);
-        // console.log(maxValue);
-
         setMinValue(minValue);
         setMaxValue(maxValue);
     

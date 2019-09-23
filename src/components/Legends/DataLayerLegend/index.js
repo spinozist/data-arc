@@ -6,22 +6,52 @@ import defaults from '../../../config/defaults';
 
 import './style.css';
   
-const colorRampOptions = colorScale ? Object.entries(colorScale).map(([key,value]) => {
-  // const numberOfBins = value ? value.length : null;
-  // const widthOfBins = numberOfBins ? 100/numberOfBins : null  
-  // const content = value ? value.map(item => 
-  //   <div style={{ float:'left', width: widthOfBins + '%', backgroundColor: item.rgb}}/>
-  //   ) : null; 
+
+
+const DataLayerLegend = props => {
+
+  const colorRampOptions = colorScale ? 
+  Object.entries(colorScale)
+    .filter(([key,value]) => key !== 'alpha')
+    .map(([key,value]) => {
 
     return({
       key: key,
       text: key,
       value: key,
-      // content: (content)
+      content: (
+        <div 
+          style={{
+            width: '140px',
+            height: '50px',
+            backgroundColor: key === props.layout.colorMap ? 'black' : null
+          }}
+        >
+          <div 
+            style={{
+              float: 'left', 
+              width: '100%', 
+              height: '40%',
+              color: key === props.layout.colorMap ? 'white' : null
+            }}
+          >
+            {key}
+          </div>
+          {
+            props.layout.colorMapReverse ? 
+            
+            value.map(obj => 
+                <div style={{float: 'left', width: (100 / value.length) + '%', backgroundColor: `rgb(${obj.rgb[0]},${obj.rgb[1]},${obj.rgb[2]})`, height: '60%' }}/>
+            ).reverse()
+            :
+            value.map(obj => 
+              <div style={{float: 'left', width: (100 / value.length) + '%', backgroundColor: `rgb(${obj.rgb[0]},${obj.rgb[1]},${obj.rgb[2]})`, height: '60%' }}/>
+          )
+          }
+        </div>
+      )
     })
   }) : null;
-
-const DataLayerLegend = props => {
 
   const [ legendOpen, setLegendOpen ] = useState(true);
 
@@ -56,7 +86,7 @@ const DataLayerLegend = props => {
           borderRadius: props.style.borderRadius
         }}
       >
-        <h2>Data Layer(s)
+        <h2>Data
         <Icon name='ellipsis vertical' color={legendOpen ? 'grey' : 'black'} style={{float: 'right'}} onClick={() => setLegendOpen(legendOpen ? false : true)}/>
 
         </h2>
@@ -212,33 +242,8 @@ const DataLayerLegend = props => {
               <h4 style={{ width: '100%', textAlign: 'center', lineHeight: '20px'}}>Data loading...</h4>
 
           } /> 
-        <div style={{
-            // paddingLeft: '10px', 
-            // lineHeight: '20px'
-          }}> 
-          {/* {
-            primaryField && 
-            props.dataTray && 
-            props.data &&
-            dataManifest.find(dataInfo => 
-              dataInfo.Variable === dataTray[primaryField].value) ?
+        <div> 
 
-                <div 
-                  style={{
-                    width: '100%',
-                    textAlign: 'right',
-                    marginTop: '5px',
-                    marginLeft: '-10px'
-                  }}
-                >
-
-                Source:&nbsp;
-                {
-                  dataManifest.find(dataInfo => 
-                  dataInfo.Variable === dataTray[primaryField].value).Source
-                }
-                </div> : null
-          } */}
           {
           primaryField &&
           props.dataTray &&

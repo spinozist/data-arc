@@ -19,7 +19,7 @@ const BaseMapLegend = props => {
                 borderRadius: props.style.borderRadius,
                 overflow: 'auto'
             }}>
-        <h2>Base Map(s)<Icon name='ellipsis vertical' color={legendOpen ? 'grey' : 'black'} style={{float: 'right'}} onClick={() => setLegendOpen(legendOpen ? false : true)}/></h2>
+        <h2>Base Map<Icon name='ellipsis vertical' color={legendOpen ? 'grey' : 'black'} style={{float: 'right'}} onClick={() => setLegendOpen(legendOpen ? false : true)}/></h2>
         {legendOpen  ? legendInfo.map(entry =>
             <div 
                 style={{paddingLeft: '10%', fontSize: '1em', margin: '0 0 5px 0'}}

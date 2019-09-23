@@ -11,48 +11,34 @@ import './style.css';
 
 const DataSelector = props => {
 
-    // const [showFilters, setShowFilters] = useState(false);
-
-    // console.log(dataManifest.map((item, i) => i < 10 ? item : null))
 
     const [queryResults, setQueryResults] = useState();
 
     const [query, setQuery] = useState({MOE: false, manifest: 'Change', catValue: 0});
     
-    // const [topicOptions, setTopicOptions] = useState();
-
     const initialTray = props.GlobalDataTray;
 
     const [dataTray, setDataTray] = useState(initialTray);
 
     const [search, setSearch] = useState();
 
-    const categoryColorIndices = {
-        "Change since 2000": 0,
-        Demographic: 15,
-        Economic: 25,
-        Housing: 35,
-        Social: 45
-    }
+    // const categoryColorIndices = {
+    //     "Change since 2000": 0,
+    //     Demographic: 15,
+    //     Economic: 25,
+    //     Housing: 35,
+    //     Social: 45
+    // }
 
-    const catColors = colormap(
-        {
-        colormap: 'summer',
-        nshades: 50,
-        format: 'hex',
-        alpha: 1
-        });
+    // const catColors = colormap(
+    //     {
+    //     colormap: 'summer',
+    //     nshades: 50,
+    //     format: 'hex',
+    //     alpha: 1
+    //     });
     
     const runQuery = queryObj => {
-
-        // console.log(queryObj)
-
-        // const searchArray = queryObj.search ? queryObj.search.split(" ") : null
-
-        // console.log(searchArray);
-        // const manifest = queryObj ? queryObj.manifest : null;
-        // const category = queryObj ? queryObj.category : null; 
-        // const topic = queryObj ? queryObj.topic : null;
         
         const results = queryObj ? dataManifest
             .filter(result => result.Topic !== 'N/A')
@@ -70,11 +56,8 @@ const DataSelector = props => {
                 api_param: result.API_Param1,
                 MOE: result.ESTMOE === 'MOE' ? true : false,
                 content: (
-                    <div 
-                        // style={{
-                        // }}    
-                    >
-                    <h5>{result.Long}</h5>
+                    <div>
+                        <h5>{result.Long}</h5>
                     <p>
                     Year(s): {result.Years} <br/>
                     Category: {result.Category}<br/>
@@ -86,12 +69,11 @@ const DataSelector = props => {
             })) : null;
         // handleTopicOptions(results);
         setQueryResults(
-            results ? results
-                // .filter(result => 
-                // topic ? result.topic === topic : true)
-                .filter(result =>
+            results ? 
+            results.filter(result =>
                 queryObj.MOE === true ? true : result.MOE === false)
-             : null );
+            : null 
+        );
     }
 
     // const handleTopicOptions = queryResults => {
@@ -138,9 +120,9 @@ const DataSelector = props => {
     }
     
     const removeFromDataTray = key => {
+        
         const tempTray = dataTray;
-        // const removeSecondaryField = () => key === props.secondaryField ? props.secondaryField(props.primaryField) : null;
-        // removeSecondaryField();
+
         delete tempTray[key];
 
         setDataTray({
@@ -182,7 +164,16 @@ const DataSelector = props => {
                         height:'50px',
                     }}  
                 />
-                <div style={{ marginTop: '20px', width: '100%', height: '60vh', float: 'left', overflow: 'auto', textAlign: 'left'}}>
+                <div 
+                    style={{ 
+                        marginTop: '20px',
+                        width: '100%',
+                        height: '60vh',
+                        float: 'left',
+                        overflow: 'auto',
+                        textAlign: 'left'
+                    }}
+                >
                 { queryResults && query ?
                     queryResults
                     .filter( result => search && result ? runSearchFilter(search, result) : true)
@@ -204,7 +195,6 @@ const DataSelector = props => {
                     ) 
                     : null
                 }
-            
                 </div>
 
 
@@ -230,17 +220,22 @@ const DataSelector = props => {
                     // color={}
                     style={{
                         border: 'solid',
-                        borderWidth: '4px',
-                        opacity: '1',
-                        backgroundColor: catColors[categoryColorIndices[value.category]],
-                        borderColor: key === props.primaryField ? 'black' : catColors[categoryColorIndices[value.category]],
+                        borderWidth: '2px',
+                        opacity: key === props.primaryField || key === props.secondaryField ? '.8' : '1',
+                        backgroundColor: 'teal',
+                        borderColor: key === props.primaryField || key === props.secondaryField ? 'black' : 'teal',
                         // color: catColors[categories.indexOf(value.category)],
-                        float: 'left', borderRadius: '20px', margin: '5px', padding: '5px'}}>
+                        float: 'left', borderRadius: '20px', margin: '5px', padding: '5px'}}
+                    >
                         {value.text}
-                    <Icon 
+                    { key === props.primaryField || key === props.secondaryField ?
+                       null :
+                       <Icon 
                         name='delete' 
                         onClick={() => removeFromDataTray(key)}                
-                     />
+                        />
+                    }
+
                     </div>) : null 
                 }
             
