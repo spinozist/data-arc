@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ComposedChart, Bar, Cell, Label, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 // import { Dropdown } from 'react-bootstrap';
 import colormap from 'colormap';
@@ -11,9 +11,24 @@ import './style.css';
 const SimpleBarChart = props => {
 
   const [ sortOrder, setSortOrder] = useState('hilo');
+  const [yAxisOffset, setYAxisOffset] = useState(20);
+  const [yLabel, setYLabel] = useState(['Label loading...']);
+  const labelLineHeight = 15;
 
-  // console.log('BAR CHART PROPS...')
-  // console.log(props)
+
+  const labelBuilder = (ylabel) => {
+    
+    const ylabelParsed = ylabel.match(/\b[\w']+(?:[^\w\n]+[\w']+){0,3}\b/g);
+
+    setYLabel(ylabelParsed);
+
+    setYAxisOffset(ylabelParsed.length * 15)
+
+
+    // console.log(xlabelParsed);
+    // console.log(ylabelParsed);
+
+  }
 
   const numberOfBins = props.layout.numberOfBins;
   const colorMap = props.layout.colorMap;
@@ -77,6 +92,10 @@ const SimpleBarChart = props => {
   
   
   // console.log(dataArray);
+  useEffect(() => labelBuilder(
+    props.dataTray && props.dataTray[primaryField] ? props.dataTray[primaryField].text: 'No variable selected'), 
+      [primaryField])
+
 
   return (
     <ResponsiveContainer id='diagram' key={"rc-bar-chart-container"} height="90%" width="95%">
@@ -84,7 +103,7 @@ const SimpleBarChart = props => {
         key={"cc-bar-chart"}
         data={dataArray}
         margin={{
-          top: 30, right: 20, bottom: 20, left: 30,
+          top: 30, right: yAxisOffset, bottom: 20, left: 30,
         }}>
         {/* <XAxis name={'bar-chart-axis'} dataKey="name" /> */}
         <YAxis 
@@ -99,9 +118,13 @@ const SimpleBarChart = props => {
 
           // }}
         >
-          <Label angle={-90} position='right' style={{ textAnchor: 'middle'}}>
-              {props.dataTray ? props.dataTray[primaryField].text: 'y'}
-            </Label>
+          { props.dataTray && yLabel ?
+            yLabel.map((labelLine,i) => 
+            <Label angle={-90} dx={i * labelLineHeight} position='right' style={{ textAnchor: 'middle'}}>
+              {labelLine}
+            </Label>)
+            : null
+          }
         </YAxis>
 
         {/* <XAxis type='category' tick='false' dataKey='name'/> */}

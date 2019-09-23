@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { GeoJSON } from 'react-leaflet';
 // import API from "../../utils/API";
 import * as turf from '@turf/turf';
-
+import './style.css'
 
 
 const OverlayLayer = props => {
@@ -18,6 +18,7 @@ const OverlayLayer = props => {
     const borderColor = props.style.borderColor;
     const borderType = props.style.borderType;
 
+    // console.log(linestringData)
     useEffect(() => console.log('geojson refresh'), [props.style.borderType])
 
     return (
@@ -25,6 +26,13 @@ const OverlayLayer = props => {
         dashArray={borderType === 'dashed' ? '4 3 2' : '0'}
         color={borderColor}
         weight={borderWeight}
+        // onEachFeature={(feature, layer) => 
+        //   layer.bindTooltip('Test', 
+        //     {
+        //       permanent: true,
+        //       direction: 'center',
+        //       className: 'overlayLabel'
+        //     })}
         data={props.data ? linestringData : null}
       />
     );

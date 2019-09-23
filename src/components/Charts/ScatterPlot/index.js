@@ -20,17 +20,15 @@ const ScatterPlot = props => {
 
   const labelBuilder = (xlabel, ylabel) => {
     
-    const xLabelLength = xlabel.length, yLabelLength = ylabel.length;
+    const xlabelParsed = xlabel.match(/\b[\w']+(?:[^\w\n]+[\w']+){0,3}\b/g), 
+          ylabelParsed = ylabel.match(/\b[\w']+(?:[^\w\n]+[\w']+){0,3}\b/g);
 
-    const xlabelParsed = xlabel.split(' '), ylabelParsed = ylabel.split(' ');
+ 
+    setYLabel(ylabelParsed);
+    setXLabel(xlabelParsed);
 
-    const xLabelArray = [], yLabelArray = [];
-
-    setYLabel([ylabel]);
-    setXLabel([xlabel])
-
-    console.log(xlabelParsed);
-    console.log(ylabelParsed);
+    setXAxisOffset(xlabelParsed.length * 15 + 5);
+    setYAxisOffset(ylabelParsed.length * 15)
 
   }
 
@@ -84,7 +82,7 @@ const ScatterPlot = props => {
             >
               { props.dataTray && xLabel ?
                 xLabel.map((labelLine,i) => 
-                <Label dy={i * labelLineHeight * -1} position='bottom'>
+                <Label dy={i * labelLineHeight} position='bottom'>
                   {labelLine}
                 </Label>)
                 : null

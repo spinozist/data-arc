@@ -43,7 +43,8 @@ const BoundaryLayerLegend = props => {
         </h2>
         {
         Object.entries(legendInfo).map(([key, data]) => 
-            legendOpen ? <div key={key + 'legend-entry'} style={{float: 'left', width: '100%', paddingLeft: '10%'}}>
+            legendOpen ? 
+            <div key={key + 'legend-entry'} style={{float: 'left', width: '100%', paddingLeft: '10%'}}>
                 <Checkbox 
                     style={{width: '2%', float: 'left'}}
                     onChange={() => props.setBoundaryLayerInfo({
@@ -58,27 +59,12 @@ const BoundaryLayerLegend = props => {
 
                 <div style={{float: 'left', width: '90%'}}>
                     <h4 style={{paddingLeft: '10px',width: '40%', float: 'left'}}>{key}</h4>
-                    
-                    {/* <div
-                    id={key + 'symbol'} 
-                    style={{
-                        float: 'left',
-                        height: '20px', 
-                        width: '20px',
-                        borderStyle: data.style.borderType, 
-                        borderColor: data.style.borderColor,
-                        borderWidth: data.style.borderWeight
-                    }}>
-                    </div> */}
-                    
+
                     <Popup
-                        // style={{ zIndex: '99999'}}
-                        // basic
                         position={'right center'}
                         on='hover'
                         hoverable
                         pinned
-                        // inverted
                         wide
                         children={
                             <LayerEditor 
@@ -100,9 +86,7 @@ const BoundaryLayerLegend = props => {
                             }}>
                             </div>
                         } />
-
                 </div>
-
             </div> : null
                 )}
         </div>
