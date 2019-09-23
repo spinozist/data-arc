@@ -61,7 +61,7 @@ const Map = props => {
 
   const [overlayData, setOverlayData] = useState(),
         [bounds , setBounds] = useState(),
-        [baseMap, setBaseMap] = useState('tile-layer-mono');
+        [baseMap, setBaseMap] = useState('tile-layer-color');
 
   const handleBounds = boundingGEO => {
     const boundingGeometry = boundingGEO ? boundingGEO.features[0].geometry : null;

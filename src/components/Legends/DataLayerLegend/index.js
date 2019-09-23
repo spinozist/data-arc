@@ -23,7 +23,10 @@ const DataLayerLegend = props => {
         <div 
           style={{
             width: '140px',
-            height: '50px',
+            height: '60px',
+            padding: '10px 20px 10px 20px',
+            margin: '-5px',
+            borderRadius: '5px',
             backgroundColor: key === props.layout.colorMap ? 'black' : null
           }}
         >

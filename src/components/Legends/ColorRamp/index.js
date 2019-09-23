@@ -62,7 +62,7 @@ const ColorRamp = props => {
                 height: '40px',
                 border: 'solid 2px black',
                 borderRadius: '5px',
-                backgroundColor: 'black'
+                backgroundColor: 'black',
                 }}>
             <div
                 style={{

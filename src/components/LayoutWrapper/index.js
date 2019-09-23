@@ -11,6 +11,7 @@ import ModalWrapper from '../ModalWrapper';
 import { Button, Icon, Popup } from 'semantic-ui-react';
 import CSVExportButton from '../CSVExportButton';
 import defaults from '../../config/defaults';
+import ImageExportButton from '../ImageExportButton'
 import './style.css';
 // import { readSync } from 'fs';
 
@@ -180,13 +181,46 @@ const LayoutWrapper = props => {
                     sm={layout.mapWidth.sm} 
                     lg={layout.mapWidth.lg} 
                     style={{
-                        padding: '5px',
+                        padding: '0',
                         borderRadius: '10px',
                         backgroundColor: 'white',
                         height: '100%'
                     }}
-                >  
+                > 
+                <div className='chart-control-bar-map'>
+                {/* <Icon name='download' size={'large'} inverted style={{float: 'right'}} /> */}
+                <Popup
+                    pinned
+                    hoverable
+                    on='hover'
+                    position='bottom right'
+                    children={
+                        <div
+                        style={{textAlign: 'center'}}>
+                            <h5>Export Image</h5>
+                            <ImageExportButton
+                            elementID={'map-wrapper-box'}
+                            type={'png'}
+                            text={'PNG'}
+                            imageBGColor={'white'}
+                            imageFileName={'test'}
+                            />
+                            <ImageExportButton
+                            elementID={'map-wrapper-box'}
+                            type={'jpg'}
+                            text={'JPG'}
+                            imageBGColor={'white'}
+                            imageFileName={'test'}
+                            />
+                        </div>
+                    }
+                    trigger={
+                        <Icon name='image' size={'big'} inverted style={{float: 'right'}} />
+                }
+                />
+                </div> 
                     { layout.mapVisible ? 
+                    <div id='map-wrapper-box' style={{height: '100%', width: '100%'}}>
                     <MapWrapper
                         scrollID={scrollID}
                         setScrollID={setScrollID}
@@ -222,11 +256,12 @@ const LayoutWrapper = props => {
                             centered={false}
                             header={<h2>Browse Data</h2>}
                             trigger={
-                                <Button 
+                                <Button
+                                    className={ dataLoaded ? 'pulse' : null}
                                     onClick={() => setDataSelectorModal(true)} 
                                     color='teal'
                                 >
-                                    Build Data Tray
+                                    Get Data
                                 </Button>} 
                             content={
                                 <DataSelector
@@ -244,7 +279,8 @@ const LayoutWrapper = props => {
                                 />
                             }
                         />}
-                    /> : 
+                    /> 
+                    </div> : 
                         <div style={{zIndex: '99999', color: 'teal', position: 'absolute', bottom: '50%', width: '100%', textAlign: 'center'}}>
                             <h2>Map Loading...</h2>
                             <Loader id='loader-box' color='teal' type='Circles' />

@@ -1,7 +1,9 @@
 .leaflet-container {
-    height: 100%;
-    width: 100%;
-    border-radius: 5px;
+    float: center;
+    height: 95%;
+    width: 99%;
+    border-radius: 0 0 5px 5px;
+    margin: auto;
   }
 
 body {
@@ -23,6 +25,18 @@ body {
   width: 100%;
   border-radius: 10px;
   margin: 0 0 10px 5px;
+}
+
+.chart-control-bar-map {
+  height: 35px;
+  position: relative;
+  z-index: 99999;
+  /* margin: -5px -10px 0 5px; */
+  border-radius: 10px 10px 0 0;
+  padding: 5px 10px 4px 10px;
+  width: 100%;
+  background-color: teal;
+  /* margin-top: -20px; */
 }
 
 @keyframes shadow-pulse

@@ -64,12 +64,12 @@ export default {
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap: "Map tiles by Carto, under CC BY 3.0.</a> contributors',
                 url: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
             },
-            {
-                name: 'OpenStreetMap Mono',
-                key: 'tile-layer-mono',
-                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-                url: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png'
-            },
+            // {
+            //     name: 'OpenStreetMap Mono',
+            //     key: 'tile-layer-mono',
+            //     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+            //     url: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png'
+            // },
             {
                 name: 'OpenStreetMap Color',
                 key: 'tile-layer-color',
