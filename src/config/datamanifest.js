@@ -1,5 +1,23 @@
 export default [
   {
+    "Variable": "mMedHHInc_e",
+    "Description": "Median household income",
+    "Long": "Median household income, 2017",
+    "Type": "Median",
+    "ESTMOE": "Estimate",
+    "Source": "ACS",
+    "Table": "B19013",
+    "Table2": "",
+    "Years": "2017",
+    "Release": "5",
+    "Category": "Economic",
+    "Topic": "Household Income",
+    "Universe": "Households",
+    "Notes": "",
+    "API": "OpenDataMain",
+    "API_Param1": 3
+  },
+  {
     "Variable": "LogRecNo",
     "Description": "Logical record number (Unique ID to link across tables)",
     "Long": "Logical record number",
