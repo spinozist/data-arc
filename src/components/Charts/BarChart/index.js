@@ -45,11 +45,16 @@ const SimpleBarChart = props => {
 
   colors = reverse ? colors.reverse() : colors;
 
-  const valueArray = props.data ? Object.entries(props.data)
-  .filter(([key, value]) => value[primaryField] !== 'NA' && value[primaryField] !== 'NA' && value[primaryField] !== null)
-  .map(([key,value]) => {
+  const valueArray = props.data ? 
+  Object.entries(props.data)
+    .filter(([key, value]) => 
+      value[primaryField] !== 'NA' && 
+      value[primaryField] !== 'NA' && 
+      value[primaryField] !== null
+    )
+    .map(([key,value]) => {
 
-    return parseFloat(value[primaryField])
+      return parseFloat(value[primaryField])
     }) : null;
 
   const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
@@ -57,7 +62,11 @@ const SimpleBarChart = props => {
 
   const dataArray = props.data ? 
   Object.entries(props.data)
-    .filter(([key, value]) => value[primaryField] !== 'N/A' || value[primaryField] !== 'NA' || value[primaryField] !== null)
+    .filter(([key, value]) => 
+      value[primaryField] !== 'N/A' &&
+      value[primaryField] !== 'NA' &&
+      value[primaryField] !== null 
+      )
     .map(([key,value]) => 
       ({
         x: parseFloat(value[primaryField]),
@@ -92,9 +101,12 @@ const SimpleBarChart = props => {
   
   
   // console.log(dataArray);
+
   useEffect(() => labelBuilder(
     props.dataTray && props.dataTray[primaryField] ? props.dataTray[primaryField].text: 'No variable selected'), 
       [primaryField])
+  
+  useEffect(() => {}, [props.primaryField])
 
 
   return (
@@ -148,7 +160,8 @@ const SimpleBarChart = props => {
               }) : null}
           >
           {
-            dataArray ? dataArray.filter(a => a.x !== 'NA').map((feature, index) => {
+            dataArray && props.primaryField ? dataArray
+              .map((feature, index) => {
               
               const value=parseFloat(feature.x);
               // const name=feature.name;

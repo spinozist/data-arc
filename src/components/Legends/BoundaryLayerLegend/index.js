@@ -64,7 +64,8 @@ const BoundaryLayerLegend = props => {
                         position={'right center'}
                         on='hover'
                         hoverable
-                        pinned
+                        basic
+                        // pinned
                         wide
                         children={
                             <LayerEditor 

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dropdown, Popup, Icon } from 'semantic-ui-react';
 import dataManifest from '../../../config/datamanifest';
 import colorScale from 'colormap/colorScale';
 import defaults from '../../../config/defaults';
+import Loader from 'react-loader-spinner';
+
 
 import './style.css';
   
@@ -58,27 +60,11 @@ const DataLayerLegend = props => {
 
   const [ legendOpen, setLegendOpen ] = useState(true);
 
+  // const bringLayerToTop = 
+
   const primaryField = props.primaryField;
   const dataTray = props.dataTray;
 
-  // const fieldOptions = Object.entries(dataTray).map(([key, value]) =>
-  //   ({
-  //       key: key,
-  //       text: value.text,
-  //       value: key
-  //   })
-  // );
-
-//   const removeFromDataTray = key => {
-//     const tempTray = dataTray;
-//     // const removeSecondaryField = () => key === props.secondaryField ? props.secondaryField(props.primaryField) : null;
-//     // removeSecondaryField();
-//     delete tempTray[key];
-
-//     props.setDataTray({
-//         ...tempTray
-//     })
-// }
 
   return (
       <div 
@@ -94,52 +80,43 @@ const DataLayerLegend = props => {
 
         </h2>
          { legendOpen ? 
-         <div>
+         <div>  
          <Popup
             position={'right center'}
             on='hover'
             hoverable
             pinned 
             trigger={
-              <h3>{props.geoLabel.text}</h3>
+              props.data ?
+              <h3 
+                style={{
+                  border: 'solid 1px lightgrey',
+                  borderRadius: '5px',
+                  padding: '10px'  
+                }}>
+              {props.geoLabel.text}
+              
+              </h3>
+              : null
             } 
-            children={
-              props.geo ? 
-              <Dropdown 
+            children=
+            {
+              props.geo ?
+              <Dropdown
                   selection
                   scrolling 
+                  text={'Change Geography'}
                   value={props.geo} 
                   onChange={(event, data) => 
                       props.setSumLevel(data.value)
                   } 
                   options={defaults.geoOptions}
-              /> : null 
+              />
+               : null
+
             }
-          />
-        {/* { primaryField && 
-          dataTray && 
-          dataTray[primaryField] && 
-          props.data &&
-          props.dataLoaded &&
-          dataManifest.find(dataInfo => 
-            dataInfo.Variable === dataTray[primaryField].value) ?
+        />
 
-          <p 
-            style={{ 
-              marginBottom: '-15px',
-              lineHeight: '10px' ,
-            }}
-          >
-            {
-              dataTray[primaryField].category +
-              ' | ' +
-              dataManifest.find(dataInfo => 
-                dataInfo.Variable === dataTray[primaryField].value).Topic                 }
-          </p>
-
-          : null
-
-        }              */}
         <Popup
           position={'right center'}
           on='hover'
@@ -168,12 +145,12 @@ const DataLayerLegend = props => {
                     // color={}
                     style={{
                         border: 'solid',
-                        borderWidth: '4px',
+                        borderWidth: '2px',
                         opacity: '1',
-                        backgroundColor: 'teal',
-                        borderColor: key === props.primaryField ? 'black' : 'teal',
+                        backgroundColor: 'lightgrey',
+                        borderColor: key === props.primaryField ? 'black' : 'lightgrey',
                         // color: catColors[categories.indexOf(value.category)],
-                        float: 'left', borderRadius: '20px', margin: '5px', padding: '2px'}}>
+                        float: 'left', borderRadius: '10px', margin: '5px', padding: '4px'}}>
                         {value.text}
                     {/* <Icon 
                         name='delete' 
@@ -242,7 +219,12 @@ const DataLayerLegend = props => {
                 }
                 </div> 
           </div> :
-              <h4 style={{ width: '100%', textAlign: 'center', lineHeight: '20px'}}>Data loading...</h4>
+              <div style={{position: 'relative', width: '100%', textAlign: 'center'}}>
+                
+                <h4 style={{ width: '100%', textAlign: 'center', lineHeight: '20px'}}>Data loading...</h4>
+
+                <Loader id='loader-box' color={'teal'} type='ThreeDots' height={40} width={100} />
+              </div>
 
           } /> 
         <div> 
@@ -297,16 +279,20 @@ const DataLayerLegend = props => {
                   options={colorRampOptions}
                   onChange={(e, data) => props.setLayout({...props.layout,  colorMap: data.value})}
                 />
-
-
               </div>
             } 
           /> : null
         }
+        {
+        props.data ?
 
         <div style={{width: '100%',  height: '40px', padding: '5px', textAlign: 'center'}}>
-            {props.dataButton}
+          {props.dataButton}
         </div>
+
+        : null
+        }
+
         </div>
       </div> : null }
 

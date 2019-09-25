@@ -41,15 +41,33 @@ export default {
         },
         geoAPIs: {
             OpenDataMain : {
-                url: 'https://services1.arcgis.com/Ug5xGQbHsD8zuZzM/arcgis/rest/services/ACSAllGeo2017/FeatureServer/'
+                url: 'https://services1.arcgis.com/Ug5xGQbHsD8zuZzM/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+                joinField: 'GEOID',
+                otherFields: ['NAME', 'PlanningRegion'],
                 // url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+            },
+            HighSchools15to17: {
+                url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/OpenData/FeatureServer/248/',
+                joinField: 'SCHOOL_ID',
+                otherFields: ['SCHOOL_NAME', 'SYSTEM_NAME'],
             }
         },
         dataAPIs: {
             OpenDataMain : {
-                url: 'https://services1.arcgis.com/Ug5xGQbHsD8zuZzM/arcgis/rest/services/ACSAllGeo2017/FeatureServer/'
-
+                url: 'https://services1.arcgis.com/Ug5xGQbHsD8zuZzM/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+                joinField: 'GEOID',
+                otherFields: ['NAME', 'PlanningRegion'],
+                apiParam: true,
                 // url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+                geographies: ['State', 'County', 'City', 'Tract', 'ZCTA', 'GAHouse', 'GASenate', 'NPU', 'NSA', 'AtlCityCouncil', 'RC', 'SuperDistrict', 'Congress']
+            },
+            HighSchools15to17: {
+                url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/OpenData/FeatureServer/248/',
+                joinField: 'SCHOOL_ID',
+                otherFields: ['SCHOOL_NAME', 'SYSTEM_NAME'],
+                geographies: ['GAHighSchools']
+
+
             }
         },
         hoverField: 'GEOID',
@@ -148,44 +166,48 @@ export default {
             text: 'State of Georgia',
             value: 'State',
             boundingGeo: 'State',
-            boundingGeoOffSet: -2 
+            boundingGeoOffSet: -2,
+            geoAPI: 'OpenDataMain'
         },
         {
             key: 'geo-1',
-            text: 'County',
+            text: 'Counties',
             value: 'County',
             boundingGeo: 'State',
-            boundingGeoOffSet: -2   
+            boundingGeoOffSet: -2,
+            geoAPI: 'OpenDataMain'   
         },        
         {
             key: 'geo-2',
-            text: 'City',
+            text: 'Cities',
             value: 'City',
             boundingGeo: 'State',
-            boundingGeoOffSet: -2    
+            boundingGeoOffSet: -2,
+            geoAPI: 'OpenDataMain'    
         },
         {
             key: 'geo-3',
             text: 'GA House Districts',
             value: 'GAHouse',
             boundingGeo: 'State',
-            boundingGeoOffSet: -2   
- 
+            boundingGeoOffSet: -2,
+            geoAPI: 'OpenDataMain'   
         },
         {
             key: 'geo-4',
             text: 'GA Senate Districts',
             value: 'GASenate',
             boundingGeo: 'State',
-            boundingGeoOffSet: -2     
+            boundingGeoOffSet: -2,
+            geoAPI: 'OpenDataMain'     
         },
         {
             key: 'geo-5',
             text: 'Atlanta Neighborhood Planning Units (NPUs)',
             value: 'NPU',
             boundingGeo: 'COA',
-            boundingGeoOffSet: -.09   
-  
+            boundingGeoOffSet: -.09,
+            geoAPI: 'OpenDataMain'  
         },
         // {
         //     key: 'geo-6',
@@ -198,52 +220,67 @@ export default {
             text: 'Atlanta Neighborhood Statistical Areas (NSAs)',
             value: 'NSA',
             boundingGeo: 'COA',
-            boundingGeoOffSet: -.09    
+            boundingGeoOffSet: -.09,
+            geoAPI: 'OpenDataMain'
+   
         },
         {
             key: 'geo-12',
             text: 'Atlanta City Council Districts',
             value: 'AtlCityCouncil',
             boundingGeo: 'COA',
-            boundingGeoOffSet: -.09     
+            boundingGeoOffSet: -.09,
+            geoAPI: 'OpenDataMain'     
         },
         {
             key: 'geo-9',
             text: 'Regional Commissions',
             value: 'RC',
             boundingGeo: 'State',
-            boundingGeoOffSet: -2   
- 
+            boundingGeoOffSet: -2,
+            geoAPI: 'OpenDataMain'
         },
         {
             key: 'geo-10',
             text: 'Super Districts',
             value: 'SuperDistrict',
             boundingGeo: 'ARC20',
-            boundingGeoOffSet: -.9  
+            boundingGeoOffSet: -.9,
+            geoAPI: 'OpenDataMain'  
         },
         {
             key: 'geo-7',
             text: 'US Congressional Districts',
             value: 'Congress',
             boundingGeo: 'State',
-            boundingGeoOffSet: -2   
- 
+            boundingGeoOffSet: -2,
+            geoAPI: 'OpenDataMain'   
         },
         {
             key: 'geo-11',
             text: 'Zip Code Tabulation Areas (ZCTAs)',
             value: 'ZCTA',
             boundingGeo: 'State',
-            boundingGeoOffSet: -2   
+            boundingGeoOffSet: -2,
+            geoAPI: 'OpenDataMain'   
         },
         {
-            key: 'geo-11',
+            key: 'geo-13',
             text: 'Census Tracts',
             value: 'Tract',
             boundingGeo: 'State',
-            boundingGeoOffSet: -2,   
-        }
+            boundingGeoOffSet: -2,
+            geoAPI: 'OpenDataMain'   
+        },
+        // {
+        //     key: 'geo-14',
+        //     text: 'Georgia High Schools',
+        //     value: 'GAHighSchools',
+        //     boundingGeo: 'State',
+        //     boundingGeoOffSet: -2,
+        //     geoAPI: 'HighSchools15to17'
+   
+        // }
     ],
     boundingGeoURL: {
         State: 'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/2/query?where=GEOID=13&f=geojson',

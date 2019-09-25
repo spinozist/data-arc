@@ -38,12 +38,17 @@ const ColorRamp = props => {
         const primaryField = props.primaryField;
         console.log(primaryField)
 
-        const valueArray = data ? Object.entries(data)
-        .filter(([key, value]) => value[props.primaryField] !== 'NA' && value[props.primaryField] !== 'NA' && value[props.primaryField] !== null)
-        .map(([key,value]) => {
-            return parseFloat(value[primaryField] !== 'N/A' ? value[primaryField] : null )
-        }) : null;
-            
+        const valueArray = data ? 
+        Object.entries(data)
+            .filter(([key, value]) => 
+                value[props.primaryField] !== 'NA' && 
+                value[props.primaryField] !== 'NA' && 
+                value[props.primaryField] !== null
+            )
+            .map(([key,value]) => 
+                parseFloat(value[primaryField])) 
+            : null;
+                
         const minValue = valueArray !== null ? Math.min(...valueArray) : 'no data';
 
         const maxValue = valueArray !== null ? Math.max(...valueArray) : 'no data';
@@ -83,7 +88,7 @@ const ColorRamp = props => {
                 }}>
                 {minValue || minValue === 0 ? numeral(minValue).format('0,0') : null}
             </div>
-        { colors ? colors.map(color => 
+        { colors && props.primaryField ? colors.map(color => 
             <div 
             style={{
                 // position: 'relative',

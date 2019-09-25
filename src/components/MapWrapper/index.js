@@ -29,26 +29,14 @@ const Map = props => {
     {
       backgroundColor: 'white',
       borderRadius: '5px',
-      padding: '5px'
+      padding: '5px',
+      float: 'right',
+      marginLeft: '80%',
+      marginBottom: '20px'
     };
   const iconSize = '70px';
   const iconColor = 'teal';
   const iconPosition = 'bottomright';
-
-  const [icons, setIcons] = useState({
-    table: {
-      visible: props.layout.tableVisible,
-      ref: table
-    }, 
-    scatterPlot : {
-      visible: props.layout.scatterPlotVisible,
-      ref: chartScatterPlot
-    },
-    barChart: {
-      visible: props.layout.barChartVisible,
-      ref: chartBar
-    }, 
-  });
 
   const [boundaryLayerInfo, setBoundaryLayerInfo] = useState(defaults.data.overlayLayerInfo)
 
@@ -56,7 +44,7 @@ const Map = props => {
     padding: '20px',
     backgroundColor: 'white',
     borderRadius: '10px',
-    width: '300px'
+    width: '300px'    
   })
 
   const [overlayData, setOverlayData] = useState(),
@@ -84,7 +72,8 @@ const Map = props => {
 
   const handleOverlayData = obj => {
     const dataArray = [];
-    const getLayers = () => Object.entries(obj)
+    const getLayers = () => 
+    Object.entries(obj)
       .map(([key,data]) =>
         API.getData(data.url)
         .then(res => dataArray.push([key, res.data.features]))
@@ -95,7 +84,7 @@ const Map = props => {
   };
 
   const closeSideBar = () => {
-    const status = Object.entries(icons).map(([key, value]) =>
+    const status = Object.entries(props.icons).map(([key, value]) =>
       value.visible);
     const close = () => 
       !status[0] && 
@@ -112,10 +101,10 @@ const Map = props => {
   
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => handleOverlayData(boundaryLayerInfo), []);
-  useEffect(() => {}, [boundaryLayerInfo, props.primaryField, offset, props.layout]);
+  useEffect(() => {}, [boundaryLayerInfo, props.primaryField, offset]);
   useEffect(() => handleBounds(props.boundingGEO), [props.boundingGEO, offset]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => closeSideBar(), [icons]);
+  useEffect(() => closeSideBar(), [props.icons]);
   useEffect(() => handleOffSet(), [props.layout, props.geo]);
 
   return (
@@ -186,8 +175,10 @@ const Map = props => {
 
 
       {
-        Object.entries(icons).map(([key, value]) => 
         <Control position={iconPosition}>
+          { props.icons ?
+            Object.entries(props.icons).map(([key, value]) => 
+
           <Icon 
             style={{
               ...iconStyle,
@@ -199,6 +190,7 @@ const Map = props => {
             color={value.visible ? 'grey' : iconColor} 
             icon={value.ref}
             onClick={() => {
+              console.log(props.icons);
               props.setLayout({
                 ...props.layout,
                 mapWidth: {sm: 12, lg: 8},
@@ -210,8 +202,8 @@ const Map = props => {
                 barChartVisible: value.ref === chartBar && props.layout.barChartVisible === false ?
                 true : value.ref !== chartBar ? props.layout.barChartVisible : false,
               })
-              setIcons({
-                ...icons,
+              props.setIcons({
+                ...props.icons,
                 [key]: {
                   ...value,
                   visible: value.visible ? false : true
@@ -219,8 +211,9 @@ const Map = props => {
               })  
             }}
             />
+        ) : null }
         </Control>
-        )
+
       }
       
       {

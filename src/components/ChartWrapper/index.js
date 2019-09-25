@@ -26,6 +26,26 @@ return(
         {  chartType === 'scatterplot' && props.dataLoaded && props.data ?
             <div className='inner-box'>
                 <div className='chart-control-bar'>
+                    <Icon 
+                        name='close' 
+                        size={'large'} 
+                        inverted 
+                        style={{ marginTop: '3px', float: 'left'}}
+                        onClick={() => {
+                            props.setLayout({
+                            ...props.layout,
+                            scatterPlotVisible : false
+                            });
+                            props.setIcons({
+                                ...props.icons,
+                                scatterPlot: {
+                                  ref: props.icons.scatterPlot.ref,
+                                  visible: false
+                                }
+                            }) 
+                        }}
+                    />
+
                     <Popup
                     pinned
                     hoverable
@@ -113,6 +133,25 @@ return(
         {  chartType === 'bar-chart' ?
             <div className='inner-box'>
                 <div className='chart-control-bar'>
+                <Icon 
+                        name='close' 
+                        size={'large'} 
+                        inverted 
+                        style={{ marginTop: '3px', float: 'left'}}
+                        onClick={() => {
+                            props.setLayout({
+                            ...props.layout,
+                            barChartVisible : false
+                            });
+                            props.setIcons({
+                                ...props.icons,
+                                barChart: {
+                                  ref: props.icons.barChart.ref,
+                                  visible: false
+                                }
+                            }) 
+                        }}
+                    />
                 {/* <Icon name='download' size={'large'} inverted style={{float: 'right'}} /> */}
                 <Popup
                     pinned
@@ -155,33 +194,6 @@ return(
             </div>
         : null
         }
-
-        {/* {  layoutState.chartType === 'area-chart' ?
-        <AreaChart
-            
-            hoverID={hoverID} 
-            data={dataState}
-            layoutState={layoutState}
-            handleHoverID={handleHover}
-
-        />
-        : null
-        } */}
-
-        {/* <ImageExportButton
-            elementID={'root'}
-            type={'png'}
-            text={'PNG'}
-            imageBGColor={'white'}
-            imageFileName={'test'}
-        />
-        <ImageExportButton
-            elementID={'chart-wrapper'}
-            type={'jpg'}
-            text={'JPG'}
-            imageBGColor={'white'}
-            imageFileName={'test'}
-        /> */}
     </div>
 
     );

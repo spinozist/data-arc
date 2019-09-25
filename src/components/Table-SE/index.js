@@ -1,14 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { StickyTable, Row, Cell } from 'react-sticky-table';
+import defaults from '../../config/defaults';
+
 import './style.css'
 
 
 const TableSE = props => {
 
+    const api = defaults.geoOptions.find(option => 
+        option.value === props.geo).geoAPI;
+
+    const apiInfo = defaults.data.dataAPIs[api];
+
+
+    const joinField = apiInfo.joinField;
+    const otherFields = apiInfo.otherFields;
+
+
+
     const dataTray = props.dataTray ? props.dataTray : null;
-    const labelFields = ['NAME' ,props.hoverField];
-    const fields = ['NAME' ,props.hoverField];
-    
+    const labelFields = [];
+    const fields = [];
+
+    labelFields.push(joinField)
+    fields.push(joinField);
+    otherFields.map(field => labelFields.push(field));
+    otherFields.map(field => fields.push(field));
+
     Object.keys(dataTray).map(key => fields.push(key));
     // console.log(labelFields);
     const dataObj = props.data ? props.data : null;

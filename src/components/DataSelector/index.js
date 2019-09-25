@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Radio, Button, Icon, Input } from 'semantic-ui-react';
-// import defaults from '../../config/defaults';
+import defaults from '../../config/defaults';
 
 import dataManifest from '../../config/datamanifest';
 import colormap from 'colormap';
@@ -57,13 +57,25 @@ const DataSelector = props => {
                 MOE: result.ESTMOE === 'MOE' ? true : false,
                 content: (
                     <div>
-                        <h5>{result.Long}</h5>
+                        <h3>{result.Long}</h3>
                     <p>
-                    Year(s): {result.Years} <br/>
-                    Category: {result.Category}<br/>
-                    Topic: {result.Topic}<br/>
-                    Source: {result.Source}<br/>
-                    Universe: {result.Universe}</p>
+                    <strong>Year(s):</strong> {result.Years} <br/>
+                    <strong>Category:</strong> {result.Category}<br/>
+                    <strong>Topic:</strong> {result.Topic}<br/>
+                    <strong>Source:</strong> {result.Source}<br/>
+                    <strong>Universe:</strong> {result.Universe}<br/>
+                    {/* <strong>Geographies:</strong>
+                    <div style={{width: '100%', margin: '-5px 5px 0px 10px', padding: '5px'}}>
+                    {defaults.data.dataAPIs[result.API].geographies
+                        .map((geo,i) =>
+                            <small>
+                                {defaults.geoOptions
+                                    .find(option => option.value === geo).text
+                                }
+                                {defaults.data.dataAPIs[result.API].geographies.length === i + 1 ? null : ' | '}
+                            </small>)}
+                    </div> */}
+                    </p> 
                     </div>
                 )
             })) : null;
@@ -221,11 +233,11 @@ const DataSelector = props => {
                     style={{
                         border: 'solid',
                         borderWidth: '2px',
-                        opacity: key === props.primaryField || key === props.secondaryField ? '.8' : '1',
-                        backgroundColor: 'teal',
-                        borderColor: key === props.primaryField || key === props.secondaryField ? 'black' : 'teal',
+                        opacity: key === props.primaryField || key === props.secondaryField ? '.5' : '1',
+                        backgroundColor: 'lightgrey',
+                        borderColor: key === props.primaryField || key === props.secondaryField ? 'black' : 'lightgrey',
                         // color: catColors[categories.indexOf(value.category)],
-                        float: 'left', borderRadius: '20px', margin: '5px', padding: '5px'}}
+                        float: 'left', borderRadius: '10px', margin: '5px', padding: '5px'}}
                     >
                         {value.text}
                     { key === props.primaryField || key === props.secondaryField ?

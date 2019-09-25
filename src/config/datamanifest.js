@@ -38842,5 +38842,19 @@ export default [
     "Notes": "",
     "API": "OpenDataMain",
     "API_Param1": 8
-  }
+  },
+  // TEST School Variables
+  // {
+  //   "Variable": 'Pct_Devel_AmLitComp_2015',
+  //   "Long": 'TEST HS DATA',
+  //   "Type": 'Percent',
+  //   'ESTMOE': 'N/A',
+  //   'Source': "GA DOE",
+  //   'Years': '2015',
+  //   'Category': 'Education',
+  //   'Topic': 'School Level EOC Results',
+  //   'Universe' : 'All students taking test',
+  //   'API' : 'HighSchools15to17',
+  //   "API_Param1": ''
+  // }
  ]

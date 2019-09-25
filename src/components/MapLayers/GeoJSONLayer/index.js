@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-// import L from 'leaflet';
+import L from 'leaflet';
 import { GeoJSON } from 'react-leaflet';
 import colormap from 'colormap';
 
@@ -47,7 +47,10 @@ const GeoJSONLayer = props => {
   
   const geoJSONGeometry = props.geoJSON ? props.geoJSON : null
    
-  // console.log(geoJSONGeometry);
+  console.log(geoJSONGeometry);
+
+  const pointData = geoJSONGeometry ? geoJSONGeometry.features[0].geometry.type === 'Point' : false
+  
 
   // const geojsonData = props.data ? 
   //   Object.entries(props.data).filter(([key,value]) => value[props.primaryField] !== 'NA') : null;
@@ -61,15 +64,7 @@ const GeoJSONLayer = props => {
 //   //If there isn't a filter type
 //     : props.data;
 
-  // const pointData = dataArray.map(feature => feature.geometry.type === 'Point' ? console.log(feature.geometry.type) : null);
-  // var geojsonMarkerOptions = {
-  //   radius: 20,
-  //   fillColor: "#ff7800",
-  //   color: "#000",
-  //   weight: 1,
-  //   opacity: 1,
-  //   fillOpacity: 0.8
-  // };
+
 
   const addFeatureFunctions = (feature, layer, value) => {
           
@@ -93,13 +88,7 @@ const GeoJSONLayer = props => {
   }
 
 
-  // const pointData = dataArray && props.data.point ? dataArray.map(feature => L.circleMarker(feature.geometry.coordinates, geojsonMarkerOptions)) : null;
-  //   // L.geoJSON(dataArray, {
-  //   // pointToLayer: (feature, latlng) => {
-  //   //   console.log("This is a point")
-  //   //   return L.circleMarker(latlng, geojsonMarkerOptions )
-  //   // }
-  //   // }) 
+  // const pointData = dataArray && props.data.point ? dataArray
 
   useEffect(() => {}, [props.layout, props.primaryField])
 
@@ -114,34 +103,48 @@ const GeoJSONLayer = props => {
       <GeoJSON
       key={'geojson-layer'}
       data={ geoJSONGeometry }
-    //   pointToLayer={props.data.point ? (feature, latlng) => {
+      pointToLayer={pointData ? (feature, latlng) => {
         
-    //     const variable=feature.properties[props.data.primaryField];
-    //     const normalizer=props.data.normalizedBy ? feature.properties[props.data.normalizedBy] : 1
+        // const variable=feature.properties[props.data.primaryField];
+        // const normalizer=props.data.normalizedBy ? feature.properties[props.data.normalizedBy] : 1
 
-    //     // console.log(props.data.primaryField);
-    //     const value = variable/normalizer;
-    //     const distFromMin = value - minValue;
-    //     const range = maxValue - minValue;
-    //     const binningRatio = distFromMin/range;
-    //     const indexRange = numberOfBins - 1;
-    //     // const opacity = value;
-    //     const color = colors[Math.floor(binningRatio * indexRange)];
+        // const value = variable/normalizer;
+        // const distFromMin = value - minValue;
+        // const range = maxValue - minValue;
+        // const binningRatio = distFromMin/range;
+        // const indexRange = numberOfBins - 1;
+        // const color = colors[Math.floor(binningRatio * indexRange)];
 
-    //     // const featureID = feature.properties[props.data.hoverField];
+        const featureID = feature.properties[props.hoverField];
 
-    //     var geojsonMarkerOptions = {
-    //       // radius: 10,
-    //       fillColor: color,
-    //       color: "#000",
-    //       weight: 1,
-    //     };  
+
+        const joinedFeature = props.data ? props.data[featureID] : null;
+
+        const variable = joinedFeature ? joinedFeature[props.primaryField] : null;
+          
+        const normalizer = props.normalizedBy ? joinedFeature[props.normalizedBy] : 1;
+
+        const value = variable/normalizer;
+        const distFromMin = value - minValue;
+        const range = maxValue - minValue;
+        const binningRatio = distFromMin/range;
+        const indexRange = numberOfBins - 1;
         
-    //     // console.log("This is a point")
-    //       return L.circleMarker(latlng, geojsonMarkerOptions )
-    //               .setRadius(5)
-    //     } : null 
-    //   }
+        const color = value ? colors[Math.floor(value === 0 ? 0 : binningRatio * indexRange)] : null;
+
+
+        var geojsonMarkerOptions = {
+          // radius: 10,
+          fillColor: color,
+          color: "#000",
+          weight: 1,
+        };  
+        
+        // console.log("This is a point")
+          return L.circleMarker(latlng, geojsonMarkerOptions )
+                  .setRadius(5)
+        } : null 
+      }
 
 
       style={ feature => {
