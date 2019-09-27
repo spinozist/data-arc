@@ -21,7 +21,7 @@ import './style.css';
 // import { readSync } from 'fs';
 
 const LayoutWrapper = props => {
-
+    console.log(props.defaults)
     // Initiate state variables and setter functions
     const [dataTray, setDataTray] = useState(defaults.data.tray);
 
@@ -39,12 +39,6 @@ const LayoutWrapper = props => {
      [dataSelectorModal, setDataSelectorModal] = useState(false),
      [dataLoaded, setDataLoaded] = useState(),
      [scrollID, setScrollID] = useState();
-
-    
-    //  var CancelToken = axios.CancelToken;
-    //  var dataCall = CancelToken.source();
-    //  var geoCall = CancelToken.source();
- 
 
     const handleData = geo => {
 
@@ -190,10 +184,7 @@ const LayoutWrapper = props => {
                         .catch(err => console.log(err))
                 }) : addAddSingleAPI()
 
-            }
-                
-
-            )
+            })
         }
 
         // API for geoJSON
@@ -255,12 +246,10 @@ const LayoutWrapper = props => {
     // const handleScrollToRow = () => 
     //     layout.tableVisible ? document.getElementById('row-' + scrollID).scrollTo() : null
     
-    
     useEffect(() => handleData(sumLevel) ,[dataTray, sumLevel]);
     useEffect(() => {}, [layout]);
     // useEffect(() => layout.tableVisible ? handleScrollToRow() : null, [scrollID])
 
-    
     return (
         <Grid fluid style={{padding: '20px', height: '100vh'}}>
             

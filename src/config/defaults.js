@@ -44,10 +44,10 @@ export default {
                 url: 'https://services1.arcgis.com/Ug5xGQbHsD8zuZzM/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
                 joinField: 'GEOID',
                 otherFields: ['NAME', 'PlanningRegion'],
-                // url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+                // url: 'https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
             },
             HighSchools15to17: {
-                url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/OpenData/FeatureServer/248/',
+                url: 'https://arcgis.atlantaregional.com/arcgis/rest/services/OpenData/FeatureServer/248/',
                 joinField: 'SCHOOL_ID',
                 otherFields: ['SCHOOL_NAME', 'SYSTEM_NAME'],
             }
@@ -58,11 +58,11 @@ export default {
                 joinField: 'GEOID',
                 otherFields: ['NAME', 'PlanningRegion'],
                 apiParam: true,
-                // url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
+                // url: 'https://arcgis.atlantaregional.com/arcgis/rest/services/ACSAllGeo2017/FeatureServer/',
                 geographies: ['State', 'County', 'City', 'Tract', 'ZCTA', 'GAHouse', 'GASenate', 'NPU', 'NSA', 'AtlCityCouncil', 'RC', 'SuperDistrict', 'Congress']
             },
             HighSchools15to17: {
-                url: 'https://cors-anywhere.herokuapp.com/https://arcgis.atlantaregional.com/arcgis/rest/services/OpenData/FeatureServer/248/',
+                url: 'https://arcgis.atlantaregional.com/arcgis/rest/services/OpenData/FeatureServer/248/',
                 joinField: 'SCHOOL_ID',
                 otherFields: ['SCHOOL_NAME', 'SYSTEM_NAME'],
                 geographies: ['GAHighSchools']
@@ -135,6 +135,7 @@ export default {
                     borderType: 'solid'
                 },
                 checked: true,
+                labelValue: 'Name',
                 url: 'https://opendata.arcgis.com/datasets/63996663b8a040438defe56ef7ce31e3_0.geojson'
             },
             Cities: {
@@ -145,6 +146,7 @@ export default {
                     borderType: 'dashed'
                 },
                 checked: true,
+                labelValue: 'NAME',
                 url: 'https://opendata.arcgis.com/datasets/0248805ea42145d3b7d7194beafcc3d7_55.geojson'
             },
             NPUs: {
@@ -155,7 +157,9 @@ export default {
                     borderType: 'solid'
                 },
                 checked: false,
-                url: 'https://opendata.arcgis.com/datasets/91911cd123624a6b9b88cbf4266a2309_4.geojson'
+                labelValue: 'NAME',
+                // url: 'https://opendata.arcgis.com/datasets/91911cd123624a6b9b88cbf4266a2309_4.geojson'
+                url: 'https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService/FeatureServer/4/query?where=1%3D1&outFields=NAME,NPU&returnCentroid=true&outSR=4326&f=geojson'
             }
 
         }

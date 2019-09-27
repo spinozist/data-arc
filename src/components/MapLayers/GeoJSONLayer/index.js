@@ -6,6 +6,7 @@ import colormap from 'colormap';
 
 const GeoJSONLayer = props => {
 
+
   // const [primaryField, setPrimaryField] = useState()
 
   const numberOfBins = props.layout.numberOfBins;
@@ -70,6 +71,8 @@ const GeoJSONLayer = props => {
           
     const featureID = feature.properties[props.hoverField];
 
+    // layer.bringToBack();
+
     layer.bindTooltip(String(featureID))
       .on('mouseover', () => props.handleHover(featureID))
       .on('click', () => 
@@ -90,7 +93,7 @@ const GeoJSONLayer = props => {
 
   // const pointData = dataArray && props.data.point ? dataArray
 
-  useEffect(() => {}, [props.layout, props.primaryField])
+  useEffect(() => {}, [props.layout, props.primaryField]);
 
 
   return (
@@ -101,20 +104,12 @@ const GeoJSONLayer = props => {
     props.geoJSON ?
 
       <GeoJSON
+
+      onAdd={e => e.target.bringToBack()}
       key={'geojson-layer'}
       data={ geoJSONGeometry }
       pointToLayer={pointData ? (feature, latlng) => {
         
-        // const variable=feature.properties[props.data.primaryField];
-        // const normalizer=props.data.normalizedBy ? feature.properties[props.data.normalizedBy] : 1
-
-        // const value = variable/normalizer;
-        // const distFromMin = value - minValue;
-        // const range = maxValue - minValue;
-        // const binningRatio = distFromMin/range;
-        // const indexRange = numberOfBins - 1;
-        // const color = colors[Math.floor(binningRatio * indexRange)];
-
         const featureID = feature.properties[props.hoverField];
 
 

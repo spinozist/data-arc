@@ -3,6 +3,7 @@ import { Map as LeafletMap, TileLayer, ZoomControl } from 'react-leaflet';
 import Control from 'react-leaflet-control';
 import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
+// import LabelLayer from '../MapLayers/LabelLayer';
 import BaseMapLegend from '../Legends/BaseMapLegend';
 import BoundaryLayerLegend from '../Legends/BoundaryLayerLegend';
 import DataLayerLegend from '../Legends/DataLayerLegend';
@@ -76,7 +77,10 @@ const Map = props => {
     Object.entries(obj)
       .map(([key,data]) =>
         API.getData(data.url)
-        .then(res => dataArray.push([key, res.data.features]))
+        .then(res => {
+          console.log(res)
+          dataArray.push([key, res.data.features])
+        })
         .catch(err => console.log(err))
       )
     getLayers();
@@ -106,13 +110,19 @@ const Map = props => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => closeSideBar(), [props.icons]);
   useEffect(() => handleOffSet(), [props.layout, props.geo]);
+  // useEffect(() => setDataLayerLoaded(false), [])
 
   return (
     <LeafletMap
       key={'leaflet-map'}
+      worldCopyJump={true}
       // center={[33.8, -84.4]}
       // zoom={10.5}
       // zoomDelta={.5}
+      // event={e => console.log(e)}
+      boxZoom={true}
+      trackResize={true}
+
       zoomSnap={.3}
       zoomDelta={.3}
       bounds={bounds}
@@ -215,6 +225,13 @@ const Map = props => {
         </Control>
 
       }
+      { props.data &&
+        props.geoJSON &&
+        props.primaryField ?
+        // props.dataLoaded ?
+        <GeoJSONLayer {...props} baseMap={baseMap}/> 
+        : null 
+      }
       
       {
         overlayData ? 
@@ -226,7 +243,6 @@ const Map = props => {
           const visible = boundaryLayerInfo[layerName].checked;
           const style = boundaryLayerInfo[layerName].style;
   
-
           return (visible ?
 
            <OverlayLayer 
@@ -237,14 +253,36 @@ const Map = props => {
         })
         : null
       }
+      {/* Test of Label Layer */}
+      {/* {
+
+        overlayData ? 
+        // console.log(overlayData)
+
+        overlayData.map(layer => {
+          const layerName = layer[0];
+          const layerData = layer[1];
+          const visible = boundaryLayerInfo[layerName].checked;
+          const labelValue = boundaryLayerInfo[layerName].labelValue;
+          // const style = boundaryLayerInfo[layerName].style;
+
+
+          return (visible ?
+
+          <LabelLayer 
+            // style={style}
+            labelValue={labelValue}
+            data={layerData}/> 
+
+          : null)
+        })
+        : null
+    
+      } */}
+
+
       
-      { props.data &&
-        props.geoJSON &&
-        props.primaryField ?
-        // props.dataLoaded ?
-        <GeoJSONLayer {...props} baseMap={baseMap}/> 
-        : null 
-      }
+
       <TileLayer
             key={baseMap}
             attribution={defaults.data.tileLayers.find(layer =>

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { GeoJSON } from 'react-leaflet';
+import L from 'leaflet';
 // import API from "../../utils/API";
 import * as turf from '@turf/turf';
 import './style.css'
@@ -7,12 +8,14 @@ import './style.css'
 
 const OverlayLayer = props => {
 
-
+    // const labeled = false;
+    // const labelValue = 'NAME'
     //Converts Polygon to LineString so overlay doesn't block GeoJson layer tooltip
     //Need to test for geometry type to handle different inputs
     const [fill, setFill] = useState(false);
 
     const linestringData = props.data ? props.data.map(feature => !fill ? turf.polygonToLine(feature) : feature) : null ;
+    // const centroidData = props.data ? props.data.map(feature => labeled ? turf.centroid(feature, feature.properties) : feature) : null; 
 
     const borderWeight = props.style.borderWeight;
     const borderColor = props.style.borderColor;
@@ -26,14 +29,10 @@ const OverlayLayer = props => {
         dashArray={borderType === 'dashed' ? '4 3 2' : '0'}
         color={borderColor}
         weight={borderWeight}
-        // onEachFeature={(feature, layer) => 
-        //   layer.bindTooltip('Test', 
-        //     {
-        //       permanent: true,
-        //       direction: 'center',
-        //       className: 'overlayLabel'
-        //     })}
+
         data={props.data ? linestringData : null}
+
+
       />
     );
 };
