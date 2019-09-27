@@ -65,6 +65,7 @@ const BoundaryLayerLegend = props => {
                         on='hover'
                         hoverable
                         basic
+                        style={{borderRadius: '10px'}}
                         // pinned
                         wide
                         children={

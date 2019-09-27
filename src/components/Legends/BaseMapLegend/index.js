@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Radio, Icon } from 'semantic-ui-react'
+import { Radio, Icon, Popup, Image } from 'semantic-ui-react'
 
 import './style.css';
 
@@ -17,20 +17,37 @@ const BaseMapLegend = props => {
                 padding: props.style.padding,
                 width: props.style.width,
                 borderRadius: props.style.borderRadius,
-                overflow: 'auto'
+                // overflow: 'auto'
+                height: legendOpen ? legendInfo.length * 30 + 10 + 'px' : null
             }}>
         <h2>Base Map<Icon name='ellipsis vertical' color={legendOpen ? 'grey' : 'black'} style={{float: 'right'}} onClick={() => setLegendOpen(legendOpen ? false : true)}/></h2>
         {legendOpen  ? legendInfo.map(entry =>
             <div 
-                style={{paddingLeft: '10%', fontSize: '1em', margin: '0 0 5px 0'}}
+                style={{ float: 'left',width: '100%', paddingLeft: '10%'}}
                 // onClick={() => props.setBaseMap(entry.key)}     
             >
             <Radio
-                // label={entry.name}
+                style={{float: 'left'}}
                 checked={props.baseMap === entry.key ? true : false}
                 onChange={() => props.setBaseMap(entry.key)}
             />
-                        {entry.name}
+                <Popup
+                    position={'right center'}
+                    on='hover'
+                    hoverable
+                    pinned
+                    wide
+                    style={{borderRadius: '10px'}}
+                    trigger={<h5 style={{float: 'left', fontSize: '1em', margin: '0 0 5px 0'}}>{entry.name}</h5>}
+                    children={
+                        <Image 
+                            src=
+                            { entry.thumbUrl ?
+                                entry.thumbUrl :
+                                    'https://react.semantic-ui.com/images/wireframe/image.png'
+                            } 
+                            size='small' />}
+                />
 
             </div>
             ) : null}

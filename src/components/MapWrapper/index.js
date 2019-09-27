@@ -78,7 +78,7 @@ const Map = props => {
       .map(([key,data]) =>
         API.getData(data.url)
         .then(res => {
-          console.log(res)
+          // console.log(res)
           dataArray.push([key, res.data.features])
         })
         .catch(err => console.log(err))

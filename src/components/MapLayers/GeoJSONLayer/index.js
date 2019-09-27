@@ -48,7 +48,7 @@ const GeoJSONLayer = props => {
   
   const geoJSONGeometry = props.geoJSON ? props.geoJSON : null
    
-  console.log(geoJSONGeometry);
+  // console.log(geoJSONGeometry);
 
   const pointData = geoJSONGeometry ? geoJSONGeometry.features[0].geometry.type === 'Point' : false
   

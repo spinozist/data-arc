@@ -36,7 +36,7 @@ const ColorRamp = props => {
 
     const handleMaxMin = () => {
         const primaryField = props.primaryField;
-        console.log(primaryField)
+        // console.log(primaryField)
 
         const valueArray = data ? 
         Object.entries(data)
@@ -88,8 +88,9 @@ const ColorRamp = props => {
                 }}>
                 {minValue || minValue === 0 ? numeral(minValue).format('0,0') : null}
             </div>
-        { colors && props.primaryField ? colors.map(color => 
+        { colors && props.primaryField ? colors.map((color, i) => 
             <div 
+            key={'color-ramp-' + i}
             style={{
                 // position: 'relative',
                 // bottom: '60px',

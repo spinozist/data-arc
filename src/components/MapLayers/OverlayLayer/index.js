@@ -30,6 +30,8 @@ const OverlayLayer = props => {
         color={borderColor}
         weight={borderWeight}
 
+        // onAdd={e => e.target.bringToFront()}
+
         data={props.data ? linestringData : null}
 
 

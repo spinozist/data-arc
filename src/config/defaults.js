@@ -80,7 +80,8 @@ export default {
                 name: 'OpenStreetMap Dark',
                 key: 'tile-layer-dark',
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap: "Map tiles by Carto, under CC BY 3.0.</a> contributors',
-                url: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+                url: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
+                thumbUrl: 'https://cartodb-basemaps-a.global.ssl.fastly.net/dark_all/14/4351/6557.png'
             },
             // {
             //     name: 'OpenStreetMap Mono',
@@ -92,37 +93,44 @@ export default {
                 name: 'OpenStreetMap Color',
                 key: 'tile-layer-color',
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-                url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                thumbUrl: 'https://a.tile.openstreetmap.org/14/4351/6557.png'
+
             },
             {
                 name: 'ArcGIS Light Grey',
                 key: 'tile-arcgis-grey',
                 attribution: '',
-                url: 'http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+                url: 'http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                thumbUrl: 'http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/13/3279/2174'
             },
             {
                 name: 'ArcGIS Satellite',
                 key: 'tile-arcgis-satellite',
                 attribution: '',
-                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                thumbUrl: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/13/3279/2174'
             },
             {
                 name: 'ArcGIS Street Map Color',
                 key: 'tile-arcgis-color',
                 attribution: '',
-                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'
+                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+                thumbUrl: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/13/3279/2174'
             },
             {
                 name: 'National Geographic Color',
                 key: 'tile-natgeo',
                 attribution: '',
-                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}'
+                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
+                thumbUrl: 'http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/13/3279/2174'
             },
             {
                 name: 'Wikimedia',
                 key: 'tile-wiki',
                 attribution: '',
-                url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png'
+                url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png',
+                thumbUrl: 'https://maps.wikimedia.org/osm-intl/13/2174/3279.png'
             }
 
         ],

@@ -21,7 +21,7 @@ import './style.css';
 // import { readSync } from 'fs';
 
 const LayoutWrapper = props => {
-    console.log(props.defaults)
+    // console.log(props.defaults)
     // Initiate state variables and setter functions
     const [dataTray, setDataTray] = useState(defaults.data.tray);
 
@@ -71,7 +71,7 @@ const LayoutWrapper = props => {
         // created by returned GeoJSON, and then sets 
         const addData = (dataObj, geo) =>  {;
 
-            console.log(geo);
+            // console.log(geo);
 
             const baseURL = geoAPIInfo.url
             const otherFields = geoAPIInfo.otherFields;
@@ -96,16 +96,16 @@ const LayoutWrapper = props => {
             getAPIs();
             getServiceIDs();
 
-            console.log(APIs)
-            console.log(serviceIDs)
+            // console.log(APIs)
+            // console.log(serviceIDs)
             
             // Makes multiple API calls using array of
             // API urls and serviceIDs along with arrays of field keys 
             // filtered from the data tray
             APIs.filter(api => api === geoAPI )
                 .map(api => {
-                    const addAddSingleAPI =                 () => {
-                        console.log(dataTray)
+                    const addAddSingleAPI = () => {
+                        // console.log(dataTray)
                         const fields = 
                             Object.entries(dataTray)
                                 .filter(([key, value]) => 
@@ -115,8 +115,8 @@ const LayoutWrapper = props => {
                         fields.push(joinField);
                         otherFields.map(field => fields.push(field));
                         
-                        console.log('INSIDE ALTERNATE GET DATA')
-                        console.log(fields);
+                        // console.log('INSIDE ALTERNATE GET DATA')
+                        // console.log(fields);
                         const dataURL = `${baseURL}`;
                         const queryString = `query?where=1%3D1&outFields=${fields}&outSR=4326&f=geojson`
                         
@@ -124,7 +124,7 @@ const LayoutWrapper = props => {
     
                         API.getData(dataURL + queryString)
                             .then(res => {
-                                console.log(res);
+                                // console.log(res);
                                 res.data.features.map(feature => {
                                     const propertiesObj = feature.properties;
                                     const featureID = propertiesObj[joinField];
@@ -132,7 +132,7 @@ const LayoutWrapper = props => {
                                         .map(([key, value]) => dataObj[featureID][key] = value)
                                 });
                                 setHoverField(joinField);
-                                console.log(dataObj);
+                                // console.log(dataObj);
                                 return dataObj
                             })
                             .then(dataObj => {
@@ -149,7 +149,7 @@ const LayoutWrapper = props => {
                 defaults.data.dataAPIs[api].apiParam ?
 
                 serviceIDs.filter(serviceID => serviceID !== '').map(serviceID => {
-                    console.log('INSIDE OPENDATA GET DATA')
+                    // console.log('INSIDE OPENDATA GET DATA')
                     const fields = 
                         Object.entries(dataTray)
                             .filter(([key, value]) => 
@@ -174,7 +174,7 @@ const LayoutWrapper = props => {
                                     .map(([key, value]) => dataObj[featureID][key] = value)
                             });
                             setHoverField(joinField);
-                            console.log(dataObj);
+                            // console.log(dataObj);
                             return dataObj
                         })
                         .then(dataObj => {
@@ -209,7 +209,7 @@ const LayoutWrapper = props => {
                 // Initiate dataObj
                 var dataObj = {};
 
-                console.log(res)
+                // console.log(res)
 
                 // Map returned keys along wtih empty 
                 // valueObjects to the dataOj

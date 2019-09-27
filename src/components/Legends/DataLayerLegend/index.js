@@ -44,13 +44,11 @@ const DataLayerLegend = props => {
           </div>
           {
             props.layout.colorMapReverse ? 
-            
-            value.map(obj => 
-                <div style={{float: 'left', width: (100 / value.length) + '%', backgroundColor: `rgb(${obj.rgb[0]},${obj.rgb[1]},${obj.rgb[2]})`, height: '60%' }}/>
-            ).reverse()
-            :
-            value.map(obj => 
-              <div style={{float: 'left', width: (100 / value.length) + '%', backgroundColor: `rgb(${obj.rgb[0]},${obj.rgb[1]},${obj.rgb[2]})`, height: '60%' }}/>
+            value.map((obj, i) => 
+                <div key={'legend-color-ramp' + key + i} style={{float: 'left', width: (100 / value.length) + '%', backgroundColor: `rgb(${obj.rgb[0]},${obj.rgb[1]},${obj.rgb[2]})`, height: '60%' }}/>
+            ).reverse() :
+            value.map((obj, i) => 
+              <div key={'legend-color-ramp' + key + i} style={{float: 'left', width: (100 / value.length) + '%', backgroundColor: `rgb(${obj.rgb[0]},${obj.rgb[1]},${obj.rgb[2]})`, height: '60%' }}/>
           )
           }
         </div>
@@ -76,8 +74,13 @@ const DataLayerLegend = props => {
         }}
       >
         <h2>Data
-        <Icon name='ellipsis vertical' color={legendOpen ? 'grey' : 'black'} style={{float: 'right'}} onClick={() => setLegendOpen(legendOpen ? false : true)}/>
-
+        <Icon 
+          name='ellipsis vertical' 
+          color={ legendOpen ? 'grey' : 'black'} 
+          style={{float: 'right'}} 
+          onClick={() => 
+          setLegendOpen(legendOpen ? false : true)}
+        />
         </h2>
          { legendOpen ? 
          <div>  
@@ -113,22 +116,21 @@ const DataLayerLegend = props => {
                   options={defaults.geoOptions}
               />
                : null
-
             }
         />
-
         <Popup
           position={'right center'}
           on='hover'
           hoverable
           flowing
           pinned
+          style={{borderRadius: '10px', padding: '5px'}}
           children={
             <div 
                 style={{ 
                     // marginTop: '20px',
                     width: '400px',
-                    height: '40vh',
+                    height: '30vh',
                     // float: 'right',
                     overflow: 'auto',
                     textAlign: 'left',
@@ -140,6 +142,7 @@ const DataLayerLegend = props => {
                 { dataTray ?
                     Object.entries(dataTray).map(([key, value]) =>
                     <div
+                    key={'tray-option-' + key}
                     onClick={() => props.setPrimaryField(key)}
                     // basic
                     // color={}
@@ -152,26 +155,11 @@ const DataLayerLegend = props => {
                         // color: catColors[categories.indexOf(value.category)],
                         float: 'left', borderRadius: '10px', margin: '5px', padding: '4px'}}>
                         {value.text}
-                    {/* <Icon 
-                        name='delete' 
-                        onClick={() => removeFromDataTray(key)}                
-                     /> */}
                     </div>
-                ) : null 
+                  ) : null 
                 }
             
             </div>
-            // dataTray ? 
-            // <Dropdown 
-            //     selection
-            //     scrolling 
-            //     value={primaryField} 
-            //     onChange={(event, data) => {
-            //         // props.setPreviousServiceID(props.serviceID)
-            //         props.setPrimaryField(data.value)
-            //     }} 
-            //     // placeholder='Select Geography' 
-            //     options={fieldOptions} /> : null
           }
           trigger={
             primaryField && props.dataTray && props.dataTray[primaryField] && props.data ?
