@@ -200,7 +200,7 @@ const Map = props => {
             color={value.visible ? 'grey' : iconColor} 
             icon={value.ref}
             onClick={() => {
-              console.log(props.icons);
+              // console.log(props.icons);
               props.setLayout({
                 ...props.layout,
                 mapWidth: {sm: 12, lg: 8},

@@ -219,7 +219,7 @@ const LayoutWrapper = props => {
                 // Initiate dataObj
                 var dataObj = {};
 
-                console.log(res)
+                // console.log(res)
 
                 // Map returned keys along wtih empty 
                 // valueObjects to the dataOj

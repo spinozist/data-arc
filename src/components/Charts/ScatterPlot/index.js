@@ -68,13 +68,13 @@ const ScatterPlot = props => {
 
   const regressionAnalysis = data => {
     // const data = dataArray
-    console.log(data);
+    // console.log(data);
     const analysisArray =  data
     // .filter(point => !isNaN(point.x) &&  !isNaN(point.y))
     .map(point => [parseFloat(point.x), parseFloat(point.y)]);
-    console.log(analysisArray);
+    // console.log(analysisArray);
     const result = regression.linear(analysisArray, {precision: 6});
-    console.log(result)
+    // console.log(result)
     setRegressionResults(result);
 
   };

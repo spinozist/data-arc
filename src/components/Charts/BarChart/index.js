@@ -98,15 +98,30 @@ const SimpleBarChart = props => {
           }
         }
       ) : null;
-  
-  
+
+  const CustomTooltip = ({ active, payload }) => 
+    active ?
+      <div 
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '5px',
+          opacity: '.8',
+          padding: '10px',
+          border: '1px solid black' 
+        }}>
+          <h3>{payload[0].payload.name}</h3>
+          <p>{payload[0].value}</p>
+        </div>
+    : null;
+
+
   // console.log(dataArray);
 
   useEffect(() => labelBuilder(
     props.dataTray && props.dataTray[primaryField] ? props.dataTray[primaryField].text: 'No variable selected'), 
       [primaryField])
   
-  useEffect(() => {}, [props.primaryField])
+  useEffect(() => {}, [primaryField])
 
 
   return (
@@ -193,17 +208,21 @@ const SimpleBarChart = props => {
         {/* <Brush dataKey="name" height={30} stroke="#8884d8" /> */}
         <Tooltip
           key={"tooltip-" + primaryField}
-          itemStyle={{ color: 'black' }}
+          // itemStyle={{ color: 'black' }}
           style={{ borderRadius: '5px'}}
           cursor={{ strokeDasharray: '3 3' }} 
-          animationEasing={'ease-in-out'}
-          formatter={ value => 
-            typeof value === 'number' ? 
-            value % 1 !== 0 ? 
-            numeral(value).format('0,0.00') 
-            : numeral(value).format('0,0')
-            : value
-            } />
+          // animationEasing={'ease-in-out'}
+          // formatter={(value, name) => {
+          //   const formattedValue = 
+          //     typeof value === 'number' ? 
+          //        numeral(value).format('0,0.00') 
+          //         : value;
+          //   return ([formattedValue, name])
+          // }
+
+          //   } 
+          content={<CustomTooltip />}
+            />
       </ComposedChart>
     </ResponsiveContainer>
   );

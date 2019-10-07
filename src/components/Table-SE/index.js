@@ -34,7 +34,7 @@ const TableSE = props => {
     const [sort, setSort] = useState({field: 'NAME', direction: 'lohi'});
         
 
-    useEffect(() => console.log(sort), [sort]);
+    useEffect(() => {}, [sort]);
 
     return (
         <StickyTable style={{width: '100%', height: '90%'}} stickHeaderCount={1}>
@@ -43,7 +43,8 @@ const TableSE = props => {
                 <Cell
                     style={{
                         // height: '30px',
-                        width: index === 0 ? '30%' : null,
+                        // width: index === 0 ? '30%' : null,
+                        // width: '25%',
                         textAlign: 'center', 
                         verticalAlign: 'middle', 
                         backgroundColor: '#d5bdbd',
@@ -58,7 +59,14 @@ const TableSE = props => {
                 >
                     {   dataTray[columnLabel] ? 
                             dataTray[columnLabel].text.length > 30 ?
-                                <small>{dataTray[columnLabel].text}</small> :
+                                dataTray[columnLabel].text
+                                    .match(/\b[\w']+(?:[^\w\n]+[\w']+){0,3}\b/g)
+                                    .map((line, i, arr) => 
+                                        <p 
+                                            style={{
+                                                marginTop: i === 0 ? '10px' : null,
+                                                marginBottom: i === arr.length - 1 ? '10px' : null, 
+                                                lineHeight: '5px'}}>{line}</p>) :
                                     dataTray[columnLabel].text :
                                         columnLabel 
                     }
