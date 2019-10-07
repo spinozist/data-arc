@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, Label, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 // import dataConfig from "../../../config/dataConfig";
 import colormap from 'colormap';
+import regression from 'regression';
 import numeral from 'numeral';
 import './style.css';
 
@@ -17,6 +18,7 @@ const ScatterPlot = props => {
   const [xAxisOffset, setXAxisOffset] = useState(20);
   const [xLabel, setXLabel] = useState(['Label loading...']);
   const labelLineHeight = 15;
+  const [regressionResults, setRegressionResults] = useState();
 
   const labelBuilder = (xlabel, ylabel) => {
     
@@ -27,7 +29,7 @@ const ScatterPlot = props => {
     setYLabel(ylabelParsed);
     setXLabel(xlabelParsed);
 
-    setXAxisOffset(xlabelParsed.length * 15 + 5);
+    setXAxisOffset(xlabelParsed.length * 15 + 22);
     setYAxisOffset(ylabelParsed.length * 15)
 
   }
@@ -42,29 +44,54 @@ const ScatterPlot = props => {
   colors = reverse ? colors.reverse() : colors;
 
   const valueArray = props.data ? Object.entries(props.data)
-  .filter(([key, value]) => value[primaryField] !== 'NA' && value[primaryField] !== 'NA' && value[primaryField] !== null)
-  .map(([key,value]) => {
-
-    return parseFloat(value[primaryField])
-    }) : null;
+    .filter(([key, value]) => value[primaryField] !== 'NA' && value[primaryField] !== 'NA' && value[primaryField] !== null)
+    .map(([key,value]) => parseFloat(value[primaryField])) : null;
 
   const maxValue = valueArray !== null ? Math.max(...valueArray) : 'Value array not load yet';
   const minValue = valueArray !== null ? Math.min(...valueArray) : 'Value array not load yet';
 
   const dataArray = props.data ? Object.entries(props.data)
-    .filter(([key, value]) => value[primaryField] !== 'N/A' || value[primaryField] !== 'NA' || value[primaryField] !== null)
+    .filter(([key, value]) => 
+      value[primaryField] !== 'N/A' && 
+      value[primaryField] !== 'NA' && 
+      value[primaryField] !== null &&
+      value[secondaryField] !== 'N/A' && 
+      value[secondaryField] !== 'NA' && 
+      value[secondaryField] !== null)
     .map(([key,value]) => 
       ({
         x: parseFloat(value[primaryField]),
         y: parseFloat(value[secondaryField]),
         name: value[props.hoverField]
       })
-      ) : null;
+    ) : null;
+
+  const regressionAnalysis = data => {
+    // const data = dataArray
+    console.log(data);
+    const analysisArray =  data
+    // .filter(point => !isNaN(point.x) &&  !isNaN(point.y))
+    .map(point => [parseFloat(point.x), parseFloat(point.y)]);
+    console.log(analysisArray);
+    const result = regression.linear(analysisArray, {precision: 6});
+    console.log(result)
+    setRegressionResults(result);
+
+  };
+
+  // const rSquaredLabel = () => <h5>R<super>2</super> = {regressionResults ? regressionResults.r2 : null}</h5>
+
+
+  const Noshape = (props)=>{ 
+    return null; 
+   }
   
   useEffect(() => labelBuilder(
     props.dataTray && props.dataTray[primaryField] ? props.dataTray[primaryField].text: 'No variable selected',
     props.dataTray && props.dataTray[secondaryField] ? props.dataTray[secondaryField].text: 'No variable selected'), 
-      [primaryField, secondaryField])
+      [primaryField, secondaryField]);
+
+  useEffect(dataArray !== [] ? () => regressionAnalysis(dataArray) : null, [primaryField, secondaryField])
 
   return (
       <ResponsiveContainer height="90%" width="95%">
@@ -87,8 +114,13 @@ const ScatterPlot = props => {
                 </Label>)
                 : null
               }
-
-
+              <Label 
+                dy={xLabel.length * labelLineHeight + 25} 
+                position='insideBottomLeft'
+                // offset={50}
+                value={regressionResults ? 'R-squared: ' + regressionResults.r2 : null}
+              />
+      
             </XAxis>
 
             <YAxis 
@@ -147,7 +179,7 @@ const ScatterPlot = props => {
             >
             {
               dataArray ? dataArray
-              .filter(a => a.x !== 'NA' || a.y !== 'NA' || a.x !== 'N/A' ||a.y !== 'N/A' )
+              .filter(a => !isNaN(a.x ) || !isNaN(a.y))
               .map((feature, index) => {
                 
                 const value = parseFloat(feature.x);
@@ -199,6 +231,18 @@ const ScatterPlot = props => {
               }) : null
             }
           </Scatter>
+          {regressionResults ?
+          <Scatter 
+            name='regression-line' 
+            data={regressionResults ? 
+              regressionResults.points
+                .map(point => ({x: point[0], y: point[1]}))
+                .sort((a,b) => a.x > b.x ? -1 : 1) : null} 
+            line 
+            fill="#8884d8"
+            shape={<Noshape />}
+          />
+          : null }
         </ScatterChart>
 
       </ResponsiveContainer>

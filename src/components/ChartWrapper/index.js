@@ -23,7 +23,7 @@ useEffect(() => setChartType(props.chartType), [props.data, props.selectedVariab
 return(
     <div className='chart-wrapper'>
         
-        {  chartType === 'scatterplot' && props.dataLoaded && props.data ?
+        {  chartType === 'scatterplot' && props.data ?
             <div className='inner-box'>
                 <div className='chart-control-bar'>
                     <Icon 

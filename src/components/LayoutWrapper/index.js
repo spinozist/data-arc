@@ -5,7 +5,8 @@ import DataSelector from '../DataSelector';
 import MapWrapper from '../MapWrapper';
 import ChartWrapper from '../ChartWrapper';
 import Loader from 'react-loader-spinner';
-import API from '../../utils/API'
+import API from '../../utils/API';
+// import Data from '../../utils/Data';
 import ColorRamp from '../Legends/ColorRamp';
 import ModalWrapper from '../ModalWrapper';
 import { Button, Icon, Popup } from 'semantic-ui-react';
@@ -40,7 +41,24 @@ const LayoutWrapper = props => {
      [dataLoaded, setDataLoaded] = useState(),
      [scrollID, setScrollID] = useState();
 
-    const handleData = geo => {
+    const [icons, setIcons] = useState({
+        table: {
+            visible: layout.tableVisible,
+            ref: table
+        }, 
+        scatterPlot : {
+            visible: layout.scatterPlotVisible,
+            ref: chartScatterPlot
+        },
+        barChart: {
+            visible: layout.barChartVisible,
+            ref: chartBar
+        }
+    });
+    //  [loadStatus, setLoadStatus] = useState();
+
+
+    const handleData = (geo, dataTray) => {
 
         const geoAPI = defaults.geoOptions.find(option => 
             option.value === geo).geoAPI;
@@ -48,7 +66,7 @@ const LayoutWrapper = props => {
         const geoAPIInfo = defaults.data.dataAPIs[geoAPI];
         const joinField = geoAPIInfo.joinField;
 
-        setDataLoaded(false);
+        // setDataLoaded(false);
         
         // Empty Data and GeoJSON states
         setData();
@@ -95,16 +113,13 @@ const LayoutWrapper = props => {
         
             getAPIs();
             getServiceIDs();
-
-            // console.log(APIs)
-            // console.log(serviceIDs)
             
             // Makes multiple API calls using array of
             // API urls and serviceIDs along with arrays of field keys 
             // filtered from the data tray
             APIs.filter(api => api === geoAPI )
                 .map(api => {
-                    const addAddSingleAPI = () => {
+                    const singleAPI = () => {
                         // console.log(dataTray)
                         const fields = 
                             Object.entries(dataTray)
@@ -137,7 +152,7 @@ const LayoutWrapper = props => {
                             })
                             .then(dataObj => {
                                 setData(dataObj)
-                                setDataLoaded(true);
+                                // setDataLoaded(true);
                             })
                             .catch(err => console.log(err))
     
@@ -148,7 +163,9 @@ const LayoutWrapper = props => {
                 
                 defaults.data.dataAPIs[api].apiParam ?
 
-                serviceIDs.filter(serviceID => serviceID !== '').map(serviceID => {
+                serviceIDs
+                    .filter(serviceID => serviceID !== '')
+                    .map(serviceID => {
                     // console.log('INSIDE OPENDATA GET DATA')
                     const fields = 
                         Object.entries(dataTray)
@@ -159,7 +176,6 @@ const LayoutWrapper = props => {
 
                     fields.push(joinField);
                     otherFields.map(field => fields.push(field));
-
                     const dataURL = `${baseURL}${serviceID}`;
                     const queryString =
                     `/query?where=SumLevel='${geo}'&outFields=${fields}&returnGeometry=false&f=geojson`
@@ -179,10 +195,10 @@ const LayoutWrapper = props => {
                         })
                         .then(dataObj => {
                             setData(dataObj)
-                            setDataLoaded(true);
+                            // setDataLoaded(true);
                         })
                         .catch(err => console.log(err))
-                }) : addAddSingleAPI()
+                }) : singleAPI()
 
             })
         }
@@ -192,24 +208,18 @@ const LayoutWrapper = props => {
         const geoJSONFields = [joinField];
         const geoJSONURL = defaults.data.geoAPIs[geoAPI].url;
         
-        const queryString = 
+        const geoJSONQuery = 
         geoAPI === 'OpenDataMain' ?
         `0/query?where=SumLevel='${geo}'&outSR=4326&outFields=${geoJSONFields}&f=geojson`
         : `query?where=1%3D1&outFields=${geoJSONFields}&outSR=4326&f=geojson`
 
-        // geo === 'Tract' ? defaults.geoOptions.find(item => 
-        //     item.value === 'Tract').geoJSONURL :
-        // geo === 'ZCTA' ? defaults.geoOptions.find(item => 
-        //     item.value === 'ZCTA').geoJSONURL :
-        
-
-        API.getData(geoJSONURL + queryString)
+        API.getData(geoJSONURL + geoJSONQuery)
             .then(res => {
 
                 // Initiate dataObj
                 var dataObj = {};
 
-                // console.log(res)
+                console.log(res)
 
                 // Map returned keys along wtih empty 
                 // valueObjects to the dataOj
@@ -228,27 +238,8 @@ const LayoutWrapper = props => {
             .catch(err => console.error(err)); 
     }
 
-    const [icons, setIcons] = useState({
-        table: {
-          visible: layout.tableVisible,
-          ref: table
-        }, 
-        scatterPlot : {
-          visible: layout.scatterPlotVisible,
-          ref: chartScatterPlot
-        },
-        barChart: {
-          visible: layout.barChartVisible,
-          ref: chartBar
-        }, 
-    });
-
-    // const handleScrollToRow = () => 
-    //     layout.tableVisible ? document.getElementById('row-' + scrollID).scrollTo() : null
-    
-    useEffect(() => handleData(sumLevel) ,[dataTray, sumLevel]);
+    useEffect(() => handleData(sumLevel, dataTray) , [sumLevel, dataTray]);
     useEffect(() => {}, [layout]);
-    // useEffect(() => layout.tableVisible ? handleScrollToRow() : null, [scrollID])
 
     return (
         <Grid fluid style={{padding: '20px', height: '100vh'}}>
@@ -307,7 +298,6 @@ const LayoutWrapper = props => {
                         setIcons={setIcons}
                         scrollID={scrollID}
                         setScrollID={setScrollID}
-                        dataLoaded={dataLoaded}
                         setLayout={setLayout}
                         layout={layout}
                         boundingGEO={boundingGEO}
@@ -323,7 +313,7 @@ const LayoutWrapper = props => {
                         geoJSON={geoJSON}
                         setSumLevel={setSumLevel}
                         colorRamp={
-                            data && dataLoaded && geoJSON ?
+                            data && geoJSON ?
                             <ColorRamp 
                                 primaryField={primaryField} 
                                 data={data} 
@@ -339,7 +329,7 @@ const LayoutWrapper = props => {
                             header={<h2>Browse Data</h2>}
                             trigger={
                                 <Button
-                                    className={ dataLoaded ? 'pulse' : null}
+                                    className={ 'pulse'}
                                     onClick={() => setDataSelectorModal(true)} 
                                     color='teal'
                                 >
@@ -369,7 +359,7 @@ const LayoutWrapper = props => {
                         </div> 
                     }
                     {
-                        !dataLoaded && !data ?
+                        !data ?
                         <div style={{zIndex: '99999', color: 'teal', position: 'absolute', bottom: '50%', width: '100%', textAlign: 'center'}}>
                         <h2>Data Layer Loading...</h2>
                         <Loader id='loader-box' color='teal' type='Circles' />
@@ -473,7 +463,7 @@ const LayoutWrapper = props => {
                 { layout.scatterPlotVisible && primaryField ? 
 
                     <Row center='sm' middle='sm' style={{ marginBottom: '20px', height: '40vh', width: '100%'}}>
-                        { data && dataLoaded  ? 
+                        { data  ? 
                         <ChartWrapper
                         icons={icons}
                         setIcons={setIcons}
@@ -499,7 +489,7 @@ const LayoutWrapper = props => {
                 { layout.barChartVisible && primaryField ? 
 
                     <Row center='sm' middle='sm' style={{ height: '40vh', width: '100%'}}>
-                        { data && dataLoaded ?
+                        { data ?
                         <ChartWrapper
                             icons={icons}
                             setIcons={setIcons}

@@ -50,7 +50,7 @@ const Map = props => {
 
   const [overlayData, setOverlayData] = useState(),
         [bounds , setBounds] = useState(),
-        [baseMap, setBaseMap] = useState('tile-layer-color');
+        [baseMap, setBaseMap] = useState(defaults.data.baseMap);
 
   const handleBounds = boundingGEO => {
     const boundingGeometry = boundingGEO ? boundingGEO.features[0].geometry : null;
@@ -225,14 +225,7 @@ const Map = props => {
         </Control>
 
       }
-      { props.data &&
-        props.geoJSON &&
-        props.primaryField ?
-        // props.dataLoaded ?
-        <GeoJSONLayer {...props} baseMap={baseMap}/> 
-        : null 
-      }
-      
+
       {
         overlayData ? 
         // console.log(overlayData)
@@ -253,6 +246,16 @@ const Map = props => {
         })
         : null
       }
+      
+      { props.data &&
+        props.geoJSON &&
+        props.primaryField ?
+        // props.dataLoaded ?
+        <GeoJSONLayer {...props} baseMap={baseMap}/> 
+        : null 
+      }
+      
+
       {/* Test of Label Layer */}
       {/* {
 

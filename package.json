@@ -2,8 +2,8 @@
   "name": "data_arc",
   "version": "0.1.0",
   "private": true,
-  "engines" : {
-    "node" : "11.6.0"
+  "engines": {
+    "node": "11.6.0"
   },
   "dependencies": {
     "@iconify/icons-mdi": "^1.0.10",
@@ -30,6 +30,7 @@
     "react-scripts": "^3.1.1",
     "react-sticky-table": "^4.0.0",
     "recharts": "^1.6.2",
+    "regression": "^2.0.1",
     "semantic-ui-react": "^0.88.1"
   },
   "scripts": {
@@ -46,5 +47,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {}
 }

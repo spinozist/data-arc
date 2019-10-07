@@ -87,7 +87,7 @@ const GeoJSONLayer = props => {
              behavior: 'smooth'
           }) : null
       )
-      .on('mouseout', () => props.handleHover());
+      .on('mouseleave', () => props.handleHover());
   }
 
 
@@ -100,7 +100,6 @@ const GeoJSONLayer = props => {
 
     props.primaryField &&
     props.data &&
-    props.dataLoaded && 
     props.geoJSON ?
 
       <GeoJSON
@@ -108,6 +107,7 @@ const GeoJSONLayer = props => {
       onAdd={e => e.target.bringToBack()}
       key={'geojson-layer'}
       data={ geoJSONGeometry }
+      ontooltipopen={e => console.log(e.target)}
       pointToLayer={pointData ? (feature, latlng) => {
         
         const featureID = feature.properties[props.hoverField];
@@ -174,7 +174,7 @@ const GeoJSONLayer = props => {
     //   onMouse
 
       onEachFeature={(feature, layer) => 
-        props.dataLoaded && props.primaryField && props.data ? 
+        props.primaryField && props.data ? 
         addFeatureFunctions(feature, layer, props.data[feature.properties[props.hoverField]][props.primaryField]) : null }
     /> : null
   ) 

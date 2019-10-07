@@ -15,6 +15,12 @@ export default {
         sideBarWidth: {sm: 0, lg: 0}
     },
     data: {
+        hoverField: 'GEOID',
+        selectedFields: ['NAME', 'GEOID'],
+        sumLevel: 'NSA',
+        MOE: false,
+        bounds: [[-85.4, 34.8],[-83.4, 32.8],[-84, 33]],
+        baseMap: 'tile-arcgis-grey',
         tray: {
             TotPop_00: {
                 category: "Change since 2000",
@@ -70,11 +76,6 @@ export default {
 
             }
         },
-        hoverField: 'GEOID',
-        selectedFields: ['NAME', 'GEOID'],
-        sumLevel: 'NSA',
-        MOE: false,
-        bounds: [[-85.4, 34.8],[-83.4, 32.8],[-84, 33]],
         tileLayers : [
             {
                 name: 'OpenStreetMap Dark',
@@ -166,8 +167,8 @@ export default {
                 },
                 checked: false,
                 labelValue: 'NAME',
-                // url: 'https://opendata.arcgis.com/datasets/91911cd123624a6b9b88cbf4266a2309_4.geojson'
-                url: 'https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService/FeatureServer/4/query?where=1%3D1&outFields=NAME,NPU&returnCentroid=true&outSR=4326&f=geojson'
+                url: 'https://opendata.arcgis.com/datasets/91911cd123624a6b9b88cbf4266a2309_4.geojson'
+                // url: 'https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService/FeatureServer/4/query?where=1%3D1&outFields=NAME,NPU&returnCentroid=true&outSR=4326&f=geojson'
             }
 
         }
