@@ -145,6 +145,7 @@ export default {
                 },
                 checked: true,
                 labelValue: 'Name',
+                labelClass: 'overlayLabel',
                 url: 'https://opendata.arcgis.com/datasets/63996663b8a040438defe56ef7ce31e3_0.geojson'
             },
             Cities: {
@@ -156,6 +157,7 @@ export default {
                 },
                 checked: true,
                 labelValue: 'NAME',
+                labelClass: 'overlayLabelSm',
                 url: 'https://opendata.arcgis.com/datasets/0248805ea42145d3b7d7194beafcc3d7_55.geojson'
             },
             NPUs: {
@@ -167,6 +169,7 @@ export default {
                 },
                 checked: false,
                 labelValue: 'NAME',
+                labelClass: 'overlayLabel',
                 url: 'https://opendata.arcgis.com/datasets/91911cd123624a6b9b88cbf4266a2309_4.geojson'
                 // url: 'https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService/FeatureServer/4/query?where=1%3D1&outFields=NAME,NPU&returnCentroid=true&outSR=4326&f=geojson'
             }

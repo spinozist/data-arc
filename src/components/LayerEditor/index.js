@@ -68,7 +68,7 @@ const LayerEditor = props => {
                         ...data,
                         style: {
                             ...data.style,
-                            borderWeight: data.style.borderWeight - .5
+                            borderWeight: data.style.borderWeight < .6 ? .5 : data.style.borderWeight - .5
                         }
                     } 
                     })
@@ -83,12 +83,26 @@ const LayerEditor = props => {
                         ...data,
                         style: {
                             ...data.style,
-                            borderWeight: data.style.borderWeight + .5
+                            borderWeight: data.style.borderWeight > 4 ? 4 : data.style.borderWeight + .5
                         }
                     } 
                     })
                 }
             }/>
+            <h4>Show Labels</h4>
+            <Radio
+                toggle
+                inverted
+                onChange={() => props.setBoundaryLayerInfo({
+                    ...legendInfo,
+                    [key]: {
+                        ...data,
+                        labelVisible: data.labelVisible ? false : true
+                        } 
+                })}
+                checked={legendInfo[key].labelVisible} 
+                        
+            />
             
         </div>
     )

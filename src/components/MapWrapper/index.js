@@ -3,7 +3,7 @@ import { Map as LeafletMap, TileLayer, ZoomControl } from 'react-leaflet';
 import Control from 'react-leaflet-control';
 import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
-// import LabelLayer from '../MapLayers/LabelLayer';
+import LabelLayer from '../MapLayers/LabelLayer';
 import BaseMapLegend from '../Legends/BaseMapLegend';
 import BoundaryLayerLegend from '../Legends/BoundaryLayerLegend';
 import DataLayerLegend from '../Legends/DataLayerLegend';
@@ -257,7 +257,7 @@ const Map = props => {
       
 
       {/* Test of Label Layer */}
-      {/* {
+      {
 
         overlayData ? 
         // console.log(overlayData)
@@ -265,15 +265,17 @@ const Map = props => {
         overlayData.map(layer => {
           const layerName = layer[0];
           const layerData = layer[1];
-          const visible = boundaryLayerInfo[layerName].checked;
+          const labelClass = boundaryLayerInfo[layerName].labelClass
+          const layerVisible = boundaryLayerInfo[layerName].checked;
+          const labelVisible = boundaryLayerInfo[layerName].labelVisible;
           const labelValue = boundaryLayerInfo[layerName].labelValue;
           // const style = boundaryLayerInfo[layerName].style;
 
 
-          return (visible ?
+          return (labelVisible && layerVisible ?
 
           <LabelLayer 
-            // style={style}
+            labelClass={labelClass}
             labelValue={labelValue}
             data={layerData}/> 
 
@@ -281,7 +283,7 @@ const Map = props => {
         })
         : null
     
-      } */}
+      }
 
 
       

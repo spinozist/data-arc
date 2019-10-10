@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Dropdown, Radio, Button, Icon, Input } from 'semantic-ui-react';
-import defaults from '../../config/defaults';
+import { Button, Icon, Input } from 'semantic-ui-react';
+// import defaults from '../../config/defaults';
 
 import dataManifest from '../../config/datamanifest';
-import colormap from 'colormap';
+// import colormap from 'colormap';
 // import CSVExportButton from '../CSVExportButton';
 import './style.css';
 
@@ -60,6 +60,7 @@ const DataSelector = props => {
                         <h3>{result.Long}</h3>
                     <p>
                     <strong>Year(s):</strong> {result.Years} <br/>
+                    <strong>Type:</strong> {result.Type} <br/>
                     <strong>Category:</strong> {result.Category}<br/>
                     <strong>Topic:</strong> {result.Topic}<br/>
                     <strong>Source:</strong> {result.Source}<br/>

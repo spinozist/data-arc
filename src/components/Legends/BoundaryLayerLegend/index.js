@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Checkbox, Popup, Icon } from 'semantic-ui-react';
+import { Checkbox, Popup, Icon, Radio } from 'semantic-ui-react';
 // import { HuePicker, SketchPicker, CirclePicker } from 'react-color';
 import LayerEditor from '../../LayerEditor';
 import './style.css';
@@ -87,7 +87,10 @@ const BoundaryLayerLegend = props => {
                                 borderWidth: data.style.borderWeight
                             }}>
                             </div>
-                        } />
+                        } 
+                    />
+
+
                 </div>
             </div> : null
                 )}

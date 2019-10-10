@@ -8,7 +8,8 @@ import './style.css'
 
 const LabelLayer = props => {
 
-    const layerRef = useRef(null);
+    const labelClass = props.labelClass
+    // const layerRef = useRef(null);
 
     // const labeled = true;
     const labelValue = props.labelValue
@@ -39,9 +40,9 @@ const LabelLayer = props => {
           {
             permanent: true,
             direction: 'center',
-            className: 'overlayLabel',
-            // sticky: true,
-            offset: [0, 0]
+            className: labelClass,
+            sticky: true,
+            // offset: L.point(20, -20)
             // offset: '-20px'
 
           })

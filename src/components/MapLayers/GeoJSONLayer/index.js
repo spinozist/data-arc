@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from "react";
 import L from 'leaflet';
-import { GeoJSON } from 'react-leaflet';
+import { GeoJSON, Tooltip } from 'react-leaflet';
 import colormap from 'colormap';
+import dataManifest from '../../../config/datamanifest';
+import numeral from 'numeral';
 
 
 const GeoJSONLayer = props => {
@@ -46,11 +48,11 @@ const GeoJSONLayer = props => {
     // console.log(maxValue);
     // console.log(minValue);
   
-  const geoJSONGeometry = props.geoJSON ? props.geoJSON : null
+  const geoJSONGeometry = props.geoJSON ? props.geoJSON : null;
    
   // console.log(geoJSONGeometry);
 
-  const pointData = geoJSONGeometry ? geoJSONGeometry.features[0].geometry.type === 'Point' : false
+  const pointData = geoJSONGeometry ? geoJSONGeometry.features[0].geometry.type === 'Point' : false;
   
 
   // const geojsonData = props.data ? 
@@ -65,16 +67,74 @@ const GeoJSONLayer = props => {
 //   //If there isn't a filter type
 //     : props.data;
 
+  // const tooltipJSX = () => {
+  
+  // return <h5>test</h5>
+  // }
 
-
-  const addFeatureFunctions = (feature, layer, value) => {
+  const addFeatureFunctions = (feature, layer) => {
           
     const featureID = feature.properties[props.hoverField];
 
-    // layer.bringToBack();
+    layer
+    .bindTooltip(null, {interactive: true})
+      .on('mouseover', e => {
+        const joinedFeature = props.data ? props.data[featureID] : null;
+        // console.log(joinedFeature)
+        
+        // const fieldName = dataManifest.
+        const content = document.createElement('div');
+        const header = document.createElement('h2');
+        const headerText = document.createTextNode(joinedFeature['NAME']);
+        
 
-    layer.bindTooltip(String(featureID))
-      .on('mouseover', () => props.handleHover(featureID))
+        content.style.textAlign = 'center';
+        content.style.padding = '5px';
+
+        header.appendChild(headerText);
+        content.appendChild(header);
+
+        Object.keys(props.dataTray).map(key => {
+          const fieldInfo = dataManifest.find(item => item.Variable === key)
+          const fieldName = fieldInfo.Long;
+          const fieldType = fieldInfo.Type;
+
+          const value = fieldType === 'Count' ? 
+                          numeral(joinedFeature[key]).format('0,0') :
+                            fieldType === 'Percent' ?
+                              numeral(joinedFeature[key]).format('0.0') + '%' :
+                                numeral(joinedFeature[key]).format('0,0.0')
+
+
+          console.log(fieldType);
+
+          const itemDiv = document.createElement('div');
+          const fieldNameText = document.createTextNode(fieldName);
+          const fieldNameElement = document.createElement('p');
+          const valueText = document.createTextNode(value ? value.toString() : '*')
+          const valueElement = document.createElement('h4');
+  
+          valueElement.appendChild(valueText);
+          valueElement.style.marginTop = '0px';
+          valueElement.style.paddingTop = '0px';
+          valueElement.style.marginBottom = '20px';
+
+          fieldNameElement.appendChild(fieldNameText);
+          fieldNameElement.style.marginBottom = '2px'
+          itemDiv.appendChild(fieldNameElement);
+          itemDiv.appendChild(valueElement);
+  
+          content.appendChild(itemDiv);
+        });
+        
+
+
+        // console.log(value)
+        props.handleHover(featureID);
+        // console.log(e.target)
+        layer.setTooltipContent(content)
+
+      })
       .on('click', () => 
         document
           .getElementById('row-' + featureID) ?
@@ -87,9 +147,8 @@ const GeoJSONLayer = props => {
              behavior: 'smooth'
           }) : null
       )
-      .on('mouseout', () => props.handleHover());
+      .on('mouseout', () => props.handleHover());    
   }
-
 
   // const pointData = dataArray && props.data.point ? dataArray
 
@@ -105,9 +164,9 @@ const GeoJSONLayer = props => {
       <GeoJSON
 
       onAdd={e => e.target.bringToBack()}
+      // Tooltip={'test'}
       key={'geojson-layer'}
       data={ geoJSONGeometry }
-      // ontooltipopen={e => console.log(e.target)}
       pointToLayer={pointData ? (feature, latlng) => {
         
         const featureID = feature.properties[props.hoverField];
@@ -175,7 +234,7 @@ const GeoJSONLayer = props => {
 
       onEachFeature={(feature, layer) => 
         props.primaryField && props.data ? 
-        addFeatureFunctions(feature, layer, props.data[feature.properties[props.hoverField]][props.primaryField]) : null }
+        addFeatureFunctions(feature, layer) : null }
     /> : null
   ) 
 };
