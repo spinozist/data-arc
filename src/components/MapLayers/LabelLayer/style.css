@@ -14,6 +14,13 @@
     font-size: .8em;
   }
 
+  .leaflet-marker-icon {
+    visibility: hidden;
+  }
+
+  .leaflet-shadow-pane {
+    visibility: hidden;
+  }
 /* .label {
   font-weight: 700;
   text-transform: uppercase;

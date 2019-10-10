@@ -32,8 +32,8 @@ const LabelLayer = props => {
         // weight={borderWeight}
         onEachFeature={(feature, layer) => {
 
-          layer.options.icon.options.iconSize = [0,0];
-          layer.options.icon.options.shadowUrl = '';
+          // layer.options.icon.options.iconSize = [0,0];
+          // layer.options.icon.options.shadowUrl = '';
 
           // console.log(feature)
           layer.bindTooltip(feature.properties[labelValue], 

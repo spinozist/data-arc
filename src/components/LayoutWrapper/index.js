@@ -329,6 +329,7 @@ const LayoutWrapper = props => {
                             header={<h2>Browse Data</h2>}
                             trigger={
                                 <Button
+                                    style={{width: '100%'}}
                                     className={ 'pulse'}
                                     onClick={() => setDataSelectorModal(true)} 
                                     color='teal'

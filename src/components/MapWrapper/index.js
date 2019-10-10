@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Map as LeafletMap, TileLayer, ZoomControl } from 'react-leaflet';
+import { Map as LeafletMap, TileLayer, ZoomControl, withLeaflet } from 'react-leaflet';
 import Control from 'react-leaflet-control';
 import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
@@ -14,9 +14,12 @@ import { Icon } from '@iconify/react';
 import table from '@iconify/icons-mdi/table';
 import chartScatterPlot from '@iconify/icons-mdi/chart-scatter-plot';
 import chartBar from '@iconify/icons-mdi/chart-bar';
+// import PrintControlDefault from 'react-leaflet-easyprint';
 import './style.css';
 
 const Map = props => {
+
+  // const PrintControl = withLeaflet(PrintControlDefault);
 
   const [offset, setOffSet] = useState(0);
 
@@ -164,6 +167,8 @@ const Map = props => {
           style={legendStyle}
         />
       </Control>
+
+      
       <Control position="topright" >
 
         <FiHome 
@@ -197,6 +202,9 @@ const Map = props => {
           Hold down <strong style={{fontSize: '1.2em'}}>Shift key</strong> to draw zoom box
         </div>
       </Control>
+      {/* <PrintControl  position="topright" sizeModes={['Current', 'A4Portrait', 'A4Landscape']} hideControlContainer={false} />
+      <PrintControl position="topright"  sizeModes={['Current', 'A4Portrait', 'A4Landscape']} hideControlContainer={false} title="Export as PNG" exportOnly />       */}
+
 
 
       {
