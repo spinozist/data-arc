@@ -77,7 +77,7 @@ const GeoJSONLayer = props => {
     const featureID = feature.properties[props.hoverField];
 
     layer
-    .bindTooltip(null, {interactive: true})
+    .bindTooltip(null, {interactive: true, className: 'map-feature-tooltip'})
       .on('mouseover', e => {
         const joinedFeature = props.data ? props.data[featureID] : null;
         // console.log(joinedFeature)

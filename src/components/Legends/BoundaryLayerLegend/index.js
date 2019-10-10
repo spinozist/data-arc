@@ -35,7 +35,9 @@ const BoundaryLayerLegend = props => {
                 width: props.style.width,
                 borderRadius: props.style.borderRadius,
                 overflow: 'visible',
-                height: legendOpen ? height + 'px' : null
+                height: legendOpen ? height + 'px' : null,
+                boxShadow: '0 0 3px 3px rgba(23, 17, 17, 0.42)'
+
             }}>
 
         <h2>Boundaries

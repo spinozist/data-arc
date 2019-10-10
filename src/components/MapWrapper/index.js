@@ -14,6 +14,7 @@ import { Icon } from '@iconify/react';
 import table from '@iconify/icons-mdi/table';
 import chartScatterPlot from '@iconify/icons-mdi/chart-scatter-plot';
 import chartBar from '@iconify/icons-mdi/chart-bar';
+import './style.css';
 
 const Map = props => {
 
@@ -45,7 +46,7 @@ const Map = props => {
     padding: '20px',
     backgroundColor: 'white',
     borderRadius: '10px',
-    width: '300px'    
+    width: '300px',    
   })
 
   const [overlayData, setOverlayData] = useState(),
@@ -182,6 +183,20 @@ const Map = props => {
         }} />
       </Control>
       <ZoomControl position="topright" />
+      <Control>
+        <div 
+          style={{
+            backgroundColor: 'lightgrey',
+            width: '80px',
+            opacity: '.8',
+            textAlign: 'center',
+            border: 'dotted 2px #0080FF',
+            padding: '5px',
+            // borderRadius: '10px'
+          }}>
+          Hold down <strong style={{fontSize: '1.2em'}}>Shift key</strong> to draw zoom box
+        </div>
+      </Control>
 
 
       {

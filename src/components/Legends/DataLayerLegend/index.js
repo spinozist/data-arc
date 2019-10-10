@@ -70,7 +70,9 @@ const DataLayerLegend = props => {
           backgroundColor: props.style.backgroundColor,
           padding: props.style.padding,
           width: props.style.width,
-          borderRadius: props.style.borderRadius
+          borderRadius: props.style.borderRadius,
+          boxShadow: '0 0 3px 3px rgba(23, 17, 17, 0.42)'
+
         }}
       >
         <h2>Data

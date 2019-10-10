@@ -17,6 +17,8 @@ const BaseMapLegend = props => {
                 padding: props.style.padding,
                 width: props.style.width,
                 borderRadius: props.style.borderRadius,
+                boxShadow: '0 0 3px 3px rgba(23, 17, 17, 0.42)',
+
                 // overflow: 'auto'
                 height: legendOpen ? legendInfo.length * 30 + 10 + 'px' : null
             }}>
