@@ -139,7 +139,7 @@ const Map = props => {
       dragging={true}
       animate={false}
       // onViewportChange={(viewport: Viewport) => setViewport(viewport)}
-      // onViewportChange={() => setBounds()}
+      onViewportChange={() => setBounds()}
 
     > 
       <Control position='topleft'>

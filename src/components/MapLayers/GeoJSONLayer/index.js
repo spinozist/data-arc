@@ -106,7 +106,7 @@ const GeoJSONLayer = props => {
                                 numeral(joinedFeature[key]).format('0,0.0')
 
 
-          console.log(fieldType);
+          // console.log(fieldType);
 
           const itemDiv = document.createElement('div');
           const fieldNameText = document.createTextNode(fieldName);

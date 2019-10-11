@@ -102,29 +102,29 @@ export default {
                 name: 'ArcGIS Light Grey',
                 key: 'tile-arcgis-grey',
                 attribution: '',
-                url: 'http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-                thumbUrl: 'http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/13/3279/2174'
+                url: 'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                thumbUrl: 'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/13/3279/2174'
             },
             {
                 name: 'ArcGIS Satellite',
                 key: 'tile-arcgis-satellite',
                 attribution: '',
-                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-                thumbUrl: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/13/3279/2174'
+                url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                thumbUrl: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/13/3279/2174'
             },
             {
                 name: 'ArcGIS Street Map Color',
                 key: 'tile-arcgis-color',
                 attribution: '',
-                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-                thumbUrl: 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/13/3279/2174'
+                url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+                thumbUrl: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/13/3279/2174'
             },
             {
                 name: 'National Geographic Color',
                 key: 'tile-natgeo',
                 attribution: '',
-                url: 'http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
-                thumbUrl: 'http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/13/3279/2174'
+                url: 'https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
+                thumbUrl: 'https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/13/3279/2174'
             },
             {
                 name: 'Wikimedia',
