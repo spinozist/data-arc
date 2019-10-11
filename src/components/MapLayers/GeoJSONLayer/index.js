@@ -4,7 +4,7 @@ import { GeoJSON, Tooltip } from 'react-leaflet';
 import colormap from 'colormap';
 import dataManifest from '../../../config/datamanifest';
 import numeral from 'numeral';
-
+import './style.css'
 
 const GeoJSONLayer = props => {
 
