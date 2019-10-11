@@ -207,7 +207,16 @@ const Map = props => {
       {/* <PrintControl  position="topright" sizeModes={['Current', 'A4Portrait', 'A4Landscape']} hideControlContainer={false} />
       <PrintControl position="topright"  sizeModes={['Current', 'A4Portrait', 'A4Landscape']} hideControlContainer={false} title="Export as PNG" exportOnly />       */}
 
-
+      <Control position={'bottomright'}>
+        <Popup
+          pinned
+          hoverable
+          on='hover'
+          position='top right'
+          children={<FeedbackForm />}
+          trigger={<Button color={'green'} className={'pulse'} style={{float: 'left'}}><h2>Give Feedback</h2></Button>}
+        />
+      </Control>
 
       {
         <Control position={iconPosition}>
@@ -249,17 +258,6 @@ const Map = props => {
         ) : null }
         </Control>
       }
-
-      <Control position={'bottomleft'}>
-        <Popup
-          pinned
-          hoverable
-          on='hover'
-          position='top left'
-          children={<FeedbackForm />}
-          trigger={<Button color={'green'} className={'pulse'} style={{float: 'left'}}><h2>Give Feedback</h2></Button>}
-        />
-      </Control>
 
       {
         overlayData ? 
