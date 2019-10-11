@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Map as LeafletMap, TileLayer, ZoomControl, withLeaflet } from 'react-leaflet';
+import { Map as LeafletMap, TileLayer, ZoomControl } from 'react-leaflet';
+import { Button, Popup } from 'semantic-ui-react';
 import Control from 'react-leaflet-control';
 import GeoJSONLayer from '../MapLayers/GeoJSONLayer';
 import OverlayLayer from '../MapLayers/OverlayLayer';
 import LabelLayer from '../MapLayers/LabelLayer';
 import BaseMapLegend from '../Legends/BaseMapLegend';
+import FeedbackForm from '../FeedbackForm';
 import BoundaryLayerLegend from '../Legends/BoundaryLayerLegend';
 import DataLayerLegend from '../Legends/DataLayerLegend';
 import { FiHome } from "react-icons/fi";
@@ -246,8 +248,18 @@ const Map = props => {
             />
         ) : null }
         </Control>
-
       }
+
+      <Control position={'bottomleft'}>
+        <Popup
+          pinned
+          hoverable
+          on='hover'
+          position='top left'
+          children={<FeedbackForm />}
+          trigger={<Button color={'green'} className={'pulse'} style={{float: 'left'}}><h2>Give Feedback</h2></Button>}
+        />
+      </Control>
 
       {
         overlayData ? 

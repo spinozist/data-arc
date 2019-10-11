@@ -276,7 +276,7 @@ const DataLayerLegend = props => {
         {
         props.data ?
 
-        <div style={{width: '100%',  height: '40px', padding: '5px', textAlign: 'center'}}>
+        <div style={{width: '100%',  height: '40px', padding: '5px', textAlign: 'center', marginBottom: '10px'}}>
           {props.dataButton}
         </div>
 

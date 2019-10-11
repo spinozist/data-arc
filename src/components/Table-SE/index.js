@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StickyTable, Row, Cell } from 'react-sticky-table';
+import { Icon } from 'semantic-ui-react';
 import defaults from '../../config/defaults';
 
 import './style.css'
@@ -37,7 +38,7 @@ const TableSE = props => {
     useEffect(() => {}, [sort]);
 
     return (
-        <StickyTable style={{width: '100%', height: '90%'}} stickHeaderCount={1}>
+        <StickyTable style={{width: '98%', height: '95%'}} stickHeaderCount={1}>
             <Row >
             {fields ? fields.map((columnLabel,index) => 
                 <Cell
@@ -69,6 +70,11 @@ const TableSE = props => {
                                                 lineHeight: '5px'}}>{line}</p>) :
                                     dataTray[columnLabel].text :
                                         columnLabel 
+                    }
+                    { columnLabel === sort.field ?
+                    <div style={{marginTop: '4px', width: '100%'}}>
+                        <Icon name={sort.direction === 'hilo' ? "sort amount down icon" : "sort amount up icon" }/>
+                    </div> : null
                     }
                     
                 </Cell>

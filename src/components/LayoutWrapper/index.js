@@ -13,6 +13,7 @@ import { Button, Icon, Popup } from 'semantic-ui-react';
 import CSVExportButton from '../CSVExportButton';
 import defaults from '../../config/defaults';
 import ImageExportButton from '../ImageExportButton';
+import FeedbackForm from '../FeedbackForm';
 
 import table from '@iconify/icons-mdi/table';
 import chartScatterPlot from '@iconify/icons-mdi/chart-scatter-plot';
@@ -261,6 +262,7 @@ const LayoutWrapper = props => {
                 > 
                 <div className='chart-control-bar-map'>
                 {/* <Icon name='download' size={'large'} inverted style={{float: 'right'}} /> */}
+
                 <Popup
                     pinned
                     hoverable
@@ -326,15 +328,15 @@ const LayoutWrapper = props => {
                             size={'large'}
                             open={dataSelectorModal}
                             centered={false}
-                            header={<h2>Browse Data</h2>}
+                            header={<h2>Gather Data</h2>}
                             trigger={
                                 <Button
                                     style={{width: '100%'}}
-                                    className={ 'pulse'}
+                                    // className={ 'pulse'}
                                     onClick={() => setDataSelectorModal(true)} 
                                     color='teal'
                                 >
-                                    Gather Data
+                                <h3>Gather Data</h3>
                                 </Button>} 
                             content={
                                 <DataSelector

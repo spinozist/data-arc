@@ -54,7 +54,7 @@ body {
 } */
 
 .pulse {
-    animation: shadow-pulse 1s 6;
+    animation: shadow-pulse 1s 10;
 }
 
 
