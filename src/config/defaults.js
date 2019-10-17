@@ -298,8 +298,10 @@ export default {
         // }
     ],
     boundingGeoURL: {
-        State: 'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/2/query?where=GEOID=13&f=geojson',
-        COA: 'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_ACS2019/MapServer/28/query?where=GEOID%3D1304000&f=geojson',
+        // State: 'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/2/query?where=GEOID=13&f=geojson',
+        State: 'https://services1.arcgis.com/Ug5xGQbHsD8zuZzM/arcgis/rest/services/ACSAllGeo2017/FeatureServer/0/query?where=SumLevel=%27State%27&outSR=4326&f=geojson',
+        COA: 'https://arcgis.atlantaregional.com/arcgis/rest/services/OpenData/FeatureServer/58/query?where=Name=%27Atlanta%27&outFields=*&outSR=4326&f=geojson',
+        // COA: 'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_ACS2019/MapServer/28/query?where=GEOID%3D1304000&f=geojson',
         ARC20: 'https://services1.arcgis.com/Ug5xGQbHsD8zuZzM/ArcGIS/rest/services/Opendata2/FeatureServer/560/query?where=1%3D1&outFields=*&outSR=4326&f=geojson',
         ARC10: 'https://arcgis.atlantaregional.com/arcgis/rest/services/OpenData/FeatureServer/103/query?where=1%3D1&outFields=*&f=geojson'
     }

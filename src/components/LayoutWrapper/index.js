@@ -79,7 +79,10 @@ const LayoutWrapper = props => {
             const url = defaults.boundingGeoURL[boundingGEO];
     
             API.getData(url)
-                .then(res => setBoundingGEO(res.data))
+                .then(res => {
+                    console.log(res)
+                    setBoundingGEO(res.data)
+                })
                 .catch(err => console.error(err))
         }
 
