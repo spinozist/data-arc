@@ -4,7 +4,6 @@ export default {
         tableVisible: false,
         scatterPlotVisible: false,
         barChartVisible: false,
-        // chartVisible: false,
         colorMap: 'portland',
         numberOfBins: 72,
         colorMapReverse: false,

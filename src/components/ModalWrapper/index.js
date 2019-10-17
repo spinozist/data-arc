@@ -8,6 +8,8 @@ const ModalWrapper = props =>
       trigger={props.trigger}
       centered={props.centered}
       size={props.size}
+      closeOnDimmerClick={props.closeOnDimmerClick}
+      closeIcon={props.closeIcon}
     >
       <Modal.Header>{props.header}</Modal.Header>
       <Modal.Content>

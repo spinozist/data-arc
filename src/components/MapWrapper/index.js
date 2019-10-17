@@ -7,6 +7,7 @@ import OverlayLayer from '../MapLayers/OverlayLayer';
 import LabelLayer from '../MapLayers/LabelLayer';
 import BaseMapLegend from '../Legends/BaseMapLegend';
 import FeedbackForm from '../FeedbackForm';
+import ModalWrapper from '../ModalWrapper';
 import BoundaryLayerLegend from '../Legends/BoundaryLayerLegend';
 import DataLayerLegend from '../Legends/DataLayerLegend';
 import { FiHome } from "react-icons/fi";
@@ -208,14 +209,24 @@ const Map = props => {
       <PrintControl position="topright"  sizeModes={['Current', 'A4Portrait', 'A4Landscape']} hideControlContainer={false} title="Export as PNG" exportOnly />       */}
 
       <Control position={'bottomright'}>
-        <Popup
+        <ModalWrapper
+            size={'large'}
+            closeOnDimmerClick={false}
+            closeIcon={true}
+            centered={false}
+            header={<h2>Give Feedback</h2>}
+            trigger={<Button color={'green'} className={'pulse'} style={{float: 'left'}}><h2>Give Feedback</h2></Button>}
+            content={<FeedbackForm />}
+        />
+      
+        {/* <Popup
           pinned
           hoverable
           on='hover'
           position='top right'
           children={<FeedbackForm />}
           trigger={<Button color={'green'} className={'pulse'} style={{float: 'left'}}><h2>Give Feedback</h2></Button>}
-        />
+        /> */}
       </Control>
 
       {
